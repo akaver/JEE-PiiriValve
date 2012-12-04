@@ -25,6 +25,8 @@ public class Hello extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().println("Hi, hello there!");
+		response.getWriter().println("<br><br>");
+		response.getWriter().println("This line is commited through Eclipse!");
 	}
 
 	/**
