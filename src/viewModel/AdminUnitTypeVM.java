@@ -11,6 +11,7 @@ public class AdminUnitTypeVM {
 	private  AdminUnitType adminUnitTypeMaster;
 	// list of adminUnitTypes, for dropdown
 	private  List<AdminUnitType> adminUnitTypeMasterList;
+	private  List<AdminUnitType> adminUnitTypeMasterListWithZero;
 	
 	// list of adminunitypes which are subordinates to adminUnitType
 	private List<AdminUnitType> adminUnitTypesSubordinateList;
@@ -47,6 +48,19 @@ public class AdminUnitTypeVM {
 	public void setAdminUnitTypesSubordinateList(
 			List<AdminUnitType> adminUnitTypesSubordinateList) {
 		this.adminUnitTypesSubordinateList = adminUnitTypesSubordinateList;
+	}
+
+	public List<AdminUnitType> getAdminUnitTypeMasterListWithZero() {
+		return adminUnitTypeMasterListWithZero;
+	}
+
+	public void setAdminUnitTypeMasterListWithZero(
+			List<AdminUnitType> adminUnitTypeMasterListWithZero) {
+		AdminUnitType withZero = new AdminUnitType();
+		withZero.setAdminUnitTypeID(0);
+		withZero.setName("---");
+		adminUnitTypeMasterListWithZero.add(withZero);
+		this.adminUnitTypeMasterListWithZero = adminUnitTypeMasterListWithZero;
 	}
 
 

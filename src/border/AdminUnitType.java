@@ -36,14 +36,14 @@ public class AdminUnitType extends HttpServlet {
 		AdminUnitTypeVM formData = new AdminUnitTypeVM();
 		// populate it with some data, get it through dao
 		
-		// this is temporary crap
+		// this is temporary crap fro testing, no real id can be passed like this
 		Integer adminUnitTypeID = Integer.parseInt(request.getParameter("AdminUnitTypeID"));
 		if (adminUnitTypeID == null){
-			adminUnitTypeID  = 0;
+			adminUnitTypeID  = 2; // 0 - add, 1-country (no subordinates) 
 		}
 		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID));
 		formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getMasterByID(formData.getAdminUnitType().getAdminUnitTypeID()));
-		formData.setAdminUnitTypeMasterList(new AdminUnitTypeDAO().getAll());
+		formData.setAdminUnitTypeMasterListWithZero(new AdminUnitTypeDAO().getAll());
 		
 		// save the viewmodel for jsp dispatcher
 		request.setAttribute("formData", formData);

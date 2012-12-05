@@ -35,7 +35,7 @@
 							<td>Subordinate of</td>
 							<td><select name="MasterAdminUnitType">
 									<c:forEach var="entry"
-										items="${formData.adminUnitTypeMasterList}">
+										items="${formData.adminUnitTypeMasterListWithZero}">
 										<c:set var="selected" value="" />
 										<c:if test="${entry.adminUnitTypeID == formData.adminUnitTypeMaster.adminUnitTypeID}">
 											<c:set var="selected" value="selected=\"selected\"" />

@@ -50,9 +50,10 @@ public class AdminUnitTypeDAO extends DAO {
 		return res;
 	}
 	
-	// find and return AdminUnit's master - if any
+	// find and return AdminUnitType's master - if any
 	public AdminUnitType getMasterByID(Integer adminUnitTypeID){
-		Integer masterID=0;
+		System.out.println("Finding master AdminUnitType for: "+adminUnitTypeID);
+		Integer masterID=null;
 
 		// find the subordinate record, which contains its masters id
 		String sql = "select * from AdminUnitTypeSubordination where SubordinateAdminUnitTypeID=?";
