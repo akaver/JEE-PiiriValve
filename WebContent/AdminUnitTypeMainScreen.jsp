@@ -18,11 +18,13 @@
 						cellpadding="4">
 						<tr>
 							<td width="100px">Code</td>
-							<td><input name="AdminUnitCode" type="text" size="10" value="${formData.adminUnitType.code}"></td>
+							<td><input name="AdminUnitCode" type="text" size="10"
+								value="${formData.adminUnitType.code}"></td>
 						</tr>
 						<tr>
 							<td>Name</td>
-							<td><input name="AdminUnitName" type="text" size="30" value="${formData.adminUnitType.name}"></td>
+							<td><input name="AdminUnitName" type="text" size="30"
+								value="${formData.adminUnitType.name}"></td>
 						</tr>
 						<tr>
 							<td valign="top">Comment</td>
@@ -32,8 +34,14 @@
 						<tr>
 							<td>Subordinate of</td>
 							<td><select name="MasterAdminUnitType">
-									<option value="1">State</option>
-									<option value="2" selected>County</option>
+									<c:forEach var="entry"
+										items="${formData.adminUnitTypeMasterList}">
+										<c:set var="selected" value="" />
+										<c:if test="${entry.adminUnitTypeID == formData.adminUnitTypeMaster.adminUnitTypeID}">
+											<c:set var="selected" value="selected=\"selected\"" />
+										</c:if>
+										<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
+									</c:forEach>
 							</select></td>
 						</tr>
 					</table></td>

@@ -49,6 +49,34 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 		return res;
 	}
+	
+	// find and return AdminUnit's master - if any
+	public AdminUnitType getMasterByID(Integer adminUnitTypeID){
+		Integer masterID=0;
+
+		// find the subordinate record, which contains its masters id
+		String sql = "select * from AdminUnitTypeSubordination where SubordinateAdminUnitTypeID=?";
+		try {
+			preparedStatement = super.getConnection().prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitTypeID);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()){
+				masterID= resultSet.getInt("AdminUnitTypeID");
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(statement);
+		}
+		
+		if (masterID!=null){
+			//get the adminunittype record based on subtybe masters id
+			return getByID(masterID);
+		}
+
+		return null;
+	}
 
 	private AdminUnitType createAdminUnitTypeFromResultSet(ResultSet rs)
 			throws SQLException {

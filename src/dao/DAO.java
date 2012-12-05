@@ -70,13 +70,6 @@ public class DAO {
 
 	private void dropTables() {
 		executeSQL("DROP SCHEMA PUBLIC CASCADE");
-		
-//		executeSQL("DROP TABLE AdminUnitTypeSubordination IF EXISTS");
-//		executeSQL("DROP TABLE AdminUnitType IF EXISTS");
-//		executeSQL("DROP TABLE AdminUnitSubordination IF EXISTS");
-//		executeSQL("DROP TABLE AdminUnit IF EXISTS");
-//		executeSQL("DROP TABLE ArmyUnitSubordination IF EXISTS");
-//		executeSQL("DROP TABLE ArmyUnit IF EXISTS");
 	}
 
 	public void insertDummyData() {
@@ -112,8 +105,9 @@ public class DAO {
 				+ //
 				"('R', 'Riik', '', " + std + ")," + //
 				"('M', 'Maakond', '', " + std + ")," + //
+				"('ML', 'Maakonna Linn', '', " + std + ")," + //
 				"('V', 'Vald', '', " + std + ")," + //
-				"('L', 'Linn', '', " + std + ")," + //
+				"('VL', 'Valla Linn', '', " + std + ")," + //
 				"('A1', 'Alev', '', " + std + ")," + //
 				"('A2', 'Alevik', '', " + std + ")," + //
 				"('K', 'Küla', '', " + std + ")" + //
@@ -144,12 +138,12 @@ public class DAO {
 				+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "+
 // @formatter:off
 				"('1', '2', 'riik->maakond', " + std + ")," +
-				"('2', '3', 'maakond->vald', " + std + ")," +
-				"('2', '4', 'maakond->linn', " + std + ")," +
-				"('3', '4', 'vald->linn', " + std + ")," + 
-				"('3', '5', 'vald->alev', " + std + ")," + 
-				"('3', '6', 'vald->alevik', " + std + ")," +
-				"('3', '7', 'vald->küla', " + std + ")" +
+				"('2', '3', 'maakond->maakonna linn', " + std + ")," +
+				"('2', '4', 'maakond->vald', " + std + ")," +
+				"('4', '5', 'vald->valla linn', " + std + ")," + 
+				"('4', '6', 'vald->alev', " + std + ")," + 
+				"('4', '7', 'vald->alevik', " + std + ")," +
+				"('4', '8', 'vald->küla', " + std + ")" +
 // @formatter:on
 				"");
 

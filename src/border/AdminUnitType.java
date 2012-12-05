@@ -35,7 +35,16 @@ public class AdminUnitType extends HttpServlet {
 		//create the view model
 		AdminUnitTypeVM formData = new AdminUnitTypeVM();
 		// populate it with some data, get it through dao
-		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(1));
+		
+		// this is temporary crap
+		Integer adminUnitTypeID = Integer.parseInt(request.getParameter("AdminUnitTypeID"));
+		if (adminUnitTypeID == null){
+			adminUnitTypeID  = 0;
+		}
+		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID));
+		formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getMasterByID(formData.getAdminUnitType().getAdminUnitTypeID()));
+		formData.setAdminUnitTypeMasterList(new AdminUnitTypeDAO().getAll());
+		
 		// save the viewmodel for jsp dispatcher
 		request.setAttribute("formData", formData);
 		//call the dispatcher, pass along the view model

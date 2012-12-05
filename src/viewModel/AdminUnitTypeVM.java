@@ -4,12 +4,16 @@ import java.util.*;
 import dao.*;
 
 public class AdminUnitTypeVM {
+	// adminunittype we are editing
 	private AdminUnitType adminUnitType;
-
-	private Integer adminUnitTypeMasterID;
-	private List<AdminUnitType> adminUnitTypeMaster;
 	
-	private List<AdminUnitType> adminUnitTypeSubordinates;
+	// adminunittype wich is master for adminUnitType
+	private  AdminUnitType adminUnitTypeMaster;
+	// list of adminUnitTypes, for dropdown
+	private  List<AdminUnitType> adminUnitTypeMasterList;
+	
+	// list of adminunitypes which are subordinates to adminUnitType
+	private List<AdminUnitType> adminUnitTypesSubordinateList;
 
 	public AdminUnitType getAdminUnitType() {
 		return adminUnitType;
@@ -19,28 +23,32 @@ public class AdminUnitTypeVM {
 		this.adminUnitType = adminUnitType;
 	}
 
-	public Integer getAdminUnitTypeMasterID() {
-		return adminUnitTypeMasterID;
-	}
-
-	public void setAdminUnitTypeMasterID(Integer adminUnitTypeMasterID) {
-		this.adminUnitTypeMasterID = adminUnitTypeMasterID;
-	}
-
-	public List<AdminUnitType> getAdminUnitTypeMaster() {
+	public AdminUnitType getAdminUnitTypeMaster() {
 		return adminUnitTypeMaster;
 	}
 
-	public void setAdminUnitTypeMaster(List<AdminUnitType> adminUnitTypeMaster) {
+	public void setAdminUnitTypeMaster(AdminUnitType adminUnitTypeMaster) {
 		this.adminUnitTypeMaster = adminUnitTypeMaster;
 	}
 
-	public List<AdminUnitType> getAdminUnitTypeSubordinates() {
-		return adminUnitTypeSubordinates;
+	public List<AdminUnitType> getAdminUnitTypeMasterList() {
+		return adminUnitTypeMasterList;
 	}
 
-	public void setAdminUnitTypeSubordinates(
-			List<AdminUnitType> adminUnitTypeSubordinates) {
-		this.adminUnitTypeSubordinates = adminUnitTypeSubordinates;
+	public void setAdminUnitTypeMasterList(
+			List<AdminUnitType> adminUnitTypeMasterList) {
+		this.adminUnitTypeMasterList = adminUnitTypeMasterList;
 	}
+
+	public List<AdminUnitType> getAdminUnitTypesSubordinateList() {
+		return adminUnitTypesSubordinateList;
+	}
+
+	public void setAdminUnitTypesSubordinateList(
+			List<AdminUnitType> adminUnitTypesSubordinateList) {
+		this.adminUnitTypesSubordinateList = adminUnitTypesSubordinateList;
+	}
+
+
+
 }
