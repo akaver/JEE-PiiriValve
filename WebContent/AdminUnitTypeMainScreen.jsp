@@ -32,8 +32,8 @@
 						<tr>
 							<td>Subordinate of</td>
 							<td><select name="MasterAdminUnitType">
-									<option value="1">a</option>
-									<option value="2" selected>b</option>
+									<option value="1">State</option>
+									<option value="2" selected>County</option>
 							</select></td>
 						</tr>
 					</table></td>
@@ -54,14 +54,14 @@
 						</tr>
 						<tr>
 							<td colspan="2" align="right"><input
-								name="AddSubordinateButton" type="submit" value="Remove"></td>
+								name="AddSubordinateButton" type="submit" value="Add"></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td colspan="2" align="right"><input name="SubmitButton"
-					type="submit" value="Submit"> <input name="Reset"
-					type="reset" value="Reset"></td>
+					type="submit" value="Submit"> <input name="CancelButton"
+					type="submit" value="Cancel"></td>
 			</tr>
 		</table>
 	</form>
