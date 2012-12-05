@@ -27,7 +27,7 @@
 						<tr>
 							<td valign="top">Comment</td>
 							<td><textarea name="AdminUnitTypeComment" cols="35"
-									rows="10"></textarea></td>
+									rows="10">${formData.adminUnitType.comment}</textarea></td>
 						</tr>
 						<tr>
 							<td>Subordinate of</td>
