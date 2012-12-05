@@ -14,8 +14,8 @@
 		<br>
 		<a href="DBInit">Recreate database and load initial data</a><br>
 		<br>
-		<a href="AdminUnitType">Administrative unit type redactor</a><br>
-		<a href="AdminUnit">Administrative unit redactor</a><br>
+		<a href="AdminUnitType?AdminUnitTypeID=1">Administrative unit type redactor</a><br>
+		<a href="AdminUnit?AdminUnitID=1">Administrative unit redactor</a><br>
 		<a href="AdminUnitReport">Administrative unit report</a><br>
 		<a href="ArmyUnit">Army unit redactor</a><br>
 	</p>

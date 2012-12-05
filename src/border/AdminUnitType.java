@@ -24,9 +24,16 @@ public class AdminUnitType extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().println("AdminUnitType");
+		ShowMainScreen(request,response);
 	}
 
+	
+	protected void ShowMainScreen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("AdminUnitTypeMainScreen.jsp").forward(request, response);
+	}	
+	
+	
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -34,4 +41,6 @@ public class AdminUnitType extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 
+	
+	
 }

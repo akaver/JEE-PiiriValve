@@ -24,9 +24,7 @@ public class BorderGuard extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// DB init stuff here
-		
-		// Lets draw the main entry screen first
+		// Lets draw the main entry screen
 		ShowMainScreen(request,response);
 	}
 

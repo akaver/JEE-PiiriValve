@@ -70,12 +70,13 @@ public class DAO {
 
 	private void dropTables() {
 		executeSQL("DROP SCHEMA PUBLIC CASCADE");
-		executeSQL("DROP TABLE AdminUnitTypeSubordination IF EXISTS");
-		executeSQL("DROP TABLE AdminUnitType IF EXISTS");
-		executeSQL("DROP TABLE AdminUnitSubordination IF EXISTS");
-		executeSQL("DROP TABLE AdminUnit IF EXISTS");
-		executeSQL("DROP TABLE ArmyUnitSubordination IF EXISTS");
-		executeSQL("DROP TABLE ArmyUnit IF EXISTS");
+		
+//		executeSQL("DROP TABLE AdminUnitTypeSubordination IF EXISTS");
+//		executeSQL("DROP TABLE AdminUnitType IF EXISTS");
+//		executeSQL("DROP TABLE AdminUnitSubordination IF EXISTS");
+//		executeSQL("DROP TABLE AdminUnit IF EXISTS");
+//		executeSQL("DROP TABLE ArmyUnitSubordination IF EXISTS");
+//		executeSQL("DROP TABLE ArmyUnit IF EXISTS");
 	}
 
 	public void insertDummyData() {
