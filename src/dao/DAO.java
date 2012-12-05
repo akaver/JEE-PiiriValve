@@ -182,7 +182,11 @@ public class DAO {
 				+ "ClosedBy                 VARCHAR(32),"
 				+ "ClosedDate               DATE NOT NULL,"
 				+ "AdminUnitTypeID			INTEGER,"
-				+ "PRIMARY KEY (AdminUnitSubordinationID)" + ")");
+				+ "PRIMARY KEY (AdminUnitSubordinationID),"
+				+ "FOREIGN KEY (MasterAdminUnitID) REFERENCES AdminUnit ON DELETE RESTRICT,"
+				+ "FOREIGN KEY (SubordinateAdminUnitID) REFERENCES AdminUnit ON DELETE RESTRICT"
+				
+				+ ")");
 	}
 
 	private void insertDummyDataToAdminUnitSubordinationTable() {
@@ -224,7 +228,11 @@ public class DAO {
 				+ "ChangedDate              DATE NOT NULL,"
 				+ "ClosedBy                 VARCHAR(32),"
 				+ "ClosedDate               DATE NOT NULL,"
-				+ "PRIMARY KEY (ArmyUnitSubordinationID)" + ")");
+				+ "PRIMARY KEY (ArmyUnitSubordinationID),"
+				+ "FOREIGN KEY (MasterArmyUnitID) REFERENCES ArmyUnitID ON DELETE RESTRICT,"
+				+ "FOREIGN KEY (SubordinateArmyUnitID) REFERENCES ArmyUnitID ON DELETE RESTRICT"
+				
+				+ ")");
 	}
 
 	private void insertDummyDataToArmyUnitSubordinationTable() {
