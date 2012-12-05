@@ -18,11 +18,11 @@
 						cellpadding="4">
 						<tr>
 							<td width="100px">Code</td>
-							<td><input name="AdminUnitCode" type="text" size="10"></td>
+							<td><input name="AdminUnitCode" type="text" size="10" value="${formData.adminUnitType.code}"></td>
 						</tr>
 						<tr>
 							<td>Name</td>
-							<td><input name="AdminUnitName" type="text" size="30"></td>
+							<td><input name="AdminUnitName" type="text" size="30" value="${formData.adminUnitType.name}"></td>
 						</tr>
 						<tr>
 							<td valign="top">Comment</td>

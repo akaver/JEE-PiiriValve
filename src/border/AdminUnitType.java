@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import viewModel.*;
+import dao.*;
+
 /**
  * Servlet implementation class AdminUnitType
  */
@@ -29,6 +32,13 @@ public class AdminUnitType extends HttpServlet {
 
 	
 	protected void ShowMainScreen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//create the view model
+		AdminUnitTypeVM formData = new AdminUnitTypeVM();
+		// populate it with some data, get it through dao
+		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(1));
+		// save the viewmodel for jsp dispatcher
+		request.setAttribute("formData", formData);
+		//call the dispatcher, pass along the view model
 		request.getRequestDispatcher("AdminUnitTypeMainScreen.jsp").forward(request, response);
 	}	
 	
