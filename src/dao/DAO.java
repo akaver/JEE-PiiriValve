@@ -1,3 +1,10 @@
+/*
+Eclipse 3.6 allows you to turn off formatting by placing a special comment, like
+// @formatter:off
+...
+// @formatter:on
+The on/off features have to be turned "on" in Eclipse preferences: Java > Code Style > Formatter. Click on "Edit" button, "Off/On Tags", check off "Enable Off/On tags".
+ */
 package dao;
 
 import java.sql.*;
@@ -133,15 +140,16 @@ public class DAO {
 	private void insertDummyDataToAdminUnitTypeSubordinationTable() {
 		String std = "'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31'";
 		executeUpdateSQL("insert into AdminUnitTypeSubordination "
-				+ "(MasterAdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "
-				+ //
-				"('1', '2', 'riik->maakond', " + std + ")," + //
-				"('2', '3', 'maakond->vald', " + std + ")," + //
-				"('2', '4', 'maakond->linn', " + std + ")," + //
-				"('3', '4', 'vald->linn', " + std + ")," + //
-				"('3', '5', 'vald->alev', " + std + ")," + //
-				"('3', '6', 'vald->alevik', " + std + ")," + //
-				"('3', '7', 'vald->küla', " + std + ")" + //
+				+ "(MasterAdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "+
+// @formatter:off
+				"('1', '2', 'riik->maakond', " + std + ")," +
+				"('2', '3', 'maakond->vald', " + std + ")," +
+				"('2', '4', 'maakond->linn', " + std + ")," +
+				"('3', '4', 'vald->linn', " + std + ")," + 
+				"('3', '5', 'vald->alev', " + std + ")," + 
+				"('3', '6', 'vald->alevik', " + std + ")," +
+				"('3', '7', 'vald->küla', " + std + ")" +
+// @formatter:on
 				"");
 
 	}
@@ -152,6 +160,7 @@ public class DAO {
 				+ "Code                     VARCHAR(10) NOT NULL,"
 				+ "Name                     VARCHAR(100) NOT NULL,"
 				+ "Comment                  LONGVARCHAR,"
+				+ "AdminUnitTypeID			INTEGER NOT NULL,"
 				+ "FromDate                 DATE NOT NULL,"
 				+ "ToDate                   DATE NOT NULL,"
 				+ "OpenedBy                 VARCHAR(32) NOT NULL,"
@@ -160,13 +169,30 @@ public class DAO {
 				+ "ChangedDate              DATE NOT NULL,"
 				+ "ClosedBy                 VARCHAR(32),"
 				+ "ClosedDate               DATE NOT NULL,"
-				+ "AdminUnitTypeID			INTEGER NOT NULL,"
 				+ "PRIMARY KEY (AdminUnitID),"
 				+ "FOREIGN KEY (AdminUnitTypeID) REFERENCES AdminUnitType ON DELETE RESTRICT"
 				+ ")");
 	}
 
 	private void insertDummyDataToAdminUnitTable() {
+		String std = "'1900-01-01', '2999-12-31', 'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31'";
+		executeUpdateSQL("insert into AdminUnit "
+				+ "(Code, Name, Comment, AdminUnitTypeID, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "
+				+
+// @formatter:off
+				"('Eesti', 'Eesti Vabariik', 'globaalne AdminUnit, riik', '1'," + std + ")," + 
+				"('Harjumaa', 'Harjumaa maakond', '', '2'," + std + ")," +
+				"('Tallinn', 'Tallinn', 'pealinn', '4'," + std + ")," + 
+				"('KiiliVald', 'Kiili vald', '', '3'," + std + ")," + 
+				"('KiiliAlev', 'Kiili alev', '', '5'," + std + ")," + 
+				"('Luige', 'Luige alevik', '', '6'," + std + ")," + 
+				"('Kangru', 'Kangru alevik', '', '6'," + std + ")," + 
+				"('Arusta', 'Arusta küla', '', '7'," + std + ")," + 
+				"('Kurevere', ' Kurevere küla', '', '7'," + std + ")" + 
+
+				
+// @formatter:on
+				"");
 
 	}
 
@@ -184,7 +210,6 @@ public class DAO {
 				+ "ChangedDate              DATE NOT NULL,"
 				+ "ClosedBy                 VARCHAR(32),"
 				+ "ClosedDate               DATE NOT NULL,"
-				+ "AdminUnitTypeID			INTEGER NOT NULL,"
 				+ "PRIMARY KEY (AdminUnitSubordinationID),"
 				+ "FOREIGN KEY (MasterAdminUnitID) REFERENCES AdminUnit ON DELETE RESTRICT,"
 				+ "FOREIGN KEY (SubordinateAdminUnitID) REFERENCES AdminUnit ON DELETE RESTRICT"
@@ -193,7 +218,21 @@ public class DAO {
 	}
 
 	private void insertDummyDataToAdminUnitSubordinationTable() {
-
+		String std = "'1900-01-01', '2999-12-31', 'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31'";
+		executeUpdateSQL("insert into AdminUnitSubordination "
+				+ "(MasterAdminUnitID, SubordinateAdminUnitID, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "
+				+
+// @formatter:off
+				"('1', '2', 'Eesti->Harjumaa'," + std + ")," + 
+				"('2', '3', 'Harjumaa->Tallinn'," + std + ")," + 
+				"('2', '4', 'Harjumaa->KiiliVald'," + std + ")," + 
+				"('4', '5', 'KiiliVald->KiiliAlev'," + std + ")," + 
+				"('4', '6', 'KiiliVald->Luige'," + std + ")," + 
+				"('4', '7', 'KiiliVald->Kangru'," + std + ")," + 
+				"('4', '8', 'KiiliVald->Arusta'," + std + ")," + 
+				"('4', '9', 'KiiliVald->Kurevere'," + std + ")" + 
+// @formatter:on
+				"");
 	}
 
 	private void createArmyUnitTable() {
