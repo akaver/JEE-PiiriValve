@@ -6,12 +6,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Admin Unit Type Editor</title>
+<style>
+	table.borderedTable { border-collapse: collapse; }
+	.allBorders { border: 1px solid #CCCCCC; }
+	.withoutRight {border-left: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-bottom: 1px solid #CCCCCC;}
+	.withoutLeft {border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-bottom: 1px solid #CCCCCC;}
+</style>
 </head>
 <body>
 	<form method="post">
 		<table width="800" border="0" cellspacing="0" cellpadding="2">
 			<tr>
-				<td colspan="2">Admin Unit Type Editor</td>
+				<td colspan="2"><h3>Admin Unit Type Editor</h3></td>
 			</tr>
 			<tr>
 				<td width="50%"><table width="100%" border="0" cellspacing="0"
@@ -45,23 +51,23 @@
 							</select></td>
 						</tr>
 					</table></td>
-				<td><table width="100%" border="0" cellspacing="0"
-						cellpadding="4">
+				<td style="position:relative"><table width="100%" cellspacing="0" class="borderedTable"
+						cellpadding="4" style="position:absolute; top:0px; width:100%;">
 						<tr>
-							<td colspan="2" bgcolor="#CCCCCC">Subordinates</td>
+							<td class="allBorders" colspan="2" bgcolor="#CCCCCC">Subordinates</td>
 						</tr>
 						<tr>
-							<td align="left">village1</td>
-							<td align="right"><input name="RemoveButton_1" type="submit"
+							<td align="left" class="withoutRight">village1</td>
+							<td align="right" class="withoutLeft"><input name="RemoveButton_1" type="submit"
 								value="Remove"></td>
 						</tr>
 						<tr>
-							<td align="left">village2</td>
-							<td align="right"><input name="RemoveButton_2" type="submit"
+							<td align="left" class="withoutRight">village2</td>
+							<td align="right" class="withoutLeft"><input name="RemoveButton_2" type="submit"
 								value="Remove"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="right"><input
+							<td class="allBorders" colspan="2" align="right"><input
 								name="AddSubordinateButton" type="submit" value="Add"></td>
 						</tr>
 					</table></td>
