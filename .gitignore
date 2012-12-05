@@ -1,2 +1,6 @@
 /build
 .DS_Store
+*.lock
+*.DS_Store
+*.swp
+*.out
