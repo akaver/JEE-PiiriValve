@@ -8,7 +8,7 @@
 	<property name="web.dir" value="${project.dir}/WebContent" />
 	<property name="web-inf.dir" value="${web.dir}/WEB-INF" />
 	<property name="classes.dir" value="${web-inf.dir}/classes" />
-	<property name="dist.dir" location="dist" />
+	<property name="dist.dir" location="${project.dir}/dist" />
 	<property name="lib.dir" location="${project.dir}/lib" />
 	<property name="runtime.lib.dir" location="${web-inf.dir}/lib" />
 
@@ -22,6 +22,13 @@
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="compile.class.path" />
 	</target>
 
+	<target name="war" depends="compile">
+		<mkdir dir="${dist.dir}" />
+		<war destfile="${dist.dir}/${team.name}-${project.name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+			<classes dir="${classes.dir}" />
+			<fileset dir="${web.dir}" excludes="**/servlet-api.jar" />
+		</war>
+	</target>
 
 	<target name="clean" depends="clean-lib" description="remove intermediate files">
 		<delete dir="${classes.dir}" />
@@ -30,6 +37,6 @@
 
 	<target name="clean-lib" description="Removes all libraries">
 	</target>
-	
-	
+
+
 </project>
