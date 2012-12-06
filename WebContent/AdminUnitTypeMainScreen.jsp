@@ -10,21 +10,16 @@
 table.borderedTable {
 	border-collapse: collapse;
 }
+table div {
+	float: left;    	
+}
+table div+div {
+	float: right; 
+   	overflow: hidden;
+}
 
 .allBorders {
 	border: 1px solid #CCCCCC;
-}
-
-.withoutRight {
-	border-left: 1px solid #CCCCCC;
-	border-top: 1px solid #CCCCCC;
-	border-bottom: 1px solid #CCCCCC;
-}
-
-.withoutLeft {
-	border-right: 1px solid #CCCCCC;
-	border-top: 1px solid #CCCCCC;
-	border-bottom: 1px solid #CCCCCC;
 }
 </style>
 </head>
@@ -76,11 +71,10 @@ table.borderedTable {
 
 						<c:forEach var="entry"
 							items="${formData.adminUnitTypesSubordinateList}">
-							<tr>
-								<td align="left" class="withoutRight">${entry.name}</td>
-								<td align="right" class="withoutLeft"><input
-									name="RemoveButton_1" type="submit" value="Remove"></td>
-							</tr>
+							<tr><td class="allBorders">
+								<div>${entry.name}</div>
+								<div><input name="RemoveButton_1" type="submit" value="Remove"></div>
+							</td></tr>
 						</c:forEach>
 						<tr>
 							<td class="allBorders" colspan="2" align="right"><input
