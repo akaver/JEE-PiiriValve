@@ -56,6 +56,11 @@ public class AdminUnitTypeDAO extends DAO {
 	public AdminUnitType getMasterByID(Integer adminUnitTypeID) {
 		System.out.println("Finding master AdminUnitType for: "
 				+ adminUnitTypeID);
+		
+		if (adminUnitTypeID==null){
+			return null;
+		}
+		
 		Integer masterID = null;
 
 		// find the subordinate record, which contains its masters id
@@ -86,6 +91,10 @@ public class AdminUnitTypeDAO extends DAO {
 	public List<AdminUnitType> getSubordinates(Integer adminUnitTypeID) {
 		System.out.println("Finding subordinates for adminUnitType with ID:"
 				+ adminUnitTypeID);
+		
+		if (adminUnitTypeID==null){
+			return null;
+		}
 		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
 
 		// get the list of subordinate ID's
@@ -135,5 +144,31 @@ public class AdminUnitTypeDAO extends DAO {
 	public AdminUnitTypeDAO() {
 		super();
 	}
+
+	public boolean isIDValid(Integer adminUnitTypeID) {
+		System.out.println("adminUnitType isIDValidD:" + adminUnitTypeID);
+		
+		Boolean res = false;
+
+		String sql = "select * from AdminUnitType where AdminUnitTypeID=?";
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitTypeID);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				res = true;
+			}
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(preparedStatement);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+
+		
+		return res;
+	}
+
 
 }
