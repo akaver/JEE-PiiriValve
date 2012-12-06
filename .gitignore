@@ -1,4 +1,6 @@
 /build
+/dist
+/WebContent/WEB-INF/classes
 .DS_Store
 *.lock
 *.DS_Store
