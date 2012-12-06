@@ -54,11 +54,20 @@ public class AdminUnitTypeVM {
 		return adminUnitTypeMasterListWithZero;
 	}
 
+	/*
+	 * return list with one added record with ID=0 and name="----"
+	 * its used in dropdwon to indicate "no selection"
+	 */
 	public void setAdminUnitTypeMasterListWithZero(
 			List<AdminUnitType> adminUnitTypeMasterListWithZero) {
+		// create new AdminUnitType
 		AdminUnitType withZero = new AdminUnitType();
+		// set id to 0
 		withZero.setAdminUnitTypeID(0);
+		// and name to "---"
 		withZero.setName("---");
+		// append it to list
+		// it goes to last place in list, should go into first!
 		adminUnitTypeMasterListWithZero.add(withZero);
 		this.adminUnitTypeMasterListWithZero = adminUnitTypeMasterListWithZero;
 	}

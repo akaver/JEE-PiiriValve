@@ -7,10 +7,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Admin Unit Type Editor</title>
 <style>
-	table.borderedTable { border-collapse: collapse; }
-	.allBorders { border: 1px solid #CCCCCC; }
-	.withoutRight {border-left: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-bottom: 1px solid #CCCCCC;}
-	.withoutLeft {border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-bottom: 1px solid #CCCCCC;}
+table.borderedTable {
+	border-collapse: collapse;
+}
+
+.allBorders {
+	border: 1px solid #CCCCCC;
+}
+
+.withoutRight {
+	border-left: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+.withoutLeft {
+	border-right: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+}
 </style>
 </head>
 <body>
@@ -43,7 +58,8 @@
 									<c:forEach var="entry"
 										items="${formData.adminUnitTypeMasterListWithZero}">
 										<c:set var="selected" value="" />
-										<c:if test="${entry.adminUnitTypeID == formData.adminUnitTypeMaster.adminUnitTypeID}">
+										<c:if
+											test="${entry.adminUnitTypeID == formData.adminUnitTypeMaster.adminUnitTypeID}">
 											<c:set var="selected" value="selected=\"selected\"" />
 										</c:if>
 										<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
@@ -51,21 +67,21 @@
 							</select></td>
 						</tr>
 					</table></td>
-				<td style="position:relative"><table width="100%" cellspacing="0" class="borderedTable"
-						cellpadding="4" style="position:absolute; top:0px; width:100%;">
+				<td style="position: relative"><table width="100%"
+						cellspacing="0" class="borderedTable" cellpadding="4"
+						style="position: absolute; top: 0px; width: 100%;">
 						<tr>
 							<td class="allBorders" colspan="2" bgcolor="#CCCCCC">Subordinates</td>
 						</tr>
-						<tr>
-							<td align="left" class="withoutRight">village1</td>
-							<td align="right" class="withoutLeft"><input name="RemoveButton_1" type="submit"
-								value="Remove"></td>
-						</tr>
-						<tr>
-							<td align="left" class="withoutRight">village2</td>
-							<td align="right" class="withoutLeft"><input name="RemoveButton_2" type="submit"
-								value="Remove"></td>
-						</tr>
+
+						<c:forEach var="entry"
+							items="${formData.adminUnitTypesSubordinateList}">
+							<tr>
+								<td align="left" class="withoutRight">${entry.name}</td>
+								<td align="right" class="withoutLeft"><input
+									name="RemoveButton_1" type="submit" value="Remove"></td>
+							</tr>
+						</c:forEach>
 						<tr>
 							<td class="allBorders" colspan="2" align="right"><input
 								name="AddSubordinateButton" type="submit" value="Add"></td>

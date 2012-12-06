@@ -5,16 +5,13 @@ import java.sql.*;
 import org.apache.commons.dbutils.DbUtils;
 
 public class AdminUnitTypeDAO extends DAO {
-	private Statement statement;
-	private PreparedStatement preparedStatement;
-	private ResultSet resultSet;
-
 	public List<AdminUnitType> getAll() {
 		List<AdminUnitType> res = null;
 
 		try {
-			statement = super.getConnection().createStatement();
-			resultSet = statement.executeQuery("select * from AdminUnitType");
+			Statement statement = super.getConnection().createStatement();
+			ResultSet resultSet = statement
+					.executeQuery("select * from AdminUnitType");
 
 			res = new ArrayList<AdminUnitType>();
 
@@ -22,11 +19,12 @@ public class AdminUnitTypeDAO extends DAO {
 				res.add(createAdminUnitTypeFromResultSet(resultSet));
 			}
 
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(statement);
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			DbUtils.closeQuietly(resultSet);
-			DbUtils.closeQuietly(statement);
 		}
 		return res;
 	}
@@ -34,49 +32,84 @@ public class AdminUnitTypeDAO extends DAO {
 	public AdminUnitType getByID(Integer adminUnitTypeID) {
 		AdminUnitType res = null;
 
+		System.out.println("adminUnitType getByID:" + adminUnitTypeID);
+
 		String sql = "select * from AdminUnitType where AdminUnitTypeID=?";
 		try {
-			preparedStatement = super.getConnection().prepareStatement(sql);
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
 			preparedStatement.setInt(1, adminUnitTypeID);
-			resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			res = createAdminUnitTypeFromResultSet(resultSet);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				res = createAdminUnitTypeFromResultSet(resultSet);
+			}
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(preparedStatement);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			DbUtils.closeQuietly(resultSet);
-			DbUtils.closeQuietly(statement);
 		}
 		return res;
 	}
-	
+
 	// find and return AdminUnitType's master - if any
-	public AdminUnitType getMasterByID(Integer adminUnitTypeID){
-		System.out.println("Finding master AdminUnitType for: "+adminUnitTypeID);
-		Integer masterID=null;
+	public AdminUnitType getMasterByID(Integer adminUnitTypeID) {
+		System.out.println("Finding master AdminUnitType for: "
+				+ adminUnitTypeID);
+		Integer masterID = null;
 
 		// find the subordinate record, which contains its masters id
 		String sql = "select * from AdminUnitTypeSubordination where SubordinateAdminUnitTypeID=?";
 		try {
-			preparedStatement = super.getConnection().prepareStatement(sql);
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
 			preparedStatement.setInt(1, adminUnitTypeID);
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()){
-				masterID= resultSet.getInt("AdminUnitTypeID");
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				masterID = resultSet.getInt("AdminUnitTypeID");
 			}
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(preparedStatement);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			DbUtils.closeQuietly(resultSet);
-			DbUtils.closeQuietly(statement);
 		}
-		
-		if (masterID!=null){
-			//get the adminunittype record based on subtybe masters id
+
+		if (masterID != null) {
+			// get the adminunittype record based on subtybe masters id
 			return getByID(masterID);
 		}
 
 		return null;
+	}
+
+	public List<AdminUnitType> getSubordinates(Integer adminUnitTypeID) {
+		System.out.println("Finding subordinates for adminUnitType with ID:"
+				+ adminUnitTypeID);
+		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
+
+		// get the list of subordinate ID's
+		String sql = "select * from AdminUnitTypeSubordination where AdminUnitTypeID=?";
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitTypeID);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			// find the record from AdminUnitType and insert into result
+			while (resultSet.next()) {
+				Integer subid = resultSet.getInt("SubordinateAdminUnitTypeID");
+				System.out.println("Fetching subordinate with ID:" + subid);
+				res.add(getByID(subid));
+			}
+
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(preparedStatement);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+
+		return res;
 	}
 
 	private AdminUnitType createAdminUnitTypeFromResultSet(ResultSet rs)
