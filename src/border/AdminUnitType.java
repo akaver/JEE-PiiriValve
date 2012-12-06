@@ -10,7 +10,17 @@ import viewModel.*;
 import dao.*;
 
 /**
- * Servlet implementation class AdminUnitType
+ * Servlet implementation, for entity AdminUnitType
+ * 
+ * thera are several ways to get here:
+ * 1 - through get with some ID for editing (check id for existance?)
+ * 2 - through get for new type
+ * 3 - post (after get), wiht some changed data (removed or added subordinates) - do not save to database yet - so after post everything should be saved in session
+ * 4 - post (after get), final submit button - save everything to base and go back to originating page (which is saved where?)
+ * 
+ * so either there is session, or there isnt
+ * cant i immediately, when i see nosession, create it, stuff everything into it and be done?
+ * from that point forward, ony deal with session. me gusta.
  */
 public class AdminUnitType extends HttpServlet {
 	private static final long serialVersionUID = 1L;
