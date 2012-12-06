@@ -7,6 +7,7 @@ The on/off features have to be turned "on" in Eclipse preferences: Java > Code S
  */
 package dao;
 
+import java.io.File;
 import java.sql.*;
 
 import org.apache.commons.dbutils.DbUtils;
@@ -15,6 +16,23 @@ public class DAO {
 	private Connection connection;
 
 	public DAO() {
+		try{
+			 
+			File lockfile = new File("/usr/share/tomcat7/i377/Team02d/db2.lck");
+ 
+    		if(lockfile.delete()){
+    			System.out.println(lockfile.getName() + " is deleted!");
+    		}else{
+    			System.out.println("Delete operation is failed.");
+    		}
+ 
+    	}catch(Exception e){
+ 
+    		e.printStackTrace();
+ 
+    	}		
+		
+		
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
 		} catch (ClassNotFoundException e) {
