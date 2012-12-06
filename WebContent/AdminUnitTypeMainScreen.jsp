@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Admin Unit Type Editor</title>
-<link rel="stylesheet" href="/JEE-PiiriValve/style.css" type="text/css">
+<link rel="stylesheet" href="./style.css" type="text/css">
 </head>
 <body>
 	<form method="post">
