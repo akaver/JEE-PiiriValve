@@ -22,7 +22,7 @@ public class DAO {
 		}
 
 		try {
-			String db = "${user.home}/i377/Team02d/db;shutdown=true";
+			String db = "${user.home}/i377/Team02d/db2;shutdown=true";
 			connection = DriverManager.getConnection("jdbc:hsqldb:" + db, "sa",
 					"");
 		} catch (Exception e) {
