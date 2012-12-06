@@ -6,22 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Admin Unit Type Editor</title>
-<style>
-table.borderedTable {
-	border-collapse: collapse;
-}
-table div {
-	float: left;    	
-}
-table div+div {
-	float: right; 
-   	overflow: hidden;
-}
-
-.allBorders {
-	border: 1px solid #CCCCCC;
-}
-</style>
+<link rel="stylesheet" href="/JEE-PiiriValve/style.css" type="text/css">
 </head>
 <body>
 	<form method="post">
