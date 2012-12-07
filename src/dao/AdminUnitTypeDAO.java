@@ -190,6 +190,10 @@ public class AdminUnitTypeDAO extends DAO {
 	}
 
 	public List<AdminUnitType> getPossibleSubordinates(Integer adminUnitTypeID) {
+		System.out.println("Possible subordinates for AdminUnitTypeID:"+adminUnitTypeID);
+		
+		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
+		
 		// return the list of possible subordinates for this adminUnit
 		// all units without any master set and excluding itself and itself's master
 		// pluss all the units which where removed from the list on the form
@@ -201,12 +205,31 @@ public class AdminUnitTypeDAO extends DAO {
 		// without current AdminUnitTypeID
 		// without master currently set
 		// and without record no 1 - the first semifixed unit - the state
-		String sql = "select AdminUnitType.AdminUnitTypeID from AdminUnitType LEFT JOIN AdminUnitTypeSubordination ON where "+
-				"AdminUnitType.AdminUnitTypeID<>1 and "+ //first record is state - it cannot be subordinate
-				"AdminUnitType.AdminUnitTypeID<>? and "+
+		String sql = "select AdminUnitType.AdminUnitTypeID as ID1 "+
+				"from AdminUnitType LEFT JOIN AdminUnitTypeSubordination ON AdminUnitType.AdminUnitTypeID=AdminUnitTypeSubordination.SubordinateAdminUnitTypeID "+
+				"where "+
+				"AdminUnitType.AdminUnitTypeID<>1 and "+ //id 1  is state - it cannot be subordinate
+				"AdminUnitType.AdminUnitTypeID<>? "+
+				"and "+ 
+				"ISNULL(AdminUnitTypeSubordination.AdminUnitTypeID,0)=0 "+
 				"";
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitTypeID);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				System.out.println("sub: "+resultSet.getInt("ID1"));
+				res.add(getByID(resultSet.getInt("ID1")));
+			}
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(preparedStatement);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
 		
-		return null;
+		return res;
 	}
 
 }

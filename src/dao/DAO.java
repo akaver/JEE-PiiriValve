@@ -190,8 +190,8 @@ public class DAO {
 				"('2', '3', 'maakond->maakonna linn', " + std + ")," +
 				"('2', '4', 'maakond->vald', " + std + ")," +
 				"('4', '5', 'vald->valla linn', " + std + ")," + 
-				"('4', '6', 'vald->alev', " + std + ")," + 
-				"('4', '7', 'vald->alevik', " + std + ")," +
+//				"('4', '6', 'vald->alev', " + std + ")," + 
+//				"('4', '7', 'vald->alevik', " + std + ")," +
 				"('4', '8', 'vald->küla', " + std + ")" +
 // @formatter:on
 				"");

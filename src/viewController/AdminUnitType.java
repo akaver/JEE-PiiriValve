@@ -139,6 +139,12 @@ public class AdminUnitType extends HttpServlet {
 			formData.setAdminUnitTypesSubordinateList(new AdminUnitTypeDAO()
 					.getSubordinates(formData.getAdminUnitType()
 							.getAdminUnitTypeID()));
+
+			// load the list of possible new subordinates
+			formData.setAdminUnitTypesSubordinateListPossible(new AdminUnitTypeDAO()
+					.getPossibleSubordinates(formData.getAdminUnitType()
+							.getAdminUnitTypeID()));
+
 		} else {
 			// formData was there, so this is post. lets update the viewmodel
 			// with changes the user wants to make
@@ -167,7 +173,8 @@ public class AdminUnitType extends HttpServlet {
 						.getParameter("AdminUnitTypeMaster_adminUnitTypeID"))));
 			}
 
-			// now the tricky part - scan through several possible submit buttons
+			// now the tricky part - scan through several possible submit
+			// buttons
 			// which button was clicked?
 			Enumeration<String> paramNames = request.getParameterNames();
 			while (paramNames.hasMoreElements()) {
@@ -186,31 +193,30 @@ public class AdminUnitType extends HttpServlet {
 					List<dao.AdminUnitType> adminUnitTypesSubordinateList = formData
 							.getAdminUnitTypesSubordinateList();
 					// remove the item
-					adminUnitTypesSubordinateList.remove((int) removeSubLineNo.intValue());
+					adminUnitTypesSubordinateList.remove((int) removeSubLineNo
+							.intValue());
 					// put the list back
 					formData.setAdminUnitTypesSubordinateList(adminUnitTypesSubordinateList);
 				}
-				
+
 				// add new subordinate
-				if (paramName.equals("AddSubordinateButton")){
+				if (paramName.equals("AddSubordinateButton")) {
 					System.out.println("Adding new subordinate");
-					
+
 				}
 
 				// global save and exit
-				if (paramName.equals("SubmitButton")){
+				if (paramName.equals("SubmitButton")) {
 					System.out.println("Submit, save and exit");
 
 				}
-				
+
 				// global cancel and exit
-				if (paramName.equals("CancelButton")){
+				if (paramName.equals("CancelButton")) {
 					System.out.println("Cancel, nosave and exit");
 
 				}
-				
-				
-				
+
 			}
 
 		}

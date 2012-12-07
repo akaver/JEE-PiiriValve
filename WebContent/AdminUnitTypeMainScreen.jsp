@@ -51,7 +51,7 @@
 						cellspacing="0" class="borderedTable" cellpadding="4"
 						style="position: absolute; top: 0px; width: 100%;">
 						<tr>
-							<td class="allBorders" colspan="2" bgcolor="#CCCCCC">Subordinates</td>
+							<td class="allBorders" bgcolor="#CCCCCC">Subordinates</td>
 						</tr>
 
 						<c:set var="counter" value="0" />
@@ -69,8 +69,19 @@
 							<c:set var="counter" value="${counter+1}" />
 						</c:forEach>
 						<tr>
-							<td class="allBorders" colspan="2" align="right"><input
-								name="AddSubordinateButton" type="submit" value="Add"></td>
+							<td class="allBorders">
+								<div>
+									<select name="AdminUnitType_nNewSubordinateID">
+										<c:forEach var="entry"
+											items="${formData.adminUnitTypesSubordinateListPossible}">
+											<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
+										</c:forEach>
+									</select>
+								</div>
+								<div>
+									<input name="AddSubordinateButton" type="submit" value="Add">
+								</div>
+							</td>
 						</tr>
 					</table></td>
 			</tr>
