@@ -1,4 +1,4 @@
-package border;
+package viewController;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -6,16 +6,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.*;
+
 /**
- * Servlet implementation class BorderGuard
+ * Servlet implementation class DBInit
  */
-public class BorderGuard extends HttpServlet {
+public class DBInit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BorderGuard() {
+    public DBInit() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -24,8 +26,15 @@ public class BorderGuard extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Lets draw the main entry screen
-		ShowMainScreen(request,response);
+		response.getWriter().println("DB Init...");
+		
+		DAO dao = new DAO();
+		
+		response.getWriter().println("Droping and creating tables!");
+		dao.createTables();
+		dao.insertDummyData();
+			
+		response.getWriter().println("DB Init done!!!");
 	}
 
 	/**
@@ -35,7 +44,4 @@ public class BorderGuard extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 
-	private void ShowMainScreen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("mainScreen.jsp").forward(request, response);
-	}
 }
