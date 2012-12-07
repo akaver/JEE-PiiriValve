@@ -190,39 +190,41 @@ public class AdminUnitTypeDAO extends DAO {
 	}
 
 	public List<AdminUnitType> getPossibleSubordinates(Integer adminUnitTypeID) {
-		System.out.println("Possible subordinates for AdminUnitTypeID:"+adminUnitTypeID);
-		
+		System.out.println("Possible subordinates for AdminUnitTypeID:"
+				+ adminUnitTypeID);
+
 		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
-		
-		if (adminUnitTypeID==null){
+
+		if (adminUnitTypeID == null) {
 			adminUnitTypeID = 0;
 		}
 		// return the list of possible subordinates for this adminUnit
-		// all units without any master set and excluding itself and itself's master
+		// all units without any master set and excluding itself and itself's
+		// master
 		// pluss all the units which where removed from the list on the form
 		// (but not yet saved to db as removed)
 
 		// this is complicated......
-		
+
 		// list of all AdminUnitTypeID's
 		// without current AdminUnitTypeID
 		// without master currently set
 		// and without record no 1 - the first semifixed unit - the state
-		String sql = "select AdminUnitType.AdminUnitTypeID as ID1 "+
-				"from AdminUnitType LEFT JOIN AdminUnitTypeSubordination ON AdminUnitType.AdminUnitTypeID=AdminUnitTypeSubordination.SubordinateAdminUnitTypeID "+
-				"where "+
-				"AdminUnitType.AdminUnitTypeID<>1 and "+ //id 1  is state - it cannot be subordinate
-				"AdminUnitType.AdminUnitTypeID<>? "+
-				"and "+ 
-				"ISNULL(AdminUnitTypeSubordination.AdminUnitTypeID,0)=0 "+
-				"";
+		String sql = "select AdminUnitType.AdminUnitTypeID as ID1 "
+				+ "from AdminUnitType LEFT JOIN AdminUnitTypeSubordination ON AdminUnitType.AdminUnitTypeID=AdminUnitTypeSubordination.SubordinateAdminUnitTypeID "
+				+ "where "
+				+ "AdminUnitType.AdminUnitTypeID<>1 and "
+				+ // id 1 is state - it cannot be subordinate
+				"AdminUnitType.AdminUnitTypeID<>? " + "and "
+				+ "ISNULL(AdminUnitTypeSubordination.AdminUnitTypeID,0)=0 "
+				+ "";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
 			preparedStatement.setInt(1, adminUnitTypeID);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				System.out.println("sub: "+resultSet.getInt("ID1"));
+				System.out.println("sub: " + resultSet.getInt("ID1"));
 				res.add(getByID(resultSet.getInt("ID1")));
 			}
 			DbUtils.closeQuietly(resultSet);
@@ -231,7 +233,58 @@ public class AdminUnitTypeDAO extends DAO {
 			throw new RuntimeException(e);
 		} finally {
 		}
-		
+
+		return res;
+	}
+
+	public Integer save(dao.AdminUnitType adminUnitType) {
+		System.out.println("Saving AdminUnitType:" + adminUnitType);
+		Integer res = null;
+		String sql = "";
+		if (adminUnitType.getAdminUnitTypeID() == null) {
+			// this is new record
+			sql = "insert into AdminUnitType (Code, Name, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) "
+					+ "VALUES (?,?,?,'1900-01-01', '2999-12-31', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
+		} else {
+			// update existing record
+			sql = "update AdminUnitType set "
+					+ "Code=?, Name=?, Comment=?, ChangedBy='Admin', ChangedDate=NOW() "
+					+ "where AdminUnitTypeID=?";
+		}
+
+		System.out.println("Saving AdminUnitTyp sql:" + sql);
+
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setString(1, adminUnitType.getCode());
+			preparedStatement.setString(2, adminUnitType.getName());
+			preparedStatement.setString(3, adminUnitType.getComment());
+			if (adminUnitType.getAdminUnitTypeID() != null) {
+				preparedStatement.setInt(4, adminUnitType.getAdminUnitTypeID());
+			}
+			preparedStatement.executeUpdate();
+
+			if (adminUnitType.getAdminUnitTypeID() == null) {
+				//this is the way to get the identity of last insert...
+				PreparedStatement psIdentity = super.getConnection()
+						.prepareStatement("CALL IDENTITY()");
+				ResultSet result = psIdentity.executeQuery();
+				result.next();
+				res = result.getInt(1);
+				DbUtils.closeQuietly(result);
+				DbUtils.closeQuietly(psIdentity);
+				
+			} else {
+				res = adminUnitType.getAdminUnitTypeID();
+			}
+
+			DbUtils.closeQuietly(preparedStatement);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+
 		return res;
 	}
 

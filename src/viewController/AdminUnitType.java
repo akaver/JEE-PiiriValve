@@ -256,16 +256,21 @@ public class AdminUnitType extends HttpServlet {
 
 				}
 
-				// global save and exit
-				if (paramName.equals("SubmitButton")) {
-					System.out.println("Submit, save and exit");
-
+				// global save and exit, no validation errors
+				if (paramName.equals("SubmitButton") && errors.isEmpty()) {
+					System.out.println("Submit, no errors, save and exit");
+					// we have to update two tables - AdminUnitType and AdminUnitTypeSubordination
+					AdminUnitTypeDAO adminUnitTypeDAO = new AdminUnitTypeDAO();
+					Integer adminUnitTypeID = adminUnitTypeDAO.save(formData.getAdminUnitType());
+					System.out.println("Updated or new ID is:"+adminUnitTypeID);
+					//where shall i exit to?
 				}
 
 				// global cancel and exit
 				if (paramName.equals("CancelButton")) {
 					System.out.println("Cancel, nosave and exit");
 
+					//where shall i exit to?
 				}
 
 			}
@@ -284,7 +289,7 @@ public class AdminUnitType extends HttpServlet {
 	private List<String> getValidationErrors(HttpServletRequest request) {
 		List<String> res = new ArrayList<String>();
 		
-		
+		// you should also check for unique value 
 		if ("".equals(request.getParameter("AdminUnitTypeCode"))) {
 			res.add("Enter code!");
 		}
