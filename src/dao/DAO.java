@@ -18,7 +18,7 @@ public class DAO {
 	public DAO() {
 		try{
 			 
-			File lockfile = new File("/usr/share/tomcat7/i377/Team02d/db2.lck");
+			File lockfile = new File("/usr/share/tomcat7/i377/Team02d/db.lck");
  
     		if(lockfile.delete()){
     			System.out.println(lockfile.getName() + " is deleted!");
