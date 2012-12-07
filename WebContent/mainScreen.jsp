@@ -13,6 +13,7 @@
 		Choose your action:<br>
 		<br>
 		<a href="DBInit">Recreate database and load initial data</a><br>
+		<a href="DBInit?deletelck=yes">Recreate database and load initial data (kill lock)</a><br>
 		<br>
 		<a href="AdminUnitType?AdminUnitTypeID=4">Administrative unit type redactor</a><br>
 		<a href="AdminUnit?AdminUnitID=1">Administrative unit redactor</a><br>

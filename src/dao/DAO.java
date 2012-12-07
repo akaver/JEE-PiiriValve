@@ -39,7 +39,7 @@ public class DAO {
 		}
 
 		try {
-			String db = "${user.home}/i377/Team02d/db2;shutdown=true";
+			String db = "${user.home}/i377/Team02d/db;shutdown=true";
 			connection = DriverManager.getConnection("jdbc:hsqldb:" + db, "sa",
 					"");
 		} catch (Exception e) {
@@ -56,7 +56,7 @@ public class DAO {
 				if (lockfile.delete()) {
 					System.out.println(lockfile.getName() + " is deleted!");
 				} else {
-					System.out.println("Delete operation is failed.");
+					System.out.println("Lock file delete failed:"+lockfile.getAbsolutePath());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -70,7 +70,7 @@ public class DAO {
 		}
 
 		try {
-			String db = "${user.home}/i377/Team02d/db2;shutdown=true";
+			String db = "${user.home}/i377/Team02d/db;shutdown=true";
 			connection = DriverManager.getConnection("jdbc:hsqldb:" + db, "sa",
 					"");
 		} catch (Exception e) {
