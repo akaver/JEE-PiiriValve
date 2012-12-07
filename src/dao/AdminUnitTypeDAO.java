@@ -194,6 +194,9 @@ public class AdminUnitTypeDAO extends DAO {
 		
 		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
 		
+		if (adminUnitTypeID==null){
+			adminUnitTypeID = 0;
+		}
 		// return the list of possible subordinates for this adminUnit
 		// all units without any master set and excluding itself and itself's master
 		// pluss all the units which where removed from the list on the form

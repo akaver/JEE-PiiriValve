@@ -1,6 +1,7 @@
 package viewController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class AdminUnitType extends HttpServlet {
 			formData.setAdminUnitTypesSubordinateListPossible(new AdminUnitTypeDAO()
 					.getPossibleSubordinates(formData.getAdminUnitType()
 							.getAdminUnitTypeID()));
-			
+
 		} else {
 			// formData was there, so this is post. lets update the viewmodel
 			// with changes the user wants to make
@@ -155,24 +156,41 @@ public class AdminUnitType extends HttpServlet {
 					request.getParameter("AdminUnitTypeName"));
 			formData.getAdminUnitType().setComment(
 					request.getParameter("AdminUnitTypeComment"));
-
+			
+			
+			// do some simple validation - so at least code and name are set (and should be unique)
+			List<String> errors = getValidationErrors(request);
+			if (!errors.isEmpty()) {
+				session.setAttribute("errors", errors);
+			} else {
+				session.removeAttribute("errors");
+			}
+			
+			
 			// AdminUnitTypeMaster (0-"---": no master)
 			System.out
 					.println("AdminUnitTypeMaster_adminUnitTypeID:"
 							+ request
 									.getParameter("AdminUnitTypeMaster_adminUnitTypeID"));
 			// was AdminUnitTypeMaster dropdown changed?
-			if (!request.getParameter("AdminUnitTypeMaster_adminUnitTypeID")
-					.equals(formData.getAdminUnitTypeMaster()
-							.getAdminUnitTypeID().toString())) {
+			try {
+				if (!request
+						.getParameter("AdminUnitTypeMaster_adminUnitTypeID")
+						.equals(formData.getAdminUnitTypeMaster()
+								.getAdminUnitTypeID().toString())) {
+					System.out
+							.println("Changing AdminUnitTypeMaster_adminUnitTypeID");
+					// change viewmodels AdminUnitTypeMaster, find new one from
+					// dao
+					// based on new id
+					formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getMasterByIDWithZero(Integer.parseInt(request
+							.getParameter("AdminUnitTypeMaster_adminUnitTypeID"))));
+				}
+			} catch (Exception e) {
 				System.out
-						.println("Changing AdminUnitTypeMaster_adminUnitTypeID");
-				// change viewmodels AdminUnitTypeMaster, find new one from dao
-				// based on new id
-				formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getMasterByIDWithZero(Integer.parseInt(request
-						.getParameter("AdminUnitTypeMaster_adminUnitTypeID"))));
-			}
+				.println("Exceptoin:"+e);
 
+			}
 			// now the tricky part - scan through several possible submit
 			// buttons
 			// which button was clicked?
@@ -219,6 +237,9 @@ public class AdminUnitType extends HttpServlet {
 					List<dao.AdminUnitType> adminUnitTypesSubordinateList = formData
 							.getAdminUnitTypesSubordinateList();
 					// add the item
+					if (adminUnitTypesSubordinateList==null){
+						adminUnitTypesSubordinateList = new ArrayList<dao.AdminUnitType>();
+					}
 					adminUnitTypesSubordinateList.add(formData
 							.getAdminUnitTypesSubordinateListPossible().get(
 									listNo));
@@ -229,7 +250,8 @@ public class AdminUnitType extends HttpServlet {
 
 					List<dao.AdminUnitType> adminUnitTypesSubordinateListPossible = formData
 							.getAdminUnitTypesSubordinateListPossible();
-					adminUnitTypesSubordinateListPossible.remove(listNo.intValue());
+					adminUnitTypesSubordinateListPossible.remove(listNo
+							.intValue());
 					formData.setAdminUnitTypesSubordinateListPossible(adminUnitTypesSubordinateListPossible);
 
 				}
@@ -258,4 +280,19 @@ public class AdminUnitType extends HttpServlet {
 				request, response);
 	}
 
+	
+	private List<String> getValidationErrors(HttpServletRequest request) {
+		List<String> res = new ArrayList<String>();
+		
+		
+		if ("".equals(request.getParameter("AdminUnitTypeCode"))) {
+			res.add("Enter code!");
+		}
+		if ("".equals(request.getParameter("AdminUnitTypeName"))) {
+			res.add("Enter name!");
+		}
+		
+		
+		return res;
+	}
 }

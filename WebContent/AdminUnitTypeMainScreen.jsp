@@ -16,6 +16,18 @@
 			</tr>
 			<tr>
 				<td width="50%"><table width="100%">
+						<c:if test="${not empty errors}">
+							<tr>
+								<td colspan="2">
+									<div style="color: red">
+										<c:forEach var="error" items="${errors}">
+											<c:out value="${error}"></c:out>
+											<br />
+										</c:forEach>
+									</div>
+								</td>
+							</tr>
+						</c:if>
 						<tr>
 							<td width="100px">Code</td>
 							<td><input name="AdminUnitTypeCode" type="text" size="10"
@@ -31,22 +43,28 @@
 							<td><textarea name="AdminUnitTypeComment" cols="35"
 									rows="10">${formData.adminUnitType.comment}</textarea></td>
 						</tr>
-						<tr>
-							<td>Subordinate of</td>
-							<td><select name="AdminUnitTypeMaster_adminUnitTypeID">
-									<c:forEach var="entry"
-										items="${formData.adminUnitTypeMasterListWithZero}">
-										<c:set var="selected" value="" />
-										<c:if
-											test="${entry.adminUnitTypeID == formData.adminUnitTypeMaster.adminUnitTypeID}">
-											<c:set var="selected" value="selected=\"selected\"" />
-										</c:if>
-										<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
-									</c:forEach>
-							</select></td>
-						</tr>
+						<c:if test="${formData.adminUnitType.adminUnitTypeID!=1}">
+							<tr>
+								<td>Subordinate of</td>
+								<td><select name="AdminUnitTypeMaster_adminUnitTypeID">
+										<c:forEach var="entry"
+											items="${formData.adminUnitTypeMasterListWithZero}">
+											<c:set var="selected" value="" />
+											<c:if
+												test="${entry.adminUnitTypeID == formData.adminUnitTypeMaster.adminUnitTypeID}">
+												<c:set var="selected" value="selected=\"selected\"" />
+											</c:if>
+											<c:if
+												test="${entry.adminUnitTypeID!=formData.adminUnitType.adminUnitTypeID}">
+												<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
+											</c:if>
+										</c:forEach>
+								</select></td>
+							</tr>
+						</c:if>
 					</table></td>
-				<td style="position: relative"><table width="100%" class="borderedTable">
+				<td style="position: relative"><table width="100%"
+						class="borderedTable">
 						<tr>
 							<td class="allBorders" bgcolor="#CCCCCC">Subordinates</td>
 						</tr>
