@@ -1,5 +1,9 @@
-table.borderedTable {
+table {
 	border-collapse: collapse;
+}
+
+table td {
+	padding: 3px;
 }
 
 table div {
@@ -11,10 +15,20 @@ table div+div {
 	overflow: hidden;
 }
 
+table.borderedTable {
+	position: absolute;
+	top: 0px;
+	width: 100%;	
+}
+
 .allBorders {
 	border: 1px solid #CCCCCC;
 }
 
 body {
+	font-size: 14px;
+}
+
+body, input, select, textarea {
 	font-family: "Comic Sans MS", cursive, sans-serif;
 }
