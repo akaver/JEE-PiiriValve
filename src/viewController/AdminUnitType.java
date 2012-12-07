@@ -192,6 +192,12 @@ public class AdminUnitType extends HttpServlet {
 					// get the list
 					List<dao.AdminUnitType> adminUnitTypesSubordinateList = formData
 							.getAdminUnitTypesSubordinateList();
+					// get the item about to be removed, and insert it into
+					// possible sublist
+					formData.getAdminUnitTypesSubordinateListPossible().add(
+							adminUnitTypesSubordinateList
+									.get((int) removeSubLineNo.intValue()));
+
 					// remove the item
 					adminUnitTypesSubordinateList.remove((int) removeSubLineNo
 							.intValue());
@@ -202,6 +208,29 @@ public class AdminUnitType extends HttpServlet {
 				// add new subordinate
 				if (paramName.equals("AddSubordinateButton")) {
 					System.out.println("Adding new subordinate");
+					// get the id from the post
+					Integer listNo = Integer.parseInt(request
+							.getParameter("AdminUnitType_NewSubordinateNo"));
+					System.out
+							.println("Adding new subordinate with list sequence no:"
+									+ listNo);
+
+					// get the list of exsisting subordinates
+					List<dao.AdminUnitType> adminUnitTypesSubordinateList = formData
+							.getAdminUnitTypesSubordinateList();
+					// add the item
+					adminUnitTypesSubordinateList.add(formData
+							.getAdminUnitTypesSubordinateListPossible().get(
+									listNo));
+					// put the list back
+					formData.setAdminUnitTypesSubordinateList(adminUnitTypesSubordinateList);
+
+					// now remove the item from list of possible candidates
+
+					List<dao.AdminUnitType> adminUnitTypesSubordinateListPossible = formData
+							.getAdminUnitTypesSubordinateListPossible();
+					adminUnitTypesSubordinateListPossible.remove(listNo.intValue());
+					formData.setAdminUnitTypesSubordinateListPossible(adminUnitTypesSubordinateListPossible);
 
 				}
 

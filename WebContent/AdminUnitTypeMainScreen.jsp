@@ -71,10 +71,12 @@
 						<tr>
 							<td class="allBorders">
 								<div>
-									<select name="AdminUnitType_nNewSubordinateID">
+									<c:set var="counter" value="0" />
+									<select name="AdminUnitType_NewSubordinateNo">
 										<c:forEach var="entry"
 											items="${formData.adminUnitTypesSubordinateListPossible}">
-											<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
+											<option value="${counter}" ${selected}>${entry.name}</option>
+											<c:set var="counter" value="${counter+1}" />
 										</c:forEach>
 									</select>
 								</div>
