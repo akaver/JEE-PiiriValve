@@ -15,8 +15,7 @@
 				<td colspan="2"><h3>Admin Unit Type Editor</h3></td>
 			</tr>
 			<tr>
-				<td width="50%"><table width="100%" border="0" cellspacing="0"
-						cellpadding="4">
+				<td width="50%"><table width="100%">
 						<tr>
 							<td width="100px">Code</td>
 							<td><input name="AdminUnitTypeCode" type="text" size="10"
@@ -47,9 +46,7 @@
 							</select></td>
 						</tr>
 					</table></td>
-				<td style="position: relative"><table width="100%"
-						cellspacing="0" class="borderedTable" cellpadding="4"
-						style="position: absolute; top: 0px; width: 100%;">
+				<td style="position: relative"><table width="100%" class="borderedTable">
 						<tr>
 							<td class="allBorders" bgcolor="#CCCCCC">Subordinates</td>
 						</tr>
