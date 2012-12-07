@@ -144,7 +144,7 @@ public class AdminUnitType extends HttpServlet {
 			formData.setAdminUnitTypesSubordinateListPossible(new AdminUnitTypeDAO()
 					.getPossibleSubordinates(formData.getAdminUnitType()
 							.getAdminUnitTypeID()));
-
+			
 		} else {
 			// formData was there, so this is post. lets update the viewmodel
 			// with changes the user wants to make

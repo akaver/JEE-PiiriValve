@@ -68,23 +68,26 @@
 							</tr>
 							<c:set var="counter" value="${counter+1}" />
 						</c:forEach>
-						<tr>
-							<td class="allBorders">
-								<div>
-									<c:set var="counter" value="0" />
-									<select name="AdminUnitType_NewSubordinateNo">
-										<c:forEach var="entry"
-											items="${formData.adminUnitTypesSubordinateListPossible}">
-											<option value="${counter}" ${selected}>${entry.name}</option>
-											<c:set var="counter" value="${counter+1}" />
-										</c:forEach>
-									</select>
-								</div>
-								<div>
-									<input name="AddSubordinateButton" type="submit" value="Add">
-								</div>
-							</td>
-						</tr>
+						<c:if
+							test="${formData.adminUnitTypesSubordinateListPossible.size()!=0}">
+							<tr>
+								<td class="allBorders">
+									<div>
+										<c:set var="counter" value="0" />
+										<select name="AdminUnitType_NewSubordinateNo">
+											<c:forEach var="entry"
+												items="${formData.adminUnitTypesSubordinateListPossible}">
+												<option value="${counter}" ${selected}>${entry.name}</option>
+												<c:set var="counter" value="${counter+1}" />
+											</c:forEach>
+										</select>
+									</div>
+									<div>
+										<input name="AddSubordinateButton" type="submit" value="Add">
+									</div>
+								</td>
+							</tr>
+						</c:if>
 					</table></td>
 			</tr>
 			<tr>
