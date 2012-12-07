@@ -1,6 +1,9 @@
 package viewController;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +47,8 @@ public class AdminUnitType extends HttpServlet {
 
 		// get the session
 		HttpSession session = request.getSession();
-		// and delete this viewmodel from session, so we can start fresh on each get request
+		// and delete this viewmodel from session, so we can start fresh on each
+		// get request
 		// normally second requests should come through post
 		session.removeAttribute("formData");
 
@@ -62,7 +66,8 @@ public class AdminUnitType extends HttpServlet {
 
 	protected void ShowMainScreen(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// so, 2 ways to be here - there is session with our data (then it was post), 
+		// so, 2 ways to be here - there is session with our data (then it was
+		// post),
 		// or there isnt - then its get
 
 		// there are two ways to arrive here through get method
@@ -123,7 +128,7 @@ public class AdminUnitType extends HttpServlet {
 
 			// get the master for this AdminUnitType
 			formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO()
-					.getMasterByID(formData.getAdminUnitType()
+					.getMasterByIDWithZero(formData.getAdminUnitType()
 							.getAdminUnitTypeID()));
 
 			// load the full list of AdminUnitType
@@ -134,9 +139,82 @@ public class AdminUnitType extends HttpServlet {
 			formData.setAdminUnitTypesSubordinateList(new AdminUnitTypeDAO()
 					.getSubordinates(formData.getAdminUnitType()
 							.getAdminUnitTypeID()));
+		} else {
+			// formData was there, so this is post. lets update the viewmodel
+			// with changes the user wants to make
+			// trivial stuff: name,code,comment
+			formData.getAdminUnitType().setCode(
+					request.getParameter("AdminUnitTypeCode"));
+			formData.getAdminUnitType().setName(
+					request.getParameter("AdminUnitTypeName"));
+			formData.getAdminUnitType().setComment(
+					request.getParameter("AdminUnitTypeComment"));
+
+			// AdminUnitTypeMaster (0-"---": no master)
+			System.out
+					.println("AdminUnitTypeMaster_adminUnitTypeID:"
+							+ request
+									.getParameter("AdminUnitTypeMaster_adminUnitTypeID"));
+			// was AdminUnitTypeMaster dropdown changed?
+			if (!request.getParameter("AdminUnitTypeMaster_adminUnitTypeID")
+					.equals(formData.getAdminUnitTypeMaster()
+							.getAdminUnitTypeID().toString())) {
+				System.out
+						.println("Changing AdminUnitTypeMaster_adminUnitTypeID");
+				// change viewmodels AdminUnitTypeMaster, find new one from dao
+				// based on new id
+				formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getMasterByIDWithZero(Integer.parseInt(request
+						.getParameter("AdminUnitTypeMaster_adminUnitTypeID"))));
+			}
+
+			// now the tricky part - scan through several possible submit buttons
+			// which button was clicked?
+			Enumeration<String> paramNames = request.getParameterNames();
+			while (paramNames.hasMoreElements()) {
+				String paramName = paramNames.nextElement();
+
+				// table of subordinates for this adminUnitType
+				// every line has separate submit button, with item sequence no
+				// added to each button name.
+				if (paramName.startsWith("RemoveButton_")) {
+					// found the button from the list, get the id
+					Integer removeSubLineNo = Integer.parseInt(paramName
+							.substring(13));
+					System.out.println("removing from sub list item with id:"
+							+ removeSubLineNo);
+					// get the list
+					List<dao.AdminUnitType> adminUnitTypesSubordinateList = formData
+							.getAdminUnitTypesSubordinateList();
+					// remove the item
+					adminUnitTypesSubordinateList.remove((int) removeSubLineNo.intValue());
+					// put the list back
+					formData.setAdminUnitTypesSubordinateList(adminUnitTypesSubordinateList);
+				}
+				
+				// add new subordinate
+				if (paramName.equals("AddSubordinateButton")){
+					System.out.println("Adding new subordinate");
+					
+				}
+
+				// global save and exit
+				if (paramName.equals("SubmitButton")){
+					System.out.println("Submit, save and exit");
+
+				}
+				
+				// global cancel and exit
+				if (paramName.equals("CancelButton")){
+					System.out.println("Cancel, nosave and exit");
+
+				}
+				
+				
+				
+			}
+
 		}
 
-		
 		// save the viewmodel for jsp dispatcher into session
 		session.setAttribute("formData", formData);
 

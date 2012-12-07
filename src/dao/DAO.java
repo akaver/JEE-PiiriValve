@@ -16,22 +16,52 @@ public class DAO {
 	private Connection connection;
 
 	public DAO() {
-		try{
-			 
-			File lockfile = new File("/usr/share/tomcat7/i377/Team02d/db.lck");
- 
-    		if(lockfile.delete()){
-    			System.out.println(lockfile.getName() + " is deleted!");
-    		}else{
-    			System.out.println("Delete operation is failed.");
-    		}
- 
-    	}catch(Exception e){
- 
-    		e.printStackTrace();
- 
-    	}		
-		
+		/*
+		 * try{
+		 * 
+		 * File lockfile = new File("/usr/share/tomcat7/i377/Team02d/db.lck");
+		 * 
+		 * if(lockfile.delete()){ System.out.println(lockfile.getName() +
+		 * " is deleted!"); }else{
+		 * System.out.println("Delete operation is failed."); }
+		 * 
+		 * }catch(Exception e){
+		 * 
+		 * e.printStackTrace();
+		 * 
+		 * }
+		 */
+
+		try {
+			Class.forName("org.hsqldb.jdbcDriver");
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+
+		try {
+			String db = "${user.home}/i377/Team02d/db2;shutdown=true";
+			connection = DriverManager.getConnection("jdbc:hsqldb:" + db, "sa",
+					"");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public DAO(boolean deleteLockFile) {
+
+		if (deleteLockFile) {
+			try {
+				File lockfile = new File(
+						"/usr/share/tomcat7/i377/Team02d/db.lck");
+				if (lockfile.delete()) {
+					System.out.println(lockfile.getName() + " is deleted!");
+				} else {
+					System.out.println("Delete operation is failed.");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
@@ -121,7 +151,8 @@ public class DAO {
 		executeUpdateSQL("insert into AdminUnitType "
 				+ "(Code, Name, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "
 				+ //
-				"('R', 'Riik', '', " + std + ")," + //
+				"('R', 'Riik', '', "
+				+ std + ")," + //
 				"('M', 'Maakond', '', " + std + ")," + //
 				"('ML', 'Maakonna Linn', '', " + std + ")," + //
 				"('V', 'Vald', '', " + std + ")," + //

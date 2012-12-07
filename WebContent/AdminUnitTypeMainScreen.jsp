@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="./style.css" type="text/css">
 </head>
 <body>
-	<form method="post">
+	<form method="post" action="" name="AdminUnitTypeForm">
 		<table width="800" border="0" cellspacing="0" cellpadding="2">
 			<tr>
 				<td colspan="2"><h3>Admin Unit Type Editor</h3></td>
@@ -19,12 +19,12 @@
 						cellpadding="4">
 						<tr>
 							<td width="100px">Code</td>
-							<td><input name="AdminUnitCode" type="text" size="10"
+							<td><input name="AdminUnitTypeCode" type="text" size="10"
 								value="${formData.adminUnitType.code}"></td>
 						</tr>
 						<tr>
 							<td>Name</td>
-							<td><input name="AdminUnitName" type="text" size="30"
+							<td><input name="AdminUnitTypeName" type="text" size="30"
 								value="${formData.adminUnitType.name}"></td>
 						</tr>
 						<tr>
@@ -34,7 +34,7 @@
 						</tr>
 						<tr>
 							<td>Subordinate of</td>
-							<td><select name="MasterAdminUnitType">
+							<td><select name="AdminUnitTypeMaster_adminUnitTypeID">
 									<c:forEach var="entry"
 										items="${formData.adminUnitTypeMasterListWithZero}">
 										<c:set var="selected" value="" />
@@ -54,12 +54,19 @@
 							<td class="allBorders" colspan="2" bgcolor="#CCCCCC">Subordinates</td>
 						</tr>
 
+						<c:set var="counter" value="0" />
 						<c:forEach var="entry"
 							items="${formData.adminUnitTypesSubordinateList}">
-							<tr><td class="allBorders">
-								<div>${entry.name}</div>
-								<div><input name="RemoveButton_1" type="submit" value="Remove"></div>
-							</td></tr>
+							<tr>
+								<td class="allBorders">
+									<div>${entry.name}</div>
+									<div>
+										<input name="RemoveButton_${counter}" type="submit"
+											value="Remove">
+									</div>
+								</td>
+							</tr>
+							<c:set var="counter" value="${counter+1}" />
 						</c:forEach>
 						<tr>
 							<td class="allBorders" colspan="2" align="right"><input

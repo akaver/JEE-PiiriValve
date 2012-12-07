@@ -15,6 +15,11 @@ public class AdminUnitTypeVM {
 	
 	// list of adminunitypes which are subordinates to adminUnitType
 	private List<AdminUnitType> adminUnitTypesSubordinateList;
+	
+	// list of adminunitypes which are possible new subordinates to adminUnitType
+	private List<AdminUnitType> adminUnitTypesSubordinateListPossible;
+	
+	
 
 	public AdminUnitType getAdminUnitType() {
 		return adminUnitType;
@@ -70,6 +75,15 @@ public class AdminUnitTypeVM {
 		// it goes to last place in list, should go into first!
 		adminUnitTypeMasterListWithZero.add(withZero);
 		this.adminUnitTypeMasterListWithZero = adminUnitTypeMasterListWithZero;
+	}
+
+	public List<AdminUnitType> getAdminUnitTypesSubordinateListPossible() {
+		return adminUnitTypesSubordinateListPossible;
+	}
+
+	public void setAdminUnitTypesSubordinateListPossible(
+			List<AdminUnitType> adminUnitTypesSubordinateListPossible) {
+		this.adminUnitTypesSubordinateListPossible = adminUnitTypesSubordinateListPossible;
 	}
 
 

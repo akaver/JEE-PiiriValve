@@ -56,11 +56,11 @@ public class AdminUnitTypeDAO extends DAO {
 	public AdminUnitType getMasterByID(Integer adminUnitTypeID) {
 		System.out.println("Finding master AdminUnitType for: "
 				+ adminUnitTypeID);
-		
-		if (adminUnitTypeID==null){
+
+		if (adminUnitTypeID == null) {
 			return null;
 		}
-		
+
 		Integer masterID = null;
 
 		// find the subordinate record, which contains its masters id
@@ -88,11 +88,31 @@ public class AdminUnitTypeDAO extends DAO {
 		return null;
 	}
 
+	public AdminUnitType getMasterByIDWithZero(Integer adminUnitTypeID) {
+		System.out.println("Finding master AdminUnitType with zero for: "
+				+ adminUnitTypeID);
+
+		if (adminUnitTypeID == null) {
+			return null;
+		}
+
+		AdminUnitType res = getMasterByID(adminUnitTypeID);
+
+		if (res == null) {
+			res = new AdminUnitType();
+			res.setAdminUnitTypeID(0);
+			res.setName("---");
+		}
+
+		return res;
+
+	}
+
 	public List<AdminUnitType> getSubordinates(Integer adminUnitTypeID) {
 		System.out.println("Finding subordinates for adminUnitType with ID:"
 				+ adminUnitTypeID);
-		
-		if (adminUnitTypeID==null){
+
+		if (adminUnitTypeID == null) {
 			return null;
 		}
 		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
@@ -147,7 +167,7 @@ public class AdminUnitTypeDAO extends DAO {
 
 	public boolean isIDValid(Integer adminUnitTypeID) {
 		System.out.println("adminUnitType isIDValidD:" + adminUnitTypeID);
-		
+
 		Boolean res = false;
 
 		String sql = "select * from AdminUnitType where AdminUnitTypeID=?";
@@ -166,9 +186,27 @@ public class AdminUnitTypeDAO extends DAO {
 		} finally {
 		}
 
-		
 		return res;
 	}
 
+	public List<AdminUnitType> getPossibleSubordinates(Integer adminUnitTypeID) {
+		// return the list of possible subordinates for this adminUnit
+		// all units without any master set and excluding itself and itself's master
+		// pluss all the units which where removed from the list on the form
+		// (but not yet saved to db as removed)
+
+		// this is complicated......
+		
+		// list of all AdminUnitTypeID's
+		// without current AdminUnitTypeID
+		// without master currently set
+		// and without record no 1 - the first semifixed unit - the state
+		String sql = "select AdminUnitType.AdminUnitTypeID from AdminUnitType LEFT JOIN AdminUnitTypeSubordination ON where "+
+				"AdminUnitType.AdminUnitTypeID<>1 and "+ //first record is state - it cannot be subordinate
+				"AdminUnitType.AdminUnitTypeID<>? and "+
+				"";
+		
+		return null;
+	}
 
 }
