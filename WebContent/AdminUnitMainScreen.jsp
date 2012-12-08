@@ -46,7 +46,7 @@
 						<tr>
 							<td valign="top">Type</td>
 							<td>
-								<div>${formData.adminUnitType.comment}</div>
+								<div>${formData.adminUnitType.name}</div>
 								<div><input name="ChangeButton" type="submit" value="Change"></div>
 							</td>
 						</tr>

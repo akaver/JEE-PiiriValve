@@ -98,17 +98,20 @@ public class AdminUnit extends HttpServlet {
 			} else {
 				// get the entity from dao
 				formData.setAdminUnit(new AdminUnitDAO()
-					.getByID(adminUnitID));
+						.getByID(adminUnitID));
+				// get the type of this unit
+				formData.setAdminUnitType(new AdminUnitTypeDAO()
+						.getByID(formData.getAdminUnit().getAdminUnitTypeID()));
 			}
+			
+			formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll());
 
-			// get the master for this AdminUnitType
+			// get the master for this AdminUnit
 			formData.setAdminUnitMaster(new AdminUnitDAO()
 					.getMasterByIDWithZero(formData.getAdminUnit()
 					.getAdminUnitID()));
 
 			// load the full list of AdminUnit
-			// TODO - remove all the subordinates of itself, otherwise user can
-			// cause circular reference
 			formData.setAdminUnitMasterListWithZero(new AdminUnitDAO()
 				.getAllowedMastersByID(formData.getAdminUnit()
 					.getAdminUnitTypeID()), formData.getAdminUnitMaster());
