@@ -72,6 +72,8 @@ public class AdminUnitTypeDAO extends DAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				masterID = resultSet.getInt("AdminUnitTypeID");
+			} else {
+				System.out.println("Master not found!");
 			}
 			DbUtils.closeQuietly(resultSet);
 			DbUtils.closeQuietly(preparedStatement);
@@ -266,7 +268,7 @@ public class AdminUnitTypeDAO extends DAO {
 			preparedStatement.executeUpdate();
 
 			if (adminUnitType.getAdminUnitTypeID() == null) {
-				//this is the way to get the identity of last insert...
+				// this is the way to get the identity of last insert...
 				PreparedStatement psIdentity = super.getConnection()
 						.prepareStatement("CALL IDENTITY()");
 				ResultSet result = psIdentity.executeQuery();
@@ -274,7 +276,7 @@ public class AdminUnitTypeDAO extends DAO {
 				res = result.getInt(1);
 				DbUtils.closeQuietly(result);
 				DbUtils.closeQuietly(psIdentity);
-				
+
 			} else {
 				res = adminUnitType.getAdminUnitTypeID();
 			}
@@ -286,6 +288,44 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 
 		return res;
+	}
+
+	public void saveMaster(Integer adminUnitTypeID,
+			dao.AdminUnitType adminUnitTypeMaster) {
+		System.out.println("Saving master for adminUnitTypeID:"
+				+ adminUnitTypeID + " Master is:" + adminUnitTypeMaster);
+		// unit can only have one master!!
+		// so either it already has a record of it in db, or we shall insert new
+		// one
+		// try to change the existing record
+		String sql = "";
+		sql = "update AdminUnitTypeSubordination set "
+				+ "AdminUnitTypeID=?, SubordinateAdminUnitTypeID=?, ChangedBy='Admin', ChangedDate=NOW() "
+				+ "where SubordinateAdminUnitTypeID=?";
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitTypeMaster.getAdminUnitTypeID());
+			preparedStatement.setInt(2, adminUnitTypeID);
+			preparedStatement.setInt(3, adminUnitTypeID);
+			int rowsChanged = preparedStatement.executeUpdate();
+			System.out.println("Rows changed:" + rowsChanged);
+			if (rowsChanged == 0) {
+				// go for insert then
+				sql = "insert into AdminUnitTypeSubordination "
+						+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
+						+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
+				preparedStatement = super.getConnection().prepareStatement(sql);
+				preparedStatement.setInt(1, adminUnitTypeMaster.getAdminUnitTypeID());
+				preparedStatement.setInt(2, adminUnitTypeID);
+				rowsChanged = preparedStatement.executeUpdate();
+				System.out.println("Rows inserted:" + rowsChanged);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+
 	}
 
 }

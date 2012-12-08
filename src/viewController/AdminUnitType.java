@@ -156,17 +156,16 @@ public class AdminUnitType extends HttpServlet {
 					request.getParameter("AdminUnitTypeName"));
 			formData.getAdminUnitType().setComment(
 					request.getParameter("AdminUnitTypeComment"));
-			
-			
-			// do some simple validation - so at least code and name are set (and should be unique)
+
+			// do some simple validation - so at least code and name are set
+			// (and should be unique)
 			List<String> errors = getValidationErrors(request);
 			if (!errors.isEmpty()) {
 				session.setAttribute("errors", errors);
 			} else {
 				session.removeAttribute("errors");
 			}
-			
-			
+
 			// AdminUnitTypeMaster (0-"---": no master)
 			System.out
 					.println("AdminUnitTypeMaster_adminUnitTypeID:"
@@ -183,12 +182,11 @@ public class AdminUnitType extends HttpServlet {
 					// change viewmodels AdminUnitTypeMaster, find new one from
 					// dao
 					// based on new id
-					formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getMasterByIDWithZero(Integer.parseInt(request
+					formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
 							.getParameter("AdminUnitTypeMaster_adminUnitTypeID"))));
 				}
 			} catch (Exception e) {
-				System.out
-				.println("Exceptoin:"+e);
+				System.out.println("Exceptoin:" + e);
 
 			}
 			// now the tricky part - scan through several possible submit
@@ -237,7 +235,7 @@ public class AdminUnitType extends HttpServlet {
 					List<dao.AdminUnitType> adminUnitTypesSubordinateList = formData
 							.getAdminUnitTypesSubordinateList();
 					// add the item
-					if (adminUnitTypesSubordinateList==null){
+					if (adminUnitTypesSubordinateList == null) {
 						adminUnitTypesSubordinateList = new ArrayList<dao.AdminUnitType>();
 					}
 					adminUnitTypesSubordinateList.add(formData
@@ -259,18 +257,31 @@ public class AdminUnitType extends HttpServlet {
 				// global save and exit, no validation errors
 				if (paramName.equals("SubmitButton") && errors.isEmpty()) {
 					System.out.println("Submit, no errors, save and exit");
-					// we have to update two tables - AdminUnitType and AdminUnitTypeSubordination
+					// we have to update two tables - AdminUnitType and
+					// AdminUnitTypeSubordination
+
+					// save the primary AdminUnitType
 					AdminUnitTypeDAO adminUnitTypeDAO = new AdminUnitTypeDAO();
-					Integer adminUnitTypeID = adminUnitTypeDAO.save(formData.getAdminUnitType());
-					System.out.println("Updated or new ID is:"+adminUnitTypeID);
-					//where shall i exit to?
+					Integer adminUnitTypeID = adminUnitTypeDAO.save(formData
+							.getAdminUnitType());
+					System.out
+							.println("Updated or new ID for AdminUnitType is:"
+									+ adminUnitTypeID);
+
+					// update this units master
+					adminUnitTypeDAO.saveMaster(adminUnitTypeID,
+							formData.getAdminUnitTypeMaster());
+
+					// update this units subordinates
+
+					// where shall i exit to?
 				}
 
 				// global cancel and exit
 				if (paramName.equals("CancelButton")) {
 					System.out.println("Cancel, nosave and exit");
 
-					//where shall i exit to?
+					// where shall i exit to?
 				}
 
 			}
@@ -285,19 +296,17 @@ public class AdminUnitType extends HttpServlet {
 				request, response);
 	}
 
-	
 	private List<String> getValidationErrors(HttpServletRequest request) {
 		List<String> res = new ArrayList<String>();
-		
-		// you should also check for unique value 
+
+		// you should also check for unique value
 		if ("".equals(request.getParameter("AdminUnitTypeCode"))) {
 			res.add("Enter code!");
 		}
 		if ("".equals(request.getParameter("AdminUnitTypeName"))) {
 			res.add("Enter name!");
 		}
-		
-		
+
 		return res;
 	}
 }
