@@ -189,7 +189,7 @@ public class AdminUnitDAO extends DAO {
 	//for populating list of possible subordinates; needs to know the current 
 	//adminUnitType of adminUnit. must be read from session because it can
 	//be changed during session
-	public List<AdminUnit> getAllowedSuborindatesByID(Integer adminUnitTypeID) {
+	public List<AdminUnit> getAllowedSubordinatesByID(Integer adminUnitTypeID) {
 		System.out.println("Finding allowed subordinate AdminUnits for: "
 				+ adminUnitTypeID);
 

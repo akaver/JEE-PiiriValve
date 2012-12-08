@@ -85,7 +85,7 @@ public class AdminUnitVM {
 	 * its used in dropdwon to indicate "no selection"
 	 */
 	public void setAdminUnitMasterListWithZero(
-			List<AdminUnit> adminUnitMasterListWithZero) {
+			List<AdminUnit> adminUnitMasterListWithZero, AdminUnit foundMaster) {
 		// create new AdminUnitType
 		AdminUnit withZero = new AdminUnit();
 		// set id to 0
@@ -95,6 +95,16 @@ public class AdminUnitVM {
 		// append it to list
 		// it goes to last place in list, should go into first!
 		adminUnitMasterListWithZero.add(withZero);
+		boolean masterPresent = false;
+		for (AdminUnit au : adminUnitMasterListWithZero) {
+			if (au.getName().equals(foundMaster.getName())) {
+				masterPresent = true;
+				break;
+			}
+		}
+		
+		if(!masterPresent)
+			adminUnitMasterListWithZero.add(foundMaster);
 		this.adminUnitMasterListWithZero = adminUnitMasterListWithZero;
 	}
 
