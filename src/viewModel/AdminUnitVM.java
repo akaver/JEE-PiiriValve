@@ -21,8 +21,10 @@ public class AdminUnitVM {
 			
 	// list of adminunits which are subordinates to adminUnit
 	private List<AdminUnit> adminUnitsSubordinateList;	
-	// list of adminunis which are possible new subordinates to adminUnit
+	// list of adminunits which are possible new subordinates to adminUnit
 	private List<AdminUnit> adminUnitsSubordinateListPossible;	
+	// list of removed subordinates
+	private List<AdminUnit> adminUnitsSubordinateListRemoved;
 
 
 	public AdminUnit getAdminUnit() {
@@ -114,5 +116,14 @@ public class AdminUnitVM {
 
 	public void setAdminUnitType(AdminUnitType adminUnitType) {
 		this.adminUnitType = adminUnitType;
+	}
+
+	public List<AdminUnit> getAdminUnitsSubordinateListRemoved() {
+		return adminUnitsSubordinateListRemoved;
+	}
+
+	public void setAdminUnitsSubordinateListRemoved(
+			List<AdminUnit> adminUnitsSubordinateListRemoved) {
+		this.adminUnitsSubordinateListRemoved = adminUnitsSubordinateListRemoved;
 	}
 }

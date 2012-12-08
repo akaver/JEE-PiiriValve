@@ -233,7 +233,8 @@ public class DAO {
 				"('Kangru', 'Kangru alevik', '', '7'," + std + ")," + 
 				"('Arusta', 'Arusta küla', '', '8'," + std + ")," + 
 				"('Kurevere', ' Kurevere küla', '', '8'," + std + ")," + 
-				"('Karuvere', 'Karuvere küla', '', '8'," + std + ")" +
+				"('Karuvere', 'Karuvere küla', '', '8'," + std + ")," +
+				"('KureVald', ' Kure vald', '', '4'," + std + ")" + 
 				
 // @formatter:on
 				"");

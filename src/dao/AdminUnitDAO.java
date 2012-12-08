@@ -16,7 +16,8 @@ public class AdminUnitDAO extends DAO {
 		try {
 			Statement statement = super.getConnection().createStatement();
 			ResultSet resultSet = statement
-					.executeQuery("select * from AdminUnit");
+					.executeQuery("select * from AdminUnit" +
+							"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ");
 
 			res = new ArrayList<AdminUnit>();
 
@@ -39,7 +40,8 @@ public class AdminUnitDAO extends DAO {
 
 		System.out.println("adminUnit getByID:" + adminUnitID);
 
-		String sql = "select * from AdminUnit where AdminUnitID=?";
+		String sql = "select * from AdminUnit where AdminUnitID=?" +
+				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -69,7 +71,8 @@ public class AdminUnitDAO extends DAO {
 		Integer masterID = null;
 
 		// find the subordinate record, which contains its masters id
-		String sql = "select * from AdminUnitSubordination where SubordinateAdminUnitID=?";
+		String sql = "select * from AdminUnitSubordination where SubordinateAdminUnitID=?" +
+				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -107,7 +110,7 @@ public class AdminUnitDAO extends DAO {
 
 		if (res == null) {
 			res = new AdminUnit();
-			res.setAdminUnitTypeID(0);
+			res.setAdminUnitID(0);
 			res.setName("---");
 		}
 
@@ -130,7 +133,8 @@ public class AdminUnitDAO extends DAO {
 		//find all possible masters
 		String sql = "select * from AdminUnit where AdminUnitTypeID in " +
 				"(select AdminUnitTypeID from AdminUnitTypeSubordination " +
-				"where SubordinateAdminUnitTypeID=?)";		
+				"where SubordinateAdminUnitTypeID=? " +
+				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() )";		
 
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
@@ -163,7 +167,8 @@ public class AdminUnitDAO extends DAO {
 		List<AdminUnit> res = new ArrayList<AdminUnit>();
 
 		// get the list of subordinate ID's
-		String sql = "select * from AdminUnitSubordination where AdminUnitID=?";
+		String sql = "select * from AdminUnitSubordination where AdminUnitID=? " +
+				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -202,7 +207,7 @@ public class AdminUnitDAO extends DAO {
 		//find all possible masters
 		String sql = "select * from AdminUnit where AdminUnitTypeID in " +
 				"(select SubordinateAdminUnitTypeID from AdminUnitTypeSubordination " +
-				"where AdminUnitTypeID=?)";
+				"where AdminUnitTypeID=? and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() )";
 
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
@@ -243,7 +248,8 @@ public class AdminUnitDAO extends DAO {
 
 		Boolean res = false;
 
-		String sql = "select * from AdminUnit where AdminUnitID=?";
+		String sql = "select * from AdminUnit where AdminUnitID=? and " +
+				"ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -315,7 +321,8 @@ public class AdminUnitDAO extends DAO {
 		return res;
 	}
 	
-	public void saveMaster(Integer adminUnitID, dao.AdminUnit adminUnitMaster) {
+	public void saveMaster(Integer adminUnitID, AdminUnit adminUnitMaster) {
+		
 		System.out.println("Saving master for adminUnitID:"
 				+ adminUnitID + " Master is:" + adminUnitMaster);
 		
@@ -324,22 +331,36 @@ public class AdminUnitDAO extends DAO {
 		// one
 		// try to change the existing record
 		String sql = "";
-		sql = "update AdminUnitSubordination set "
-				+ "AdminUnitID=?, SubordinateAdminUnitID=?, ChangedBy='Admin', ChangedDate=NOW() "
-				+ "where SubordinateAdminUnitID=?";
+		if (adminUnitMaster.getAdminUnitID() == 0) {
+			sql = "update AdminUnitSubordination set ChangedBy='Admin', ChangedDate=NOW(), " +
+					"ClosedBy='Admin',ClosedDate=NOW(),ToDate=NOW() " +
+					"where SubordinateAdminUnitID=?";
+		}
+		else {
+			sql = "update AdminUnitSubordination set "
+					+ "AdminUnitID=?, SubordinateAdminUnitID=?, ChangedBy='Admin', ChangedDate=NOW() "
+					+ "where SubordinateAdminUnitID=?";
+		}
+		
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
-			preparedStatement.setInt(1, adminUnitMaster.getAdminUnitID());
-			preparedStatement.setInt(2, adminUnitID);
-			preparedStatement.setInt(3, adminUnitID);
+			if (adminUnitMaster.getAdminUnitID() == 0) {
+				preparedStatement.setInt(1, adminUnitID);
+			}
+			else {
+				preparedStatement.setInt(1, adminUnitMaster.getAdminUnitID());
+				preparedStatement.setInt(2, adminUnitID);
+				preparedStatement.setInt(3, adminUnitID);
+			}
+			
 			int rowsChanged = preparedStatement.executeUpdate();
 			System.out.println("Rows changed:" + rowsChanged);
 			if (rowsChanged == 0) {
 				// go for insert then
 				sql = "insert into AdminUnitSubordination "
-						+ "(AdminUnitID, SubordinateAdminUnitID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
-						+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
+						+ "(AdminUnitID, SubordinateAdminUnitID, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
+						+ "(?,?,'','1900-01-01','2999-12-31','Admin',NOW(),'Admin',NOW(),'Admin','2999-12-31')";
 				preparedStatement = super.getConnection().prepareStatement(sql);
 				preparedStatement.setInt(1, adminUnitMaster.getAdminUnitID());
 				preparedStatement.setInt(2, adminUnitID);

@@ -125,10 +125,26 @@ public class AdminUnit extends HttpServlet {
 			formData.setAdminUnitsSubordinateListPossible(new AdminUnitDAO()
 					.getAllowedSubordinatesByID(formData.getAdminUnit()
 							.getAdminUnitTypeID(), formData.getAdminUnitsSubordinateList()));
+			
+			// initiate the list of subordinates that can be removed
+			formData.setAdminUnitsSubordinateListRemoved(new ArrayList<dao.AdminUnit>());
 
 		} else {
-			// formData was there, so this is post. lets update the viewmodel
-			// with changes the user wants to make
+			// formData was there, so this is post!
+			
+			// first find if we want to exit => no validation etc is necessary;
+			// we will quit here
+			Enumeration<String> paramNames = request.getParameterNames();
+			while (paramNames.hasMoreElements()) {
+				String next = paramNames.nextElement();
+				if (next.equals("CancelButton")) {
+					System.out.println("Cancel, nosave and exit");
+					response.sendRedirect("mainScreen.jsp");
+					return;
+				}
+			}			
+			
+			// lets update the viewmodel with changes the user wants to make
 			// trivial stuff: name,code,comment
 			formData.getAdminUnit().setCode(
 				request.getParameter("AdminUnitCode"));
@@ -149,27 +165,31 @@ public class AdminUnit extends HttpServlet {
 			// AdminUnitMaster (0-"---": no master)
 			System.out.println("AdminUnitMaster_adminUnitID:"
 				+ request.getParameter("AdminUnitMaster_adminUnitID"));
-			// was AdminUnitMaster dropdown changed?
-			// do we have new adminunittype?
+			
+			boolean masterChanged = false;
+			
 			try {
+				// was AdminUnitMaster dropdown changed?
 				if (!request
 						.getParameter("AdminUnitMaster_adminUnitID")
 						.equals(formData.getAdminUnitMaster()
 								.getAdminUnitID().toString())) {
 					System.out.println("Changing AdminUnitMaster_adminUnitID");
+					masterChanged = true;
 					// change viewmodels AdminUnitMaster, find new one from
 					// dao
 					// based on new id
 					formData.setAdminUnitMaster(new AdminUnitDAO().getByID(Integer.parseInt(request
 							.getParameter("AdminUnitMaster_adminUnitID"))));
 				}
-				if (!request.getParameter("AdminUnitType_adminUnitTypeID")
-						.equals(formData.getAdminUnitType()
-								.getAdminUnitTypeID().toString())) {
-					System.out.println("Changing AdminUnitType_adminUnitTypeID");
-					formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
-							.getParameter("AdminUnitType_adminUnitTypeID"))));
-				}
+//				// do we have new adminunittype?
+//				if (!request.getParameter("AdminUnitType_adminUnitTypeID")
+//						.equals(formData.getAdminUnitType()
+//								.getAdminUnitTypeID().toString())) {
+//					System.out.println("Changing AdminUnitType_adminUnitTypeID");
+//					formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
+//							.getParameter("AdminUnitType_adminUnitTypeID"))));
+//				}
 			} catch (Exception e) {
 				System.out.println("Exception:" + e);
 			}
@@ -177,9 +197,9 @@ public class AdminUnit extends HttpServlet {
 			// now the tricky part - scan through several possible submit
 			// buttons
 			// which button was clicked?
-			Enumeration<String> paramNames = request.getParameterNames();
-			while (paramNames.hasMoreElements()) {
-				String paramName = paramNames.nextElement();
+			Enumeration<String> paramNames2 = request.getParameterNames();			
+			while (paramNames2.hasMoreElements()) {
+				String paramName = paramNames2.nextElement();
 				// table of subordinates for this adminUnitType
 				// every line has separate submit button, with item sequence no
 				// added to each button name.
@@ -193,8 +213,12 @@ public class AdminUnit extends HttpServlet {
 					List<dao.AdminUnit> adminUnitsSubordinateList = formData
 							.getAdminUnitsSubordinateList();
 					// get the item about to be removed, and insert it into
-					// possible sublist
+					// possible sublist; also to removed list
 					formData.getAdminUnitsSubordinateListPossible().add(
+							adminUnitsSubordinateList
+									.get((int) removeSubLineNo.intValue()));
+										
+					formData.getAdminUnitsSubordinateListRemoved().add(
 							adminUnitsSubordinateList
 									.get((int) removeSubLineNo.intValue()));
 					// remove the item
@@ -238,31 +262,34 @@ public class AdminUnit extends HttpServlet {
 				if (paramName.equals("SubmitButton") && errors.isEmpty()) {
 					System.out.println("Submit, no errors, save and exit");
 					
-					// we have to update two tables - AdminUnitType and
-					// AdminUnitTypeSubordination
-					// save the primary AdminUnitType
+					// we have to update two tables - AdminUnit and
+					// AdminUnitSubordination
+					// save the primary AdminUnit
 					AdminUnitDAO adminUnitDAO = new AdminUnitDAO();
 					Integer adminUnitID = adminUnitDAO.save(formData
 							.getAdminUnit());
 					System.out.println("Updated or new ID for AdminUnit is:"
 							+ adminUnitID);
 
-					// update this nits master
-					adminUnitDAO.saveMaster(adminUnitID,
-						formData.getAdminUnitMaster());
-					// update this units subordinates
-					// where shall i exit to?								
-					request.getRequestDispatcher("mainScreen.jsp").forward(
-							request, response);
-				}
-
-				// global cancel and exit
-				if (paramName.equals("CancelButton")) {
-					System.out.println("Cancel, nosave and exit");
-					// where shall i exit to?	
+					// update this units master
+					if (masterChanged) {
+						adminUnitDAO.saveMaster(adminUnitID, formData.getAdminUnitMaster());
+					}
+					// update the master for all subordinates (missing jQuery right now)
+					for (dao.AdminUnit sub : formData.getAdminUnitsSubordinateList()) {
+						adminUnitDAO.saveMaster(sub.getAdminUnitID(), formData.getAdminUnit());
+					}
+					// remove subordination entries for abandoned subordinates
+					dao.AdminUnit emptyEntry = new dao.AdminUnit();
+					emptyEntry.setAdminUnitID(0);
+					for (dao.AdminUnit subEx : formData.getAdminUnitsSubordinateListRemoved()) {
+						adminUnitDAO.saveMaster(subEx.getAdminUnitID(), emptyEntry);
+					}
+					
+					// work is done, back to main screen								
 					response.sendRedirect("mainScreen.jsp");
 					return;
-				}
+				}			
 
 			}
 
