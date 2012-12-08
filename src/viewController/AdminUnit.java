@@ -187,7 +187,7 @@ public class AdminUnit extends HttpServlet {
 					// found the button from the list, get the id
 					Integer removeSubLineNo = Integer.parseInt(paramName
 							.substring(13));
-					System.out.println("removing from sub list item with id:"
+					System.out.println("Removing from sub list item with id:"
 							+ removeSubLineNo);
 					// get the list
 					List<dao.AdminUnit> adminUnitsSubordinateList = formData
@@ -208,7 +208,7 @@ public class AdminUnit extends HttpServlet {
 					System.out.println("Adding new subordinate");
 					// get the id from the post
 					Integer listNo = Integer.parseInt(request
-						.getParameter("AdminUnitType_NewSubordinateNo"));
+						.getParameter("AdminUnit_NewSubordinateNo"));
 					System.out.println("Adding new subordinate with list sequence no:"
 						+ listNo);
 
@@ -237,6 +237,7 @@ public class AdminUnit extends HttpServlet {
 				// global save and exit, no validation errors
 				if (paramName.equals("SubmitButton") && errors.isEmpty()) {
 					System.out.println("Submit, no errors, save and exit");
+					
 					// we have to update two tables - AdminUnitType and
 					// AdminUnitTypeSubordination
 					// save the primary AdminUnitType
@@ -258,9 +259,9 @@ public class AdminUnit extends HttpServlet {
 				// global cancel and exit
 				if (paramName.equals("CancelButton")) {
 					System.out.println("Cancel, nosave and exit");
-					// where shall i exit to?								
-					request.getRequestDispatcher("mainScreen.jsp").forward(
-							request, response);
+					// where shall i exit to?	
+					response.sendRedirect("mainScreen.jsp");
+					return;
 				}
 
 			}

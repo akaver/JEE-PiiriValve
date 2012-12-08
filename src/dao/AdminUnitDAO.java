@@ -278,7 +278,7 @@ public class AdminUnitDAO extends DAO {
 					+ "where AdminUnitID=?";
 		}
 
-		System.out.println("Saving AdminUnitTyp sql:" + sql);
+		System.out.println("Saving AdminUnit sql:" + sql);
 
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
@@ -315,7 +315,6 @@ public class AdminUnitDAO extends DAO {
 		return res;
 	}
 	
-	//called for every adminunit involved?
 	public void saveMaster(Integer adminUnitID, dao.AdminUnit adminUnitMaster) {
 		System.out.println("Saving master for adminUnitID:"
 				+ adminUnitID + " Master is:" + adminUnitMaster);
