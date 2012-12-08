@@ -86,6 +86,4 @@ public class AdminUnitTypeVM {
 		this.adminUnitTypesSubordinateListPossible = adminUnitTypesSubordinateListPossible;
 	}
 
-
-
 }
