@@ -189,7 +189,7 @@ public class AdminUnitDAO extends DAO {
 	//for populating list of possible subordinates; needs to know the current 
 	//adminUnitType of adminUnit. must be read from session because it can
 	//be changed during session
-	public List<AdminUnit> getAllowedSubordinatesByID(Integer adminUnitTypeID) {
+	public List<AdminUnit> getAllowedSubordinatesByID(Integer adminUnitTypeID, List<AdminUnit> foundSubordinates) {
 		System.out.println("Finding allowed subordinate AdminUnits for: "
 				+ adminUnitTypeID);
 
@@ -202,7 +202,7 @@ public class AdminUnitDAO extends DAO {
 		//find all possible masters
 		String sql = "select * from AdminUnit where AdminUnitTypeID in " +
 				"(select SubordinateAdminUnitTypeID from AdminUnitTypeSubordination " +
-				"where AdminUnitTypeID=?)";		
+				"where AdminUnitTypeID=?)";
 
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
@@ -211,9 +211,22 @@ public class AdminUnitDAO extends DAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 				
 			res = new ArrayList<AdminUnit>();
-
+			AdminUnit curr;
+			boolean listed;
+			
 			while (resultSet.next()) {
-				res.add(createAdminUnitFromResultSet(resultSet));
+				curr = createAdminUnitFromResultSet(resultSet);
+				listed = false;
+				for (AdminUnit au : foundSubordinates) {
+					if (au.getName().equals(curr.getName())) {
+						listed = true;
+						break;
+					}
+				}
+				if(!listed) {
+					res.add(curr);
+				}
+				listed = false;
 			}
 			DbUtils.closeQuietly(resultSet);
 			DbUtils.closeQuietly(preparedStatement);

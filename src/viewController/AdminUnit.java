@@ -121,7 +121,7 @@ public class AdminUnit extends HttpServlet {
 			// load the list of possible new subordinates
 			formData.setAdminUnitsSubordinateListPossible(new AdminUnitDAO()
 					.getAllowedSubordinatesByID(formData.getAdminUnit()
-							.getAdminUnitTypeID()));
+							.getAdminUnitTypeID(), formData.getAdminUnitsSubordinateList()));
 
 		} else {
 			// formData was there, so this is post. lets update the viewmodel
