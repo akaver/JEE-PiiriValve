@@ -16,7 +16,7 @@
 		<a href="DBInit?deletelck=yes">Recreate database and load initial data (kill lock)</a><br>
 		<br>
 		<a href="AdminUnitType?AdminUnitTypeID=4">Administrative unit type redactor</a><br>
-		<a href="AdminUnitTypeReport">Administrative unit type redactor</a><br>
+		<a href="AdminUnitTypeReport">Administrative unit type report</a><br>
 		<br>
 		<a href="AdminUnit?AdminUnitID=1">Administrative unit redactor</a><br>
 		<a href="AdminUnitReport">Administrative unit report</a><br>
