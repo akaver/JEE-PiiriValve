@@ -4,15 +4,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Admin Unit Type Editor</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Admin Unit Editor</title>
 <link rel="stylesheet" href="./style.css" type="text/css">
 </head>
 <body>
-	<form method="post" action="" name="AdminUnitTypeForm">
+<form method="post" action="" name="AdminUnitForm">
 		<table width="800" >
 			<tr>
-				<td colspan="2"><h3>Admin Unit Type Editor</h3></td>
+				<td colspan="2"><h3>Admin Unit Editor</h3></td>
 			</tr>
 			<tr>
 				<td width="50%"><table width="100%">
@@ -30,38 +30,43 @@
 						</c:if>
 						<tr>
 							<td width="100px">Code</td>
-							<td><input name="AdminUnitTypeCode" type="text" size="10"
-								value="${formData.adminUnitType.code}"></td>
+							<td><input name="AdminUnitCode" type="text" size="10"
+								value="${formData.adminUnit.code}"></td>
 						</tr>
 						<tr>
 							<td>Name</td>
-							<td><input name="AdminUnitTypeName" type="text" size="30"
-								value="${formData.adminUnitType.name}"></td>
+							<td><input name="AdminUnitName" type="text" size="30"
+								value="${formData.adminUnit.name}"></td>
 						</tr>
 						<tr>
 							<td valign="top">Comment</td>
-							<td><textarea name="AdminUnitTypeComment" cols="35"
-									rows="10">${formData.adminUnitType.comment}</textarea></td>
+							<td><textarea name="AdminUnitComment" cols="35"
+									rows="10">${formData.adminUnit.comment}</textarea></td>
 						</tr>
-						<c:if test="${formData.adminUnitType.adminUnitTypeID!=1}">
-							<tr>
-								<td>Subordinate of</td>
-								<td><select name="AdminUnitTypeMaster_adminUnitTypeID">
-										<c:forEach var="entry"
-											items="${formData.adminUnitTypeMasterListWithZero}">
-											<c:set var="selected" value="" />
-											<c:if
-												test="${entry.adminUnitTypeID == formData.adminUnitTypeMaster.adminUnitTypeID}">
-												<c:set var="selected" value="selected=\"selected\"" />
-											</c:if>
-											<c:if
-												test="${entry.adminUnitTypeID!=formData.adminUnitType.adminUnitTypeID}">
-												<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
-											</c:if>
-										</c:forEach>
-								</select></td>
-							</tr>
-						</c:if>
+						<tr>
+							<td valign="top">Type</td>
+							<td>
+								<div>${formData.adminUnitType.comment}</div>
+								<div><input name="ChangeButton" type="submit" value="Change"></div>
+							</td>
+						</tr>
+						<tr>
+							<td>Subordinate of</td>
+							<td><select name="AdminUnitMaster_adminUnitID">
+									<c:forEach var="entry"
+										items="${formData.adminUnitMasterListWithZero}">
+										<c:set var="selected" value="" />
+										<c:if
+											test="${entry.adminUnitID == formData.adminUnitMaster.adminUnitID}">
+											<c:set var="selected" value="selected=\"selected\"" />
+										</c:if>
+										<c:if
+											test="${entry.adminUnitID!=formData.adminUnit.adminUnitID}">
+											<option value="${entry.adminUnitID}" ${selected}>${entry.name}</option>
+										</c:if>
+									</c:forEach>
+							</select></td>
+						</tr>
 					</table></td>
 				<td style="position: relative"><table width="100%"
 						class="borderedTable">
@@ -71,7 +76,7 @@
 
 						<c:set var="counter" value="0" />
 						<c:forEach var="entry"
-							items="${formData.adminUnitTypesSubordinateList}">
+							items="${formData.adminUnitsSubordinateList}">
 							<tr>
 								<td class="allBorders">
 									<div>${entry.name}</div>
@@ -84,14 +89,14 @@
 							<c:set var="counter" value="${counter+1}" />
 						</c:forEach>
 						<c:if
-							test="${formData.adminUnitTypesSubordinateListPossible.size()!=0}">
+							test="${formData.adminUnitsSubordinateListPossible.size()!=0}">
 							<tr>
 								<td class="allBorders">
 									<div>
 										<c:set var="counter" value="0" />
-										<select name="AdminUnitType_NewSubordinateNo">
+										<select name="AdminUnit_NewSubordinateNo">
 											<c:forEach var="entry"
-												items="${formData.adminUnitTypesSubordinateListPossible}">
+												items="${formData.adminUnitsSubordinateListPossible}">
 												<option value="${counter}" ${selected}>${entry.name}</option>
 												<c:set var="counter" value="${counter+1}" />
 											</c:forEach>

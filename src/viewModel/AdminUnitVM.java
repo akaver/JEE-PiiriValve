@@ -13,11 +13,12 @@ public class AdminUnitVM {
 	// list of possible new masters for adminUnit
 	private List<AdminUnit> adminUnitMastersListPossible;
 	
+	private  List<AdminUnit> adminUnitMasterListWithZero;
+	
+	private AdminUnitType adminUnitType;
 	// list of adminUnitTypes, for choosing new type
 	private  List<AdminUnitType> adminUnitTypeList;
-	////trying to avoid that = maybe trying to avoid new dropdown...
-	//private  List<AdminUnitType> adminUnitTypeMasterListWithZero;
-	
+			
 	// list of adminunits which are subordinates to adminUnit
 	private List<AdminUnit> adminUnitsSubordinateList;	
 	// list of adminunis which are possible new subordinates to adminUnit
@@ -75,22 +76,33 @@ public class AdminUnitVM {
 		this.adminUnitsSubordinateListPossible = adminUnitsSubordinateListPossible;
 	}
 
-	////trying to avoid that = maybe trying to avoid new dropdown...
+	public List<AdminUnit> getAdminUnitMasterListWithZero() {
+		return adminUnitMasterListWithZero;
+	}
+	
 	/*
 	 * return list with one added record with ID=0 and name="----"
 	 * its used in dropdwon to indicate "no selection"
-	 
-	public void setAdminUnitTypeMasterListWithZero(
-			List<AdminUnitType> adminUnitTypeMasterListWithZero) {
+	 */
+	public void setAdminUnitMasterListWithZero(
+			List<AdminUnit> adminUnitMasterListWithZero) {
 		// create new AdminUnitType
-		AdminUnitType withZero = new AdminUnitType();
+		AdminUnit withZero = new AdminUnit();
 		// set id to 0
-		withZero.setAdminUnitTypeID(0);
+		withZero.setAdminUnitID(0);
 		// and name to "---"
 		withZero.setName("---");
 		// append it to list
 		// it goes to last place in list, should go into first!
-		adminUnitTypeMasterListWithZero.add(withZero);
-		this.adminUnitTypeMasterListWithZero = adminUnitTypeMasterListWithZero;
-	}*/
+		adminUnitMasterListWithZero.add(withZero);
+		this.adminUnitMasterListWithZero = adminUnitMasterListWithZero;
+	}
+
+	public AdminUnitType getAdminUnitType() {
+		return adminUnitType;
+	}
+
+	public void setAdminUnitType(AdminUnitType adminUnitType) {
+		this.adminUnitType = adminUnitType;
+	}
 }
