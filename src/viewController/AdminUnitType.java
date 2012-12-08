@@ -133,6 +133,8 @@ public class AdminUnitType extends HttpServlet {
 							.getAdminUnitTypeID()));
 
 			// load the full list of AdminUnitType
+			// TODO - remove all the subordinates of itself, otherwise user can
+			// cause circular reference
 			formData.setAdminUnitTypeMasterListWithZero(new AdminUnitTypeDAO()
 					.getAll());
 
