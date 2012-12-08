@@ -226,7 +226,7 @@ public class AdminUnitDAO extends DAO {
 	}	
 	
 	public boolean isIDValid(Integer adminUnitID) {
-		System.out.println("adminUnite isIDValid:" + adminUnitID);
+		System.out.println("adminUnit isIDValid:" + adminUnitID);
 
 		Boolean res = false;
 

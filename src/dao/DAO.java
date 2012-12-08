@@ -226,8 +226,8 @@ public class DAO {
 // @formatter:off
 				"('Eesti', 'Eesti Vabariik', 'globaalne AdminUnit, riik', '1'," + std + ")," + 
 				"('Harjumaa', 'Harjumaa maakond', '', '2'," + std + ")," +
-				"('Tallinn', 'Tallinn', 'pealinn', '4'," + std + ")," + 
-				"('KiiliVald', 'Kiili vald', '', '3'," + std + ")," + 
+				"('Tallinn', 'Tallinn', 'pealinn', '3'," + std + ")," + 
+				"('KiiliVald', 'Kiili vald', '', '4'," + std + ")," + 
 				"('KiiliAlev', 'Kiili alev', '', '5'," + std + ")," + 
 				"('Luige', 'Luige alevik', '', '6'," + std + ")," + 
 				"('Kangru', 'Kangru alevik', '', '6'," + std + ")," + 

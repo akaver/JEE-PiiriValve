@@ -77,7 +77,7 @@ public class AdminUnit extends HttpServlet {
 
 			// check for valid ID
 			if (adminUnitID == 0
-					|| (adminUnitID >= 0 && new AdminUnitTypeDAO()
+					|| (adminUnitID >= 0 && new AdminUnitDAO()
 							.isIDValid(adminUnitID))) {
 				System.out.println("Starting view proccessing for AdminUnit ID:"
 						+ adminUnitID);
@@ -110,7 +110,8 @@ public class AdminUnit extends HttpServlet {
 			// TODO - remove all the subordinates of itself, otherwise user can
 			// cause circular reference
 			formData.setAdminUnitMasterListWithZero(new AdminUnitDAO()
-				.getAll());
+				.getAllowedMastersByID(formData.getAdminUnit()
+					.getAdminUnitID()));
 
 			// load the list of subordinates
 			formData.setAdminUnitsSubordinateList(new AdminUnitDAO()
