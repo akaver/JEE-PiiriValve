@@ -111,7 +111,7 @@ public class AdminUnit extends HttpServlet {
 			// cause circular reference
 			formData.setAdminUnitMasterListWithZero(new AdminUnitDAO()
 				.getAllowedMastersByID(formData.getAdminUnit()
-					.getAdminUnitID()));
+					.getAdminUnitTypeID()));
 
 			// load the list of subordinates
 			formData.setAdminUnitsSubordinateList(new AdminUnitDAO()

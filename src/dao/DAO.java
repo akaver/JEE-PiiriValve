@@ -228,11 +228,11 @@ public class DAO {
 				"('Harjumaa', 'Harjumaa maakond', '', '2'," + std + ")," +
 				"('Tallinn', 'Tallinn', 'pealinn', '3'," + std + ")," + 
 				"('KiiliVald', 'Kiili vald', '', '4'," + std + ")," + 
-				"('KiiliAlev', 'Kiili alev', '', '5'," + std + ")," + 
-				"('Luige', 'Luige alevik', '', '6'," + std + ")," + 
-				"('Kangru', 'Kangru alevik', '', '6'," + std + ")," + 
-				"('Arusta', 'Arusta küla', '', '7'," + std + ")," + 
-				"('Kurevere', ' Kurevere küla', '', '7'," + std + ")" + 
+				"('KiiliAlev', 'Kiili alev', '', '6'," + std + ")," + 
+				"('Luige', 'Luige alevik', '', '7'," + std + ")," + 
+				"('Kangru', 'Kangru alevik', '', '7'," + std + ")," + 
+				"('Arusta', 'Arusta küla', '', '8'," + std + ")," + 
+				"('Kurevere', ' Kurevere küla', '', '8'," + std + ")" + 
 
 				
 // @formatter:on
