@@ -64,4 +64,14 @@
     <servlet-name>ArmyUnit</servlet-name>
     <url-pattern>/ArmyUnit</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AdminUnitTypeReport</display-name>
+    <servlet-name>AdminUnitTypeReport</servlet-name>
+    <servlet-class>viewController.AdminUnitTypeReport</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminUnitTypeReport</servlet-name>
+    <url-pattern>/AdminUnitTypeReport</url-pattern>
+  </servlet-mapping>
 </web-app>
