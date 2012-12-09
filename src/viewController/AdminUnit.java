@@ -19,7 +19,6 @@ import dao.*;
  */
 public class AdminUnit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private boolean typeChanged = false;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -85,12 +84,9 @@ public class AdminUnit extends HttpServlet {
 			System.out.println("AdminUnitMaster_adminUnitID:"
 				+ request.getParameter("AdminUnitMaster_adminUnitID"));
 			
-			formData = updateUnitsType(request, formData);
+			formData = updateUnitsType(request, formData);			
+			formData = updateUnitsMaster(request, formData);
 			
-			// if type changed, things get tricky, we go just to reload
-			if (!typeChanged) {
-				formData = updateUnitsMaster(request, formData);
-			}
 			// now the tricky part - scan through several possible submit
 			// buttons: which button was clicked?
 			Enumeration<String> paramNames2 = request.getParameterNames();			
@@ -100,7 +96,7 @@ public class AdminUnit extends HttpServlet {
 				if (paramName.startsWith("RemoveButton_")) {
 					formData = removeSubordinate(formData, paramName);					
 				}
-				if (paramName.equals("AddSubordinateButton") && !typeChanged) {
+				if (paramName.equals("AddSubordinateButton")) {
 					formData = addSubordinate(formData, request);
 				}
 
@@ -116,7 +112,6 @@ public class AdminUnit extends HttpServlet {
 		
 		// save the viewmodel for jsp dispatcher into session
 		session.setAttribute("formData", formData);
-		typeChanged = false;
 		
 		// call the dispatcher
 		request.getRequestDispatcher("AdminUnitMainScreen.jsp").forward(
@@ -136,15 +131,22 @@ public class AdminUnit extends HttpServlet {
 			formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
 					.getParameter("AdminUnitType_adminUnitTypeID"))));
 			
-			// remove all current subordinates
+			// remove all current subordinates from session
 			formData.getAdminUnitsSubordinateListRemoved().addAll(formData.getAdminUnitsSubordinateList());
 			formData.getAdminUnitsSubordinateList().clear();
 			
-			// find new possible subordinates
+			// find new possible subordinates for new unit type
 			formData.setAdminUnitsSubordinateListPossible(new AdminUnitDAO()
 					.getAllowedSubordinatesByID(formData.getAdminUnitType().getAdminUnitTypeID(), 
 							formData.getAdminUnitsSubordinateList()));
-			typeChanged = true;
+			
+			// remove current master from session
+			formData.getAdminUnitMaster().setAdminUnitID(0);
+			
+			// find new possible masters for new unit type
+			formData.setAdminUnitMasterListWithZero(new AdminUnitDAO()
+				.getAllowedMastersByID(formData.getAdminUnitType()
+					.getAdminUnitTypeID()), formData.getAdminUnitMaster());
 		}
 		return formData;
 	}
@@ -232,7 +234,7 @@ public class AdminUnit extends HttpServlet {
 
 	private AdminUnitVM addSubordinate(AdminUnitVM formData,
 			HttpServletRequest request) {
-		if (!typeChanged) {
+		
 		System.out.println("Adding new subordinate");
 		// get the id from the post
 		Integer listNo = Integer.parseInt(request
@@ -260,8 +262,7 @@ public class AdminUnit extends HttpServlet {
 		adminUnitsSubordinateListPossible.remove(listNo
 				.intValue());
 		formData.setAdminUnitsSubordinateListPossible(adminUnitsSubordinateListPossible);
-		}
-		
+				
 		return formData;
 	}
 
@@ -355,7 +356,7 @@ public class AdminUnit extends HttpServlet {
 				.getMasterByIDWithZero(formData.getAdminUnit()
 				.getAdminUnitID()));
 		
-		// load the full list of AdminUnit
+		// load the full list of possible AdminUnit masters
 		formData.setAdminUnitMasterListWithZero(new AdminUnitDAO()
 			.getAllowedMastersByID(formData.getAdminUnit()
 				.getAdminUnitTypeID()), formData.getAdminUnitMaster());
