@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.Date;
+import java.util.List;
 
 public class AdminUnit {
 	private Integer adminUnitID;
@@ -16,7 +17,7 @@ public class AdminUnit {
 	private Date changedDate;
 	private String closedBy;
 	private Date closedDate;
-	
+	private List<AdminUnit> adminUnitSubordinatesList;
 	
 	public Integer getAdminUnitID() {
 		return adminUnitID;
@@ -101,5 +102,12 @@ public class AdminUnit {
 	public String toString() {
 		return "ID: " + adminUnitID + "   " + "Code: " + code + "   "
 				+ "Name: " + name;
+	}
+	public List<AdminUnit> getAdminUnitSubordinatesList() {
+		return adminUnitSubordinatesList;
+	}
+	public void setAdminUnitSubordinatesList(
+			List<AdminUnit> adminUnitSubordinatesList) {
+		this.adminUnitSubordinatesList = adminUnitSubordinatesList;
 	}
 }

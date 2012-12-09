@@ -470,4 +470,27 @@ public class AdminUnitDAO extends DAO {
 		return res;
 	}
 
+	public List<AdminUnit> getByAdminUnitTypeID(Integer adminUnitTypeID) {
+		List<AdminUnit> res = new ArrayList<AdminUnit>();
+		String sql = "select * from AdminUnit where AdminUnitTypeID=?" +
+				" and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
+		
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitTypeID);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+				res.add(createAdminUnitFromResultSet(resultSet));
+			}
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(preparedStatement);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+		return res;
+	}
+
 }
