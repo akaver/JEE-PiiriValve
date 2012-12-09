@@ -42,7 +42,7 @@
 						<select name="AdminUnitType_adminUnitTypeID">
 							<c:forEach var="entry" items="${formData.adminUnitTypeList}">
 								<c:set var="selected" value="" />
-								<c:if test="${entry.adminUnitTypeID} == ${formData.adminUnitType.adminUnitTypeID}">
+								<c:if test="${entry.adminUnitTypeID == formData.adminUnitType.adminUnitTypeID}">
 									<c:set var="selected" value="selected=\"selected\""/>
 								</c:if>
 								<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
