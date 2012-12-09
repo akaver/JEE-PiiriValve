@@ -19,6 +19,7 @@ import dao.*;
  */
 public class AdminUnit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private boolean typeChanged = false;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -81,9 +82,12 @@ public class AdminUnit extends HttpServlet {
 			System.out.println("AdminUnitMaster_adminUnitID:"
 				+ request.getParameter("AdminUnitMaster_adminUnitID"));
 			
-			formData = updateUnitsMaster(request, formData);
 			formData = updateUnitsType(request, formData);
-						
+			
+			// if type changed, things get tricky, we go just to reload
+			if (!typeChanged) {
+				formData = updateUnitsMaster(request, formData);
+			}
 			// now the tricky part - scan through several possible submit
 			// buttons: which button was clicked?
 			Enumeration<String> paramNames2 = request.getParameterNames();			
@@ -93,7 +97,7 @@ public class AdminUnit extends HttpServlet {
 				if (paramName.startsWith("RemoveButton_")) {
 					formData = removeSubordinate(formData, paramName);					
 				}
-				if (paramName.equals("AddSubordinateButton")) {
+				if (paramName.equals("AddSubordinateButton") && !typeChanged) {
 					formData = addSubordinate(formData, request);
 				}
 
@@ -109,6 +113,7 @@ public class AdminUnit extends HttpServlet {
 		
 		// save the viewmodel for jsp dispatcher into session
 		session.setAttribute("formData", formData);
+		typeChanged = false;
 		
 		// call the dispatcher
 		request.getRequestDispatcher("AdminUnitMainScreen.jsp").forward(
@@ -136,6 +141,7 @@ public class AdminUnit extends HttpServlet {
 			formData.setAdminUnitsSubordinateListPossible(new AdminUnitDAO()
 					.getAllowedSubordinatesByID(formData.getAdminUnitType().getAdminUnitTypeID(), 
 							formData.getAdminUnitsSubordinateList()));
+			typeChanged = true;
 		}
 		return formData;
 	}
@@ -223,6 +229,7 @@ public class AdminUnit extends HttpServlet {
 
 	private AdminUnitVM addSubordinate(AdminUnitVM formData,
 			HttpServletRequest request) {
+		if (!typeChanged) {
 		System.out.println("Adding new subordinate");
 		// get the id from the post
 		Integer listNo = Integer.parseInt(request
@@ -250,6 +257,7 @@ public class AdminUnit extends HttpServlet {
 		adminUnitsSubordinateListPossible.remove(listNo
 				.intValue());
 		formData.setAdminUnitsSubordinateListPossible(adminUnitsSubordinateListPossible);
+		}
 		
 		return formData;
 	}
