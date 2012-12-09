@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Admin Unit Editor</title>
+<title>Haldusüksuse redaktor</title>
 <link rel="stylesheet" href="./style.css" type="text/css">
 <script type="text/javascript">
 	function makeReload() {
@@ -17,7 +17,7 @@
 <form method="post" action="" name="AdminUnitForm" id="AdminUnitForm">
 		<table width="800" >
 			<tr>
-				<td colspan="2"><h3>Admin Unit Editor</h3></td>
+				<td colspan="2"><h3>Haldusüksuse redaktor</h3></td>
 			</tr>
 			<tr>
 				<td width="50%"><table width="100%">
