@@ -104,7 +104,6 @@ public class AdminUnitVM {
 			res.add(au);
 			if (au.getName().equals(foundMaster.getName())) {
 				masterPresent = true;
-				break;
 			}
 		}
 		
