@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>BorderGuard Main Screen</title>
+<link rel="stylesheet" href="./style.css" type="text/css">
 </head>
 <body>
 	<p>Here we go, main entry point into our borderguard webApp</p>

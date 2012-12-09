@@ -7,9 +7,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Admin Unit Editor</title>
 <link rel="stylesheet" href="./style.css" type="text/css">
+<script type="text/javascript">
+	function makeReload() {
+		document.forms["AdminUnitForm"].submit();
+	}
+</script>
 </head>
 <body>
-<form method="post" action="" name="AdminUnitForm">
+<form method="post" action="" name="AdminUnitForm" id="AdminUnitForm">
 		<table width="800" >
 			<tr>
 				<td colspan="2"><h3>Admin Unit Editor</h3></td>
@@ -48,7 +53,7 @@
 							<td>
 <%-- 								<div id="AdminUnitType">${formData.adminUnitType.name}</div> --%>
 								<div>
-									<select name="AdminUnitType_adminUnitTypeID">
+									<select name="AdminUnitType_adminUnitTypeID" onchange="makeReload()">
 										<c:forEach var="entry" items="${formData.adminUnitTypeList}">
 										<c:set var="selected" value="" />
 										<c:if
