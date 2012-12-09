@@ -34,22 +34,22 @@
 							</tr>
 						</c:if>
 						<tr>
-							<td width="100px">Code</td>
+							<td width="100px">Kood</td>
 							<td><input name="AdminUnitCode" type="text" size="10"
 								value="${formData.adminUnit.code}"></td>
 						</tr>
 						<tr>
-							<td>Name</td>
+							<td>Nimi</td>
 							<td><input name="AdminUnitName" type="text" size="30"
 								value="${formData.adminUnit.name}"></td>
 						</tr>
 						<tr>
-							<td valign="top">Comment</td>
+							<td valign="top">Kommentaar</td>
 							<td><textarea name="AdminUnitComment" cols="42"
 									rows="10">${formData.adminUnit.comment}</textarea></td>
 						</tr>
 						<tr>
-							<td valign="top">Type</td>
+							<td valign="top">Liik</td>
 							<td>
 <%-- 								<div id="AdminUnitType">${formData.adminUnitType.name}</div> --%>
 								<div>
@@ -68,7 +68,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td>Subordinate of</td>
+							<td>Allub</td>
 							<td><select name="AdminUnitMaster_adminUnitID">
 									<c:forEach var="entry"
 										items="${formData.adminUnitMasterListWithZero}">
@@ -88,7 +88,7 @@
 				<td style="position: relative"><table width="100%"
 						class="borderedTable">
 						<tr>
-							<td class="allBorders" bgcolor="#CCCCCC">Subordinates</td>
+							<td class="allBorders" bgcolor="#CCCCCC">Alluvad</td>
 						</tr>
 
 						<c:set var="counter" value="0" />
@@ -99,7 +99,7 @@
 									<div>${entry.name}</div>
 									<div>
 										<input name="RemoveButton_${counter}" type="submit"
-											value="Remove">
+											value="Eemalda">
 									</div>
 								</td>
 							</tr>
@@ -120,7 +120,7 @@
 										</select>
 									</div>
 									<div>
-										<input name="AddSubordinateButton" type="submit" value="Add">
+										<input name="AddSubordinateButton" type="submit" value="Lisa">
 									</div>
 								</td>
 							</tr>
@@ -129,8 +129,8 @@
 			</tr>
 			<tr>
 				<td colspan="2" align="right"><input name="SubmitButton"
-					type="submit" value="Submit"> <input name="CancelButton"
-					type="submit" value="Cancel"></td>
+					type="submit" value="Salvesta"> <input name="CancelButton"
+					type="submit" value="Loobu"></td>
 			</tr>
 		</table>
 	</form>

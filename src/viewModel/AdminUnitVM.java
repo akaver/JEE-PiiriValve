@@ -97,7 +97,6 @@ public class AdminUnitVM {
 		// and name to "---"
 		withZero.setName("---");
 		// append it to list
-		// it goes to last place in list, should go into first!
 		res.add(withZero);
 		boolean masterPresent = false;
 		for (AdminUnit au : adminUnitMasterListWithZero) {	
