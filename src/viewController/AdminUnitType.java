@@ -68,7 +68,7 @@ public class AdminUnitType extends HttpServlet {
 	protected void ShowMainScreen(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		// set the encoding, otherwise database encoding wrongly 
+		// set the encoding, otherwise database is encoded wrongly 
 		request.setCharacterEncoding("UTF-8");
 		
 		// so, 2 ways to be here - there is session with our data (then it was
