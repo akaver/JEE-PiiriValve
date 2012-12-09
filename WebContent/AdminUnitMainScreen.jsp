@@ -40,14 +40,26 @@
 						</tr>
 						<tr>
 							<td valign="top">Comment</td>
-							<td><textarea name="AdminUnitComment" cols="35"
+							<td><textarea name="AdminUnitComment" cols="42"
 									rows="10">${formData.adminUnit.comment}</textarea></td>
 						</tr>
 						<tr>
 							<td valign="top">Type</td>
 							<td>
-								<div>${formData.adminUnitType.name}</div>
-								<div><input name="ChangeButton" type="submit" value="Change"></div>
+<%-- 								<div id="AdminUnitType">${formData.adminUnitType.name}</div> --%>
+								<div>
+									<select name="AdminUnitType_adminUnitTypeID">
+										<c:forEach var="entry" items="${formData.adminUnitTypeList}">
+										<c:set var="selected" value="" />
+										<c:if
+											test="${entry.adminUnitTypeID == formData.adminUnitType.adminUnitTypeID}">
+											<c:set var="selected" value="selected=\"selected\"" />
+										</c:if>
+										<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
+										</c:forEach>										
+									</select>
+								</div>
+<!-- 								<div><input name="ChangeButton" type="submit" value="Change"></div> -->
 							</td>
 						</tr>
 						<tr>

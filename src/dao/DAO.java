@@ -154,9 +154,9 @@ public class DAO {
 				"('R', 'Riik', '', "
 				+ std + ")," + //
 				"('M', 'Maakond', '', " + std + ")," + //
-				"('ML', 'Maakonna Linn', '', " + std + ")," + //
+				"('ML', 'Maakonnalinn', '', " + std + ")," + //
 				"('V', 'Vald', '', " + std + ")," + //
-				"('VL', 'Valla Linn', '', " + std + ")," + //
+				"('VL', 'Vallalinn', '', " + std + ")," + //
 				"('A1', 'Alev', '', " + std + ")," + //
 				"('A2', 'Alevik', '', " + std + ")," + //
 				"('K', 'Küla', '', " + std + ")" + //
@@ -187,9 +187,9 @@ public class DAO {
 				+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "+
 // @formatter:off
 				"('1', '2', 'riik->maakond', " + std + ")," +
-				"('2', '3', 'maakond->maakonna linn', " + std + ")," +
+				"('2', '3', 'maakond->maakonnalinn', " + std + ")," +
 				"('2', '4', 'maakond->vald', " + std + ")," +
-				"('4', '5', 'vald->valla linn', " + std + ")," + 
+				"('4', '5', 'vald->vallalinn', " + std + ")," + 
 //				"('4', '6', 'vald->alev', " + std + ")," + 
 //				"('4', '7', 'vald->alevik', " + std + ")," +
 				"('4', '8', 'vald->küla', " + std + ")" +
@@ -224,7 +224,7 @@ public class DAO {
 				+ "(Code, Name, Comment, AdminUnitTypeID, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "
 				+
 // @formatter:off
-				"('Eesti', 'Eesti Vabariik', 'globaalne AdminUnit, riik', '1'," + std + ")," + 
+				"('Eesti', 'Eesti Vabariik', 'Kõrgeim haldusüksus, riik', '1'," + std + ")," + 
 				"('Harjumaa', 'Harjumaa maakond', '', '2'," + std + ")," +
 				"('Tallinn', 'Tallinn', 'pealinn', '3'," + std + ")," + 
 				"('KiiliVald', 'Kiili vald', '', '4'," + std + ")," + 

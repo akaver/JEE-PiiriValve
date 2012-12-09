@@ -81,8 +81,9 @@ public class AdminUnit extends HttpServlet {
 			System.out.println("AdminUnitMaster_adminUnitID:"
 				+ request.getParameter("AdminUnitMaster_adminUnitID"));
 			
-			formData = updateUnitsMaster(request, formData);			
-			
+			formData = updateUnitsMaster(request, formData);
+			formData = updateUnitsType(request, formData);
+						
 			// now the tricky part - scan through several possible submit
 			// buttons: which button was clicked?
 			Enumeration<String> paramNames2 = request.getParameterNames();			
@@ -114,6 +115,31 @@ public class AdminUnit extends HttpServlet {
 				request, response);
 	}	
 	
+	private AdminUnitVM updateUnitsType(HttpServletRequest request,
+			AdminUnitVM formData) {
+		
+		// do we have new adminunittype?
+		if (!request.getParameter("AdminUnitType_adminUnitTypeID")
+				.equals(formData.getAdminUnitType()
+						.getAdminUnitTypeID().toString())) {
+			System.out.println("Changing AdminUnitType_adminUnitTypeID");
+			
+			// record new type to session
+			formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
+					.getParameter("AdminUnitType_adminUnitTypeID"))));
+			
+			// remove all current subordinates
+			formData.getAdminUnitsSubordinateListRemoved().addAll(formData.getAdminUnitsSubordinateList());
+			formData.getAdminUnitsSubordinateList().clear();
+			
+			// find new possible subordinates
+			formData.setAdminUnitsSubordinateListPossible(new AdminUnitDAO()
+					.getAllowedSubordinatesByID(formData.getAdminUnitType().getAdminUnitTypeID(), 
+							formData.getAdminUnitsSubordinateList()));
+		}
+		return formData;
+	}
+
 	private boolean cancelWasPressed(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// first find if we want to exit => no validation etc is necessary;
 		// we will quit here
@@ -138,6 +164,8 @@ public class AdminUnit extends HttpServlet {
 			request.getParameter("AdminUnitName"));
 		formData.getAdminUnit().setComment(
 			request.getParameter("AdminUnitComment"));
+		formData.getAdminUnit().setAdminUnitTypeID(
+			Integer.parseInt(request.getParameter("AdminUnitType_adminUnitTypeID")));
 		
 		return formData;
 	}
@@ -157,14 +185,6 @@ public class AdminUnit extends HttpServlet {
 				formData.setAdminUnitMaster(new AdminUnitDAO().getByID(Integer.parseInt(request
 						.getParameter("AdminUnitMaster_adminUnitID"))));
 			}
-//			// do we have new adminunittype?
-//			if (!request.getParameter("AdminUnitType_adminUnitTypeID")
-//					.equals(formData.getAdminUnitType()
-//							.getAdminUnitTypeID().toString())) {
-//				System.out.println("Changing AdminUnitType_adminUnitTypeID");
-//				formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
-//						.getParameter("AdminUnitType_adminUnitTypeID"))));
-//			}
 		} catch (Exception e) {
 			System.out.println("Exception:" + e);
 		}
@@ -243,20 +263,25 @@ public class AdminUnit extends HttpServlet {
 		// get the list
 		List<dao.AdminUnit> adminUnitsSubordinateList = formData
 				.getAdminUnitsSubordinateList();
-		// get the item about to be removed, and insert it into
-		// possible sublist; also to removed list
-		formData.getAdminUnitsSubordinateListPossible().add(
-				adminUnitsSubordinateList
-						.get((int) removeSubLineNo.intValue()));
-							
-		formData.getAdminUnitsSubordinateListRemoved().add(
-				adminUnitsSubordinateList
-						.get((int) removeSubLineNo.intValue()));
-		// remove the item
-		adminUnitsSubordinateList.remove((int) removeSubLineNo
-				.intValue());
-		// put the list back
-		formData.setAdminUnitsSubordinateList(adminUnitsSubordinateList);
+		
+		// if we changed unit type then this list will be empty and
+		// removed-sub-ord-list has been filled already
+		if (adminUnitsSubordinateList.size() > 0) {
+			// get the item about to be removed, and insert it into
+			// possible sublist; also to removed list
+			formData.getAdminUnitsSubordinateListPossible().add(
+					adminUnitsSubordinateList
+							.get((int) removeSubLineNo.intValue()));
+								
+			formData.getAdminUnitsSubordinateListRemoved().add(
+					adminUnitsSubordinateList
+							.get((int) removeSubLineNo.intValue()));
+			// remove the item
+			adminUnitsSubordinateList.remove((int) removeSubLineNo
+					.intValue());
+			// put the list back
+			formData.setAdminUnitsSubordinateList(adminUnitsSubordinateList);
+		}
 		
 		return formData;
 	}

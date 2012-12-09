@@ -129,7 +129,7 @@ public class AdminUnitDAO extends DAO {
 			return null;
 		}
 
-		List<AdminUnit> res = null;
+		List<AdminUnit> res = new ArrayList<AdminUnit>();
 		
 		//find all possible masters
 		String sql = "select * from AdminUnit where AdminUnitTypeID in " +
@@ -143,8 +143,6 @@ public class AdminUnitDAO extends DAO {
 			preparedStatement.setInt(1, adminUnitTypeID);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			
-			res = new ArrayList<AdminUnit>();
-
 			while (resultSet.next()) {
 				res.add(createAdminUnitFromResultSet(resultSet));
 			}
@@ -178,8 +176,10 @@ public class AdminUnitDAO extends DAO {
 			// find the record from AdminUnit and insert into result
 			while (resultSet.next()) {
 				Integer subid = resultSet.getInt("SubordinateAdminUnitID");
-				System.out.println("Fetching subordinate with ID:" + subid);
-				res.add(getByID(subid));
+				if (subid != adminUnitID) {
+					System.out.println("Fetching subordinate with ID:" + subid);
+					res.add(getByID(subid));
+				}
 			}
 
 			DbUtils.closeQuietly(resultSet);
@@ -203,7 +203,7 @@ public class AdminUnitDAO extends DAO {
 			return null;
 		}
 
-		List<AdminUnit> res = null;
+		List<AdminUnit> res = new ArrayList<AdminUnit>();
 		
 		//find all possible masters
 		String sql = "select * from AdminUnit where AdminUnitTypeID in " +
@@ -344,22 +344,24 @@ public class AdminUnitDAO extends DAO {
 	}
 	
 	public void saveMaster(Integer adminUnitID, Integer adminUnitMasterID) {
+		if (adminUnitID != adminUnitMasterID) {
 		
-		System.out.println("Saving master for adminUnitID:"
-				+ adminUnitID + " Master is:" + adminUnitMasterID);
-		
-		// if master was removed (ID - 0), close the subordination entry
-		if (adminUnitMasterID == 0) {
-			closeSubordination (adminUnitID, adminUnitMasterID);
-			return;
-		}
-		
-		// else - try changing subordination (there can be only one master)
-		Integer rowsChanged = updateSubordination (adminUnitID, adminUnitMasterID );
-		
-		// if this is a new subordination and there was nothing to update, then insert
-		if (rowsChanged == 0) {
-			insertSubordination(adminUnitID, adminUnitMasterID);
+			System.out.println("Saving master for adminUnitID:"
+					+ adminUnitID + " Master is:" + adminUnitMasterID);
+			
+			// if master was removed (ID - 0), close the subordination entry
+			if (adminUnitMasterID == 0) {
+				closeSubordination (adminUnitID, adminUnitMasterID);
+				return;
+			}
+			
+			// else - try changing subordination (there can be only one master)
+			Integer rowsChanged = updateSubordination (adminUnitID, adminUnitMasterID );
+			
+			// if this is a new subordination and there was nothing to update, then insert
+			if (rowsChanged == 0) {
+				insertSubordination(adminUnitID, adminUnitMasterID);
+			}
 		}
 	}
 	
@@ -383,24 +385,27 @@ public class AdminUnitDAO extends DAO {
 	
 	private int updateSubordination (Integer adminUnitID, Integer adminUnitMasterID) {
 		int rowsChanged = 0;
-		String sql = "update AdminUnitSubordination set "
-				+ "AdminUnitID=?, SubordinateAdminUnitID=?, ChangedBy='Admin', ChangedDate=NOW(), "
-				+ "ClosedDate='2999-12-31', ToDate='2999-12-31' "
-				+ "where SubordinateAdminUnitID=?";		
 		
-		try {
-			PreparedStatement preparedStatement = super.getConnection()
-					.prepareStatement(sql);
-			preparedStatement.setInt(1, adminUnitMasterID);
-			preparedStatement.setInt(2, adminUnitID);
-			preparedStatement.setInt(3, adminUnitID);
+		if (adminUnitID != adminUnitMasterID) {
+			String sql = "update AdminUnitSubordination set "
+					+ "AdminUnitID=?, SubordinateAdminUnitID=?, ChangedBy='Admin', ChangedDate=NOW(), "
+					+ "ClosedDate='2999-12-31', ToDate='2999-12-31' "
+					+ "where SubordinateAdminUnitID=?";		
 			
-			rowsChanged = preparedStatement.executeUpdate();
-			System.out.println("Rows changed:" + rowsChanged);
-			//checkUpdatePresent (adminUnitID, adminUnitMasterID);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
+			try {
+				PreparedStatement preparedStatement = super.getConnection()
+						.prepareStatement(sql);
+				preparedStatement.setInt(1, adminUnitMasterID);
+				preparedStatement.setInt(2, adminUnitID);
+				preparedStatement.setInt(3, adminUnitID);
+				
+				rowsChanged = preparedStatement.executeUpdate();
+				System.out.println("Rows changed:" + rowsChanged);
+				//checkUpdatePresent (adminUnitID, adminUnitMasterID);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			} finally {
+			}
 		}
 		return rowsChanged;
 	}
@@ -424,20 +429,22 @@ public class AdminUnitDAO extends DAO {
 	}*/
 
 	private void insertSubordination(Integer adminUnitID, Integer adminUnitMasterID) {
-		String sql = "insert into AdminUnitSubordination "
-				+ "(AdminUnitID, SubordinateAdminUnitID, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
-				+ "(?,?,'','1900-01-01','2999-12-31','Admin',NOW(),'Admin',NOW(),'Admin','2999-12-31')";
-		
-		try {
-			PreparedStatement preparedStatement = super.getConnection()
-					.prepareStatement(sql);
-			preparedStatement.setInt(1, adminUnitMasterID);
-			preparedStatement.setInt(2, adminUnitID);
-			int rowsChanged = preparedStatement.executeUpdate();
-			System.out.println("Rows inserted:" + rowsChanged);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
+		if (adminUnitID != adminUnitMasterID) {
+			String sql = "insert into AdminUnitSubordination "
+					+ "(AdminUnitID, SubordinateAdminUnitID, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
+					+ "(?,?,'','1900-01-01','2999-12-31','Admin',NOW(),'Admin',NOW(),'Admin','2999-12-31')";
+			
+			try {
+				PreparedStatement preparedStatement = super.getConnection()
+						.prepareStatement(sql);
+				preparedStatement.setInt(1, adminUnitMasterID);
+				preparedStatement.setInt(2, adminUnitID);
+				int rowsChanged = preparedStatement.executeUpdate();
+				System.out.println("Rows inserted:" + rowsChanged);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			} finally {
+			}
 		}
 	}
 		
