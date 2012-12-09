@@ -88,6 +88,8 @@ public class AdminUnitVM {
 	 */
 	public void setAdminUnitMasterListWithZero(
 			List<AdminUnit> adminUnitMasterListWithZero, AdminUnit foundMaster) {
+		List<AdminUnit> res = new ArrayList<AdminUnit>();
+		
 		// create new AdminUnitType
 		AdminUnit withZero = new AdminUnit();
 		// set id to 0
@@ -96,18 +98,19 @@ public class AdminUnitVM {
 		withZero.setName("---");
 		// append it to list
 		// it goes to last place in list, should go into first!
-		adminUnitMasterListWithZero.add(withZero);
+		res.add(withZero);
 		boolean masterPresent = false;
-		for (AdminUnit au : adminUnitMasterListWithZero) {
+		for (AdminUnit au : adminUnitMasterListWithZero) {	
+			res.add(au);
 			if (au.getName().equals(foundMaster.getName())) {
 				masterPresent = true;
 				break;
 			}
 		}
 		
-		if(!masterPresent)
-			adminUnitMasterListWithZero.add(foundMaster);
-		this.adminUnitMasterListWithZero = adminUnitMasterListWithZero;
+		if(!masterPresent && foundMaster.getAdminUnitID() != 0)
+			res.add(foundMaster);
+		this.adminUnitMasterListWithZero = res;
 	}
 
 	public AdminUnitType getAdminUnitType() {
