@@ -273,17 +273,15 @@ public class AdminUnit extends HttpServlet {
 
 					// update this units master
 					if (masterChanged) {
-						adminUnitDAO.saveMaster(adminUnitID, formData.getAdminUnitMaster());
+						adminUnitDAO.saveMaster(adminUnitID, formData.getAdminUnitMaster().getAdminUnitID());
 					}
 					// update the master for all subordinates (missing jQuery right now)
 					for (dao.AdminUnit sub : formData.getAdminUnitsSubordinateList()) {
-						adminUnitDAO.saveMaster(sub.getAdminUnitID(), formData.getAdminUnit());
+						adminUnitDAO.saveMaster(sub.getAdminUnitID(), formData.getAdminUnit().getAdminUnitID());
 					}
 					// remove subordination entries for abandoned subordinates
-					dao.AdminUnit emptyEntry = new dao.AdminUnit();
-					emptyEntry.setAdminUnitID(0);
 					for (dao.AdminUnit subEx : formData.getAdminUnitsSubordinateListRemoved()) {
-						adminUnitDAO.saveMaster(subEx.getAdminUnitID(), emptyEntry);
+						adminUnitDAO.saveMaster(subEx.getAdminUnitID(), 0);
 					}
 					
 					// work is done, back to main screen								
