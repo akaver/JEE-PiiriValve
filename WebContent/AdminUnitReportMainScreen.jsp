@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="./style.css" type="text/css">
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="./jquery-1.8.3.js"></script>
-<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script type="text/javascript" src="./jquery-ui.js"></script>
 
 <script type="text/javascript">
 	function openInfo(adminUnitID) {
@@ -73,7 +73,7 @@
 									<td class="allBorders">
 										<div>${subordinate.name}</div>
 										<div><button name="LookButton" type="button" onclick="openInfo(${subordinate.adminUnitID})">Vaata</button></div>
-										<div style="display:none" id="adminUnitID${subordinate.adminUnitID}" title="${subordinate.name}">
+										<div style="display:none; font-family:'Comic Sans MS'" id="adminUnitID${subordinate.adminUnitID}" title="${subordinate.name}">
 											Nimi: ${subordinate.name}<br>
 											Kood: ${subordinate.code}<br>
 											Tüüp: ${subordinate.adminUnitTypeString}<br>
