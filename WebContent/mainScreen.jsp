@@ -20,7 +20,7 @@
 		<a href="AdminUnitTypeReport">Administrative unit type report</a><br>
 		<br>
 		<a href="AdminUnit?AdminUnitID=1">Administrative unit redactor</a><br>
-		<a href="AdminUnitReport">Administrative unit report</a><br>
+		<a href="AdminUnitReport?AdminUnitTypeID=1">Administrative unit report</a><br>
 	</p>
 </body>
 </html>
