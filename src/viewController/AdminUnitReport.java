@@ -2,6 +2,9 @@ package viewController;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -57,7 +60,11 @@ public class AdminUnitReport extends HttpServlet {
 	protected AdminUnitReportVM populateViewModelWithData(HttpServletRequest request, HttpServletResponse response,
 			Integer id) {
 		AdminUnitReportVM formData = new AdminUnitReportVM();
-		formData.setSearchDate(new Date());
+		
+		Calendar today = Calendar.getInstance();
+		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);		
+        formData.setSearchDate(dateString);
+        
 		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll());
 		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(id));
 		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(id));

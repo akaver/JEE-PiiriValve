@@ -1,12 +1,11 @@
 package viewModel;
 
-import java.util.Date;
 import java.util.List;
 import dao.*;
 
 public class AdminUnitReportVM {
 	// the date on which subordinates had to be present
-	private Date searchDate;
+	private String searchDate;
 	
 	// the current unit type
 	private AdminUnitType adminUnitType;
@@ -41,11 +40,11 @@ public class AdminUnitReportVM {
 		this.adminUnitMasterList = adminUnitMasterList;
 	}
 
-	public Date getSearchDate() {
+	public String getSearchDate() {
 		return searchDate;
 	}
 
-	public void setSearchDate(Date searchDate) {
+	public void setSearchDate(String searchDate) {
 		this.searchDate = searchDate;
 	}
 
