@@ -9,6 +9,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Haldusüksuste alluvusraport</title>
 <link rel="stylesheet" href="./style.css" type="text/css">
+<script type="text/javascript">
+	function openInfo(adminUnitID) {
+		var text = document.getElementById("adminUnitID" + adminUnitID).innerHTML;
+		alert(text);
+	}
+</script>
 </head>
 <body>
 <form method="post" action="" name="AdminUnitForm" id="AdminUnitForm">
@@ -63,7 +69,22 @@
 								<tr>
 									<td class="allBorders">
 										<div>${subordinate.name}</div>
-										<div><input name="LookButton" type="submit" value="vaata"></div>
+										<div><input name="LookButton" type="submit" value="Vaata" onclick="openInfo(${subordinate.adminUnitID})"></div>
+										<div style="display:none" id="adminUnitID${subordinate.adminUnitID}">
+											Nimi: ${subordinate.name}
+											Kood: ${subordinate.code}
+											Tüüp: ${subordinate.adminUnitTypeString}
+											Kuulub: ${subordinationSet.name}
+											<c:if test="${fn:length(subordinate.adminUnitSubordinatesList) > 0}">
+											Alluvad:
+											</c:if>
+											<c:forEach var="subsubordinate" items="${subordinate.adminUnitSubordinatesList}">
+												${subsubordinate.name}
+											</c:forEach>
+											<c:if test="${fn:length(subordinate.comment) > 0}">
+												Kommentaar: ${subordinate.comment}												
+											</c:if>
+										</div>
 									</td>
 								</tr>
 							</c:forEach>

@@ -2,10 +2,7 @@ package viewController;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,7 +42,7 @@ public class AdminUnitReport extends HttpServlet {
 		// get
 		// so check get parameters and populate viewmodel with data from dao
 		if (formData == null) {
-			formData = populateViewModelWithData(request, response, 4);			
+			formData = populateViewModelWithData(request, response, 1);			
 		} else {
 			// TODO fantastic stuff with post request
 		}
@@ -70,6 +67,12 @@ public class AdminUnitReport extends HttpServlet {
 		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(id));
 		for (dao.AdminUnit au : formData.getAdminUnitMasterList()) {
 			au.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(au.getAdminUnitID()));
+			
+			// for extra information to be displayed at Lookbutton click
+			for (dao.AdminUnit sub : au.getAdminUnitSubordinatesList()) {
+				sub.setAdminUnitTypeString(new AdminUnitTypeDAO().getByID(sub.getAdminUnitTypeID()).getName());
+				sub.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(sub.getAdminUnitID()));
+			}
 		}
 		
 		return formData;

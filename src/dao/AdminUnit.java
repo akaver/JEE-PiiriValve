@@ -17,7 +17,10 @@ public class AdminUnit {
 	private Date changedDate;
 	private String closedBy;
 	private Date closedDate;
+	
+	//custom properties to be used in view controller -> jsp
 	private List<AdminUnit> adminUnitSubordinatesList;
+	private String adminUnitTypeString;
 	
 	public Integer getAdminUnitID() {
 		return adminUnitID;
@@ -109,5 +112,11 @@ public class AdminUnit {
 	public void setAdminUnitSubordinatesList(
 			List<AdminUnit> adminUnitSubordinatesList) {
 		this.adminUnitSubordinatesList = adminUnitSubordinatesList;
+	}
+	public String getAdminUnitTypeString() {
+		return adminUnitTypeString;
+	}
+	public void setAdminUnitTypeString(String adminUnitTypeString) {
+		this.adminUnitTypeString = adminUnitTypeString;
 	}
 }
