@@ -9,10 +9,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Haldusüksuste alluvusraport</title>
 <link rel="stylesheet" href="./style.css" type="text/css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<script type="text/javascript" src="./jquery-1.8.3.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+
 <script type="text/javascript">
 	function openInfo(adminUnitID) {
-		var text = document.getElementById("adminUnitID" + adminUnitID).innerHTML;
-		alert(text);
+		$('#adminUnitID'+adminUnitID).dialog();
 	}
 </script>
 </head>
@@ -69,17 +72,17 @@
 								<tr>
 									<td class="allBorders">
 										<div>${subordinate.name}</div>
-										<div><input name="LookButton" type="submit" value="Vaata" onclick="openInfo(${subordinate.adminUnitID})"></div>
-										<div style="display:none" id="adminUnitID${subordinate.adminUnitID}">
-											Nimi: ${subordinate.name}
-											Kood: ${subordinate.code}
-											Tüüp: ${subordinate.adminUnitTypeString}
-											Kuulub: ${subordinationSet.name}
+										<div><button name="LookButton" type="button" onclick="openInfo(${subordinate.adminUnitID})">Vaata</button></div>
+										<div style="display:none" id="adminUnitID${subordinate.adminUnitID}" title="${subordinate.name}">
+											Nimi: ${subordinate.name}<br>
+											Kood: ${subordinate.code}<br>
+											Tüüp: ${subordinate.adminUnitTypeString}<br>
+											Kuulub: ${subordinationSet.name}<br>
 											<c:if test="${fn:length(subordinate.adminUnitSubordinatesList) > 0}">
-											Alluvad:
+											Alluvad:<br>
 											</c:if>
 											<c:forEach var="subsubordinate" items="${subordinate.adminUnitSubordinatesList}">
-												${subsubordinate.name}
+												- ${subsubordinate.name}<br>
 											</c:forEach>
 											<c:if test="${fn:length(subordinate.comment) > 0}">
 												Kommentaar: ${subordinate.comment}												
@@ -107,5 +110,6 @@
 			</tr>
 		</table>
 	</form>
+	<div id="forpopup" title="pealkiri">whatever</div>
 </body>
 </html>

@@ -29,6 +29,6 @@ body {
 	font-size: 14px;
 }
 
-body, input, select, textarea {
+body, input, select, textarea, button {
 	font-family: "Comic Sans MS", cursive, sans-serif;
 }

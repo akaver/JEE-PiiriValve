@@ -42,7 +42,7 @@ public class AdminUnitReport extends HttpServlet {
 		// get
 		// so check get parameters and populate viewmodel with data from dao
 		if (formData == null) {
-			formData = populateViewModelWithData(request, response, 1);			
+			formData = populateViewModelWithData(request, response, 4);			
 		} else {
 			// TODO fantastic stuff with post request
 		}
