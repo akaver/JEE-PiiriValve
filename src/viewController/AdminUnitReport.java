@@ -53,7 +53,28 @@ public class AdminUnitReport extends HttpServlet {
 				return;
 			}
 			
+			if (RefreshButtonWasPressed(request)) {
+				Boolean newDataNeeded = false;
+				Integer newAdminUnitTypeID = formData.getAdminUnitType().getAdminUnitTypeID();
+				
+				if (adminUnitTypeHasChanged(formData, request)) {
+					newAdminUnitTypeID = Integer.parseInt(request
+							.getParameter("AdminUnitType_adminUnitTypeID"));
+					formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(newAdminUnitTypeID));
+					newDataNeeded = true;					
+				}
+				
+				if (searchDateHasChanged(formData, request)) {
+					formData = setCustomDate(formData, request);
+					newDataNeeded = true;
+				}
+				
+				if (newDataNeeded) {
+					formData = setUnitTypeSpecifics(formData, newAdminUnitTypeID);
+				}
+			}
 		}
+		
 		// save the viewmodel for jsp dispatcher into session
 		session.setAttribute("formData", formData);
 				
@@ -62,6 +83,54 @@ public class AdminUnitReport extends HttpServlet {
 				request, response);
 	}
 	
+	private boolean searchDateHasChanged(AdminUnitReportVM formData,
+			HttpServletRequest request) {
+		
+		String newDateString = request.getParameter("SearchDate");
+		if (!newDateString.equals(formData.getAdminUnitType().getAdminUnitTypeID()))
+			return true;
+		
+		return false;
+	}
+
+	private Boolean adminUnitTypeHasChanged(AdminUnitReportVM formData, HttpServletRequest request) {
+		
+		try {
+			// was AdminUnitType dropdown changed?
+			if (!request
+					.getParameter("AdminUnitType_adminUnitTypeID")
+					.equals(formData.getAdminUnitType()
+							.getAdminUnitTypeID().toString())) {
+				System.out.println("Changing AdminUnitMaster_adminUnitID");
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println("Exception:" + e);
+		}
+		return false;
+	}
+
+	private AdminUnitReportVM setCustomDate(AdminUnitReportVM formData,
+			HttpServletRequest request) {
+		
+		String newDateString = request.getParameter("SearchDate");
+		formData.setSearchDate(newDateString);
+		
+		return formData;
+	}
+
+	private boolean RefreshButtonWasPressed(HttpServletRequest request) {
+		Enumeration<String> paramNames = request.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String next = paramNames.nextElement();
+			if (next.equals("RefreshButton")) {
+				System.out.println("Going to refresh view");
+				return true;
+			}
+		}	
+		return false;
+	}
+
 	private Integer processAndValidateID(HttpServletRequest request) {
 		Integer adminUnitTypeID = null;
 		try {
@@ -101,16 +170,19 @@ public class AdminUnitReport extends HttpServlet {
 	}
 
 	protected AdminUnitReportVM populateViewModelWithData(HttpServletRequest request, HttpServletResponse response,
-			Integer id) {
-		AdminUnitReportVM formData = new AdminUnitReportVM();
+			Integer adminUnitTypeID) {
+		AdminUnitReportVM formData = new AdminUnitReportVM();	       
+		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll());	
+		formData = initializeDate(formData);
+		formData = setUnitTypeSpecifics(formData, adminUnitTypeID); 	
 		
-		Calendar today = Calendar.getInstance();
-		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);		
-        formData.setSearchDate(dateString);
-        
-		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll());
-		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(id));
-		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(id));
+		return formData;
+	}
+
+	private AdminUnitReportVM setUnitTypeSpecifics(AdminUnitReportVM formData, Integer adminUnitTypeID) {
+		
+		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID));
+		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(adminUnitTypeID));
 		for (dao.AdminUnit au : formData.getAdminUnitMasterList()) {
 			au.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(au.getAdminUnitID()));
 			
@@ -120,8 +192,16 @@ public class AdminUnitReport extends HttpServlet {
 				sub.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(sub.getAdminUnitID()));
 			}
 		}
-		
 		return formData;
+	}
+
+	private AdminUnitReportVM initializeDate(AdminUnitReportVM formData) {
+
+		Calendar today = Calendar.getInstance();
+		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);		
+        formData.setSearchDate(dateString);
+        
+        return formData;
 	}
 
 }
