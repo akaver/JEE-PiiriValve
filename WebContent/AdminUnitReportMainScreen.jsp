@@ -110,6 +110,5 @@
 			</tr>
 		</table>
 	</form>
-	<div id="forpopup" title="pealkiri">whatever</div>
 </body>
 </html>
