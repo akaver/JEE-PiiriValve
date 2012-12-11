@@ -9,13 +9,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Haldusüksuste alluvusraport</title>
 <link rel="stylesheet" href="./style.css" type="text/css">
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="./jquery-1.8.3.js"></script>
 <script type="text/javascript" src="./jquery-ui.js"></script>
 
 <script type="text/javascript">
 	function openInfo(adminUnitID) {
-		$('#adminUnitID'+adminUnitID).dialog();
+		var dialog_buttons = {}; 
+		dialog_buttons['OK'] = function(){ $(this).dialog('close'); }; 
+		
+		$('#adminUnitID'+adminUnitID).dialog({ 
+			buttons: dialog_buttons,
+			closeOnEscape: true
+		});
 	}
 </script>
 </head>
@@ -73,7 +79,7 @@
 									<td class="allBorders">
 										<div>${subordinate.name}</div>
 										<div><button name="LookButton" type="button" onclick="openInfo(${subordinate.adminUnitID})">Vaata</button></div>
-										<div style="display:none; font-family:'Comic Sans MS'" id="adminUnitID${subordinate.adminUnitID}" title="${subordinate.name}">
+										<div style="display:none; font-family:'Comic Sans MS', cursive, sans-serif;" id="adminUnitID${subordinate.adminUnitID}" title="${subordinate.name}">
 											Nimi: ${subordinate.name}<br>
 											Kood: ${subordinate.code}<br>
 											Tüüp: ${subordinate.adminUnitTypeString}<br>

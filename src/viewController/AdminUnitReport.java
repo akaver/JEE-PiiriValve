@@ -3,6 +3,7 @@ package viewController;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,10 +43,38 @@ public class AdminUnitReport extends HttpServlet {
 		// get
 		// so check get parameters and populate viewmodel with data from dao
 		if (formData == null) {
-			formData = populateViewModelWithData(request, response, 4);			
+			Integer adminUnitTypeID = processAndValidateID(request);
+			if (adminUnitTypeID == null) {
+				adminUnitTypeID = 1;
+			}
+			formData = populateViewModelWithData(request, response, adminUnitTypeID);			
 		} else {
-			// TODO fantastic stuff with post request
+			if (BackButtonWasPressed(request, response)) {
+				return;
+			}
+			
+			if (RefreshButtonWasPressed(request)) {
+				Boolean newDataNeeded = false;
+				Integer newAdminUnitTypeID = formData.getAdminUnitType().getAdminUnitTypeID();
+				
+				if (adminUnitTypeHasChanged(formData, request)) {
+					newAdminUnitTypeID = Integer.parseInt(request
+							.getParameter("AdminUnitType_adminUnitTypeID"));
+					formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(newAdminUnitTypeID));
+					newDataNeeded = true;					
+				}
+				
+				if (searchDateHasChanged(formData, request)) {
+					formData = setCustomDate(formData, request);
+					newDataNeeded = true;
+				}
+				
+				if (newDataNeeded) {
+					formData = setUnitTypeSpecifics(formData, newAdminUnitTypeID);
+				}
+			}
 		}
+		
 		// save the viewmodel for jsp dispatcher into session
 		session.setAttribute("formData", formData);
 				
@@ -54,17 +83,106 @@ public class AdminUnitReport extends HttpServlet {
 				request, response);
 	}
 	
-	protected AdminUnitReportVM populateViewModelWithData(HttpServletRequest request, HttpServletResponse response,
-			Integer id) {
-		AdminUnitReportVM formData = new AdminUnitReportVM();
+	private boolean searchDateHasChanged(AdminUnitReportVM formData,
+			HttpServletRequest request) {
 		
-		Calendar today = Calendar.getInstance();
-		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);		
-        formData.setSearchDate(dateString);
-        
-		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll());
-		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(id));
-		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(id));
+		String newDateString = request.getParameter("SearchDate");
+		if (!newDateString.equals(formData.getAdminUnitType().getAdminUnitTypeID()))
+			return true;
+		
+		return false;
+	}
+
+	private Boolean adminUnitTypeHasChanged(AdminUnitReportVM formData, HttpServletRequest request) {
+		
+		try {
+			// was AdminUnitType dropdown changed?
+			if (!request
+					.getParameter("AdminUnitType_adminUnitTypeID")
+					.equals(formData.getAdminUnitType()
+							.getAdminUnitTypeID().toString())) {
+				System.out.println("Changing AdminUnitMaster_adminUnitID");
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println("Exception:" + e);
+		}
+		return false;
+	}
+
+	private AdminUnitReportVM setCustomDate(AdminUnitReportVM formData,
+			HttpServletRequest request) {
+		
+		String newDateString = request.getParameter("SearchDate");
+		formData.setSearchDate(newDateString);
+		
+		return formData;
+	}
+
+	private boolean RefreshButtonWasPressed(HttpServletRequest request) {
+		Enumeration<String> paramNames = request.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String next = paramNames.nextElement();
+			if (next.equals("RefreshButton")) {
+				System.out.println("Going to refresh view");
+				return true;
+			}
+		}	
+		return false;
+	}
+
+	private Integer processAndValidateID(HttpServletRequest request) {
+		Integer adminUnitTypeID = null;
+		try {
+			adminUnitTypeID = Integer.parseInt(request.getParameter("AdminUnitTypeID"));
+		} catch (Exception e) {
+			System.out.println("Trouble with parsing ID");
+		}
+		
+		// if anybody enters with 0 we will not be angry but send him to 1		
+		if (adminUnitTypeID == 0) {
+			adminUnitTypeID = 1;
+		}
+		
+		if (adminUnitTypeID > 0 && new AdminUnitTypeDAO().isIDValid(adminUnitTypeID)) {
+			System.out.println("Starting view proccessing for AdminUnitType ID:" + adminUnitTypeID);
+		} else {
+			// throw exception, this is hacking attempt
+			throw new RuntimeException(
+				"Hacking attempt, this is not valid ID for AdminUnitType:"
+						+ request.getParameter("AdminUnitTypeID"));
+		}
+		return adminUnitTypeID;
+	}
+
+	private boolean BackButtonWasPressed(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		Enumeration<String> paramNames = request.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String next = paramNames.nextElement();
+			if (next.equals("BackButton")) {
+				System.out.println("Going back to main screen");
+				response.sendRedirect("mainScreen.jsp");
+				return true;
+			}
+		}	
+		return false;
+	}
+
+	protected AdminUnitReportVM populateViewModelWithData(HttpServletRequest request, HttpServletResponse response,
+			Integer adminUnitTypeID) {
+		AdminUnitReportVM formData = new AdminUnitReportVM();	       
+		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll());	
+		formData = initializeDate(formData);
+		formData = setUnitTypeSpecifics(formData, adminUnitTypeID); 	
+		
+		return formData;
+	}
+
+	private AdminUnitReportVM setUnitTypeSpecifics(AdminUnitReportVM formData, Integer adminUnitTypeID) {
+		
+		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID));
+		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(adminUnitTypeID));
 		for (dao.AdminUnit au : formData.getAdminUnitMasterList()) {
 			au.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(au.getAdminUnitID()));
 			
@@ -74,8 +192,16 @@ public class AdminUnitReport extends HttpServlet {
 				sub.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(sub.getAdminUnitID()));
 			}
 		}
-		
 		return formData;
+	}
+
+	private AdminUnitReportVM initializeDate(AdminUnitReportVM formData) {
+
+		Calendar today = Calendar.getInstance();
+		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);		
+        formData.setSearchDate(dateString);
+        
+        return formData;
 	}
 
 }
