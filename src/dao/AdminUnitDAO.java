@@ -104,7 +104,9 @@ public class AdminUnitDAO extends DAO {
 				+ adminUnitID);
 
 		if (adminUnitID == null) {
-			return null;
+			AdminUnit emptyMaster = new AdminUnit();
+			emptyMaster.setAdminUnitID(0);
+			return emptyMaster;
 		}
 
 		AdminUnit res = getMasterByID(adminUnitID);
@@ -161,7 +163,7 @@ public class AdminUnitDAO extends DAO {
 				+ adminUnitID);
 
 		if (adminUnitID == null) {
-			return null;
+			return new ArrayList<AdminUnit>();
 		}
 		List<AdminUnit> res = new ArrayList<AdminUnit>();
 
@@ -200,7 +202,7 @@ public class AdminUnitDAO extends DAO {
 				+ adminUnitTypeID);
 
 		if (adminUnitTypeID == null) {
-			return null;
+			return new ArrayList<AdminUnit>();
 		}
 
 		List<AdminUnit> res = new ArrayList<AdminUnit>();

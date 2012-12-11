@@ -82,6 +82,23 @@ public class AdminUnitVM {
 		return adminUnitMasterListWithZero;
 	}
 	
+	public AdminUnitType getAdminUnitType() {
+		return adminUnitType;
+	}
+
+	public void setAdminUnitType(AdminUnitType adminUnitType) {
+		this.adminUnitType = adminUnitType;
+	}
+
+	public List<AdminUnit> getAdminUnitsSubordinateListRemoved() {
+		return adminUnitsSubordinateListRemoved;
+	}
+
+	public void setAdminUnitsSubordinateListRemoved(
+			List<AdminUnit> adminUnitsSubordinateListRemoved) {
+		this.adminUnitsSubordinateListRemoved = adminUnitsSubordinateListRemoved;
+	}
+	
 	/*
 	 * return list with one added record with ID=0 and name="----"
 	 * its used in dropdwon to indicate "no selection"
@@ -89,6 +106,9 @@ public class AdminUnitVM {
 	public void setAdminUnitMasterListWithZero(
 			List<AdminUnit> adminUnitMasterListWithZero, AdminUnit foundMaster) {
 		List<AdminUnit> res = new ArrayList<AdminUnit>();
+		if (adminUnitMasterListWithZero == null) {
+			adminUnitMasterListWithZero = new ArrayList<AdminUnit>();
+		}
 		
 		// create new AdminUnitType
 		AdminUnit withZero = new AdminUnit();
@@ -106,25 +126,12 @@ public class AdminUnitVM {
 			}
 		}
 		
-		if(!masterPresent && foundMaster.getAdminUnitID() != 0)
-			res.add(foundMaster);
+		if (foundMaster != null) {
+			if(!masterPresent && foundMaster.getAdminUnitID() != 0)
+				res.add(foundMaster);
+		}
 		this.adminUnitMasterListWithZero = res;
 	}
 
-	public AdminUnitType getAdminUnitType() {
-		return adminUnitType;
-	}
-
-	public void setAdminUnitType(AdminUnitType adminUnitType) {
-		this.adminUnitType = adminUnitType;
-	}
-
-	public List<AdminUnit> getAdminUnitsSubordinateListRemoved() {
-		return adminUnitsSubordinateListRemoved;
-	}
-
-	public void setAdminUnitsSubordinateListRemoved(
-			List<AdminUnit> adminUnitsSubordinateListRemoved) {
-		this.adminUnitsSubordinateListRemoved = adminUnitsSubordinateListRemoved;
-	}
+	
 }

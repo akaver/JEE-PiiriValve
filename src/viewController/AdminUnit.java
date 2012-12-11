@@ -46,13 +46,14 @@ public class AdminUnit extends HttpServlet {
 		// get
 		// so check get parameters and populate viewmodel with data from dao
 		if (formData == null) {
+			session.removeAttribute("errors");			
 			formData = processGET(request, response);			
 		} else {
 			// formData was there, so this is post!
 			if (cancelWasPressed(request, response)) {
 				return;
 			}			
-			formData = updateViewModelTextFields(request, formData);
+			formData = updateViewModelFieldsForDB(request, formData);
 			
 			// do some simple validation - so at least code and name are set
 			// (and should be unique)
@@ -104,10 +105,10 @@ public class AdminUnit extends HttpServlet {
 	private AdminUnitVM updateUnitsType(HttpServletRequest request,
 			AdminUnitVM formData) {
 		
-		// do we have new adminunittype?
-		if (!request.getParameter("AdminUnitType_adminUnitTypeID")
-				.equals(formData.getAdminUnitType()
-						.getAdminUnitTypeID().toString())) {
+		// do we have new (or first set?) adminunittype?
+		if (formData.getAdminUnitType() == null ||
+				!request.getParameter("AdminUnitType_adminUnitTypeID")
+				.equals(formData.getAdminUnitType().getAdminUnitTypeID().toString())) {
 			System.out.println("Changing AdminUnitType_adminUnitTypeID");
 			
 			// record new type to session
@@ -149,7 +150,7 @@ public class AdminUnit extends HttpServlet {
 		return false;
 	}
 	
-	private AdminUnitVM updateViewModelTextFields(HttpServletRequest request, AdminUnitVM formData) {
+	private AdminUnitVM updateViewModelFieldsForDB(HttpServletRequest request, AdminUnitVM formData) {
 		// lets update the viewmodel with changes the user wants to make
 		// trivial stuff: name,code,comment
 		formData.getAdminUnit().setCode(
@@ -176,8 +177,14 @@ public class AdminUnit extends HttpServlet {
 				// change viewmodels AdminUnitMaster, find new one from
 				// dao
 				// based on new id
-				formData.setAdminUnitMaster(new AdminUnitDAO().getByID(Integer.parseInt(request
-						.getParameter("AdminUnitMaster_adminUnitID"))));
+				dao.AdminUnit newMaster = new AdminUnitDAO().getByID(Integer.parseInt(request
+						.getParameter("AdminUnitMaster_adminUnitID")));
+				if (newMaster == null) {
+					newMaster = new dao.AdminUnit();
+					newMaster.setAdminUnitID(0);
+				}
+				formData.setAdminUnitMaster(newMaster);
+				
 			}
 		} catch (Exception e) {
 			System.out.println("Exception:" + e);
@@ -204,7 +211,7 @@ public class AdminUnit extends HttpServlet {
 		//}
 		// update the master for all subordinates (missing jQuery right now)
 		for (dao.AdminUnit sub : formData.getAdminUnitsSubordinateList()) {
-			adminUnitDAO.saveMaster(sub.getAdminUnitID(), formData.getAdminUnit().getAdminUnitID());
+			adminUnitDAO.saveMaster(sub.getAdminUnitID(), adminUnitID);
 		}
 		// remove subordination entries for abandoned subordinates
 		for (dao.AdminUnit subEx : formData.getAdminUnitsSubordinateListRemoved()) {
