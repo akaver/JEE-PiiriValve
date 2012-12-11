@@ -127,6 +127,47 @@ public class DAO {
 		insertDummyDataToAdminUnitSubordinationTable();
 		insertDummyDataToArmyUnitTable();
 		insertDummyDataToArmyUnitSubordinationTable();
+		insertDummyDataForTestingPastDates();
+	}
+
+	private void insertDummyDataForTestingPastDates() {
+		// Kihelkond (id 9) - olemas apr-juuni 2012
+		executeUpdateSQL("insert into AdminUnitType " +
+				"(Code, Name, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
+				"('KH','Kihelkond','väga vana üksus','2012-04-01','2012-07-01'," +
+				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+		// Talu (id 10) - olemas apr-juuni 2012
+		executeUpdateSQL("insert into AdminUnitType " +
+				"(Code, Name, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
+				"('T','Talu','talu, mis talu','2012-04-01','2012-07-01'," +
+				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+		
+		// Oli olemas kihelkond Alempois (id 12) - olemas apr-juuni 2012
+		executeUpdateSQL("insert into AdminUnit " +
+				"(Code, Name, Comment, AdminUnitTypeID, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
+				"('Alempois','Alempois','hirmus kõva kihelkond','9','2012-04-01','2012-07-01'," +
+				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+		// Alempoisile allus Kurevere küla - allus apr-mai 2012
+		executeUpdateSQL("insert into AdminUnitSubordination " +
+				"(AdminUnitID, SubordinateAdminUnitID, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
+				"('12','9','','2012-04-01','2012-06-01'," +
+				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+		// Alempoisile allus Karuvere küla - allus mai-juuni 2012
+		executeUpdateSQL("insert into AdminUnitSubordination " +
+				"(AdminUnitID, SubordinateAdminUnitID, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
+				"('12','10','','2012-05-01','2012-07-01'," +
+				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+		
+		// Oli olemas talu Karu talu (id 13) - olemas juuni 2012
+		executeUpdateSQL("insert into AdminUnit " +
+				"(Code, Name, Comment, AdminUnitTypeID, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
+				"('KaruTalu','Karu talu','siin elavad karud','10','2012-06-01','2012-07-01'," +
+				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+		// ... mis allus Karuvere külale 5.-10. juuni 2012
+		executeUpdateSQL("insert into AdminUnitSubordination " +
+				"(AdminUnitID, SubordinateAdminUnitID, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
+				"('10','13','','2012-06-05','2012-06-10'," +
+				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
 	}
 
 	private void createAdminUnitTypeTable() {
@@ -159,7 +200,7 @@ public class DAO {
 				"('VL', 'Vallalinn', '', " + std + ")," + //
 				"('A1', 'Alev', '', " + std + ")," + //
 				"('A2', 'Alevik', '', " + std + ")," + //
-				"('K', 'KÃ¼la', '', " + std + ")" + //
+				"('K', 'Küla', '', " + std + ")" + //
 				"");
 	}
 
@@ -192,7 +233,7 @@ public class DAO {
 				"('4', '5', 'vald->vallalinn', " + std + ")," + 
 //				"('4', '6', 'vald->alev', " + std + ")," + 
 //				"('4', '7', 'vald->alevik', " + std + ")," +
-				"('4', '8', 'vald->kÃ¼la', " + std + ")" +
+				"('4', '8', 'vald->küla', " + std + ")" +
 // @formatter:on
 				"");
 
@@ -224,16 +265,16 @@ public class DAO {
 				+ "(Code, Name, Comment, AdminUnitTypeID, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "
 				+
 // @formatter:off
-				"('Eesti', 'Eesti Vabariik', 'KÃµrgeim haldusÃ¼ksus, riik', '1'," + std + ")," + 
+				"('Eesti', 'Eesti Vabariik', 'Kõrgeim haldusüksus, riik', '1'," + std + ")," + 
 				"('Harjumaa', 'Harjumaa maakond', '', '2'," + std + ")," +
 				"('Tallinn', 'Tallinn', 'pealinn', '3'," + std + ")," + 
 				"('KiiliVald', 'Kiili vald', '', '4'," + std + ")," + 
 				"('KiiliAlev', 'Kiili alev', '', '6'," + std + ")," + 
 				"('Luige', 'Luige alevik', '', '7'," + std + ")," + 
 				"('Kangru', 'Kangru alevik', '', '7'," + std + ")," + 
-				"('Arusta', 'Arusta kÃ¼la', '', '8'," + std + ")," + 
-				"('Kurevere', 'Kurevere kÃ¼la', '', '8'," + std + ")," + 
-				"('Karuvere', 'Karuvere kÃ¼la', '', '8'," + std + ")," +
+				"('Arusta', 'Arusta küla', '', '8'," + std + ")," + 
+				"('Kurevere', 'Kurevere küla', '', '8'," + std + ")," + 
+				"('Karuvere', 'Karuvere küla', '', '8'," + std + ")," +
 				"('KureVald', 'Kure vald', '', '4'," + std + ")" + 
 				
 // @formatter:on

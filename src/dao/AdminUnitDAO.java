@@ -37,12 +37,32 @@ public class AdminUnitDAO extends DAO {
 	}
 	
 	public AdminUnit getByID(Integer adminUnitID) {
+		return getByID(adminUnitID, "NOW()");
+	}
+	
+	
+	public AdminUnit getByID(Integer adminUnitID, String dateString) {
 		AdminUnit res = null;
-
 		System.out.println("adminUnit getByID:" + adminUnitID);
+		
+		String dateLimits = "";
+		
+		// if we search for NOW, entry must opened and valid
+		if (dateString.equals("NOW()")) {
+			dateLimits = 
+				" and OpenedDate < " + dateString + 
+				" and ClosedDate > " + dateString + 
+				" and FromDate < " + dateString + 
+				" and ToDate > " + dateString;
+		}
+		// if we search for custom date, entry must have been valid THEN
+		else {
+			dateLimits = 
+				" and FromDate < DATE '" + dateString + 
+				"' and ToDate > DATE '" + dateString + "'";
+		}
 
-		String sql = "select * from AdminUnit where AdminUnitID=?" +
-				"and OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() ";
+		String sql = "select * from AdminUnit where AdminUnitID=?" + dateLimits;
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -183,10 +203,9 @@ public class AdminUnitDAO extends DAO {
 		}
 		// if we search for custom date, entry must have been valid THEN
 		else {
-			dateString = "'" + dateString + "'";
 			dateLimits = 
-				" and FromDate < " + dateString + 
-				" and ToDate > " + dateString;
+				" and FromDate < DATE '" + dateString + 
+				"' and ToDate > DATE '" + dateString + "'";
 		}
 
 		// get the list of subordinate ID's
@@ -201,7 +220,7 @@ public class AdminUnitDAO extends DAO {
 				Integer subid = resultSet.getInt("SubordinateAdminUnitID");
 				if (subid != adminUnitID) {
 					System.out.println("Fetching subordinate with ID:" + subid);
-					res.add(getByID(subid));
+					res.add(getByID(subid, dateString));
 				}
 			}
 
@@ -513,10 +532,9 @@ public class AdminUnitDAO extends DAO {
 		}
 		// if we search for custom date, entry must have been valid THEN
 		else {
-			dateString = "'" + dateString + "'";
 			dateLimits = 
-				" and FromDate < " + dateString + 
-				" and ToDate > " + dateString;
+				" and FromDate < DATE '" + dateString + 
+				"' and ToDate > DATE '" + dateString + "'";
 		}
 		
 		String sql = "select * from AdminUnit where AdminUnitTypeID=?" + dateLimits;

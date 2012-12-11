@@ -44,6 +44,7 @@ public class AdminUnitTypeDAO extends DAO {
 		return getByID(adminUnitTypeID, "NOW()");
 	}
 
+	// 3 options for dateString - validated date, NOW() or emptyString (no date limits)
 	public AdminUnitType getByID(Integer adminUnitTypeID, String dateString) {
 		AdminUnitType res = null;
 		String dateLimits = "";
@@ -56,12 +57,14 @@ public class AdminUnitTypeDAO extends DAO {
 				" and FromDate < " + dateString + 
 				" and ToDate > " + dateString;
 		}
+		else if(dateString.equals("")) {
+			dateLimits = "";
+		}
 		// if we search for custom date, entry must have been valid THEN
 		else {
-			dateString = "'" + dateString + "'";
 			dateLimits = 
-				" and FromDate < " + dateString + 
-				" and ToDate > " + dateString;
+				" and FromDate < DATE '" + dateString + 
+				"' and ToDate > DATE '" + dateString + "'";
 		}
 
 		System.out.println("adminUnitType getByID:" + adminUnitTypeID);

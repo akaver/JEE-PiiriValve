@@ -64,7 +64,7 @@ public class AdminUnitReport extends HttpServlet {
 				if (adminUnitTypeHasChanged(formData, request)) {
 					Integer newAdminUnitTypeID = Integer.parseInt(request
 							.getParameter("AdminUnitType_adminUnitTypeID"));
-					formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(newAdminUnitTypeID));
+					formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(newAdminUnitTypeID,""));
 					newDataNeeded = true;					
 				}
 				
@@ -94,7 +94,7 @@ public class AdminUnitReport extends HttpServlet {
 		
 		// empty space validates as Today
 		if (newDateString.trim().equals("")) {
-			newDateString = initializeDate();
+			return true;
 		}
 		else if(!isValidDateString(newDateString)) {
 			request.getSession().setAttribute("errors", "Sisesta kuupäev kujul pp.kk.aaaa");
@@ -164,6 +164,9 @@ public class AdminUnitReport extends HttpServlet {
 			HttpServletRequest request) {
 		
 		String newDateString = request.getParameter("SearchDate");
+		if (newDateString.trim().equals("")) {
+			newDateString = initializeDate();
+		}
 		formData.setSearchDate(newDateString);
 		
 		return formData;
@@ -224,9 +227,9 @@ public class AdminUnitReport extends HttpServlet {
 		Boolean searchWithoutDateLimit = true;
 		
 		AdminUnitReportVM formData = new AdminUnitReportVM();
-		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID));		
-		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll(searchWithoutDateLimit));
 		formData.setSearchDate(initializeDate());
+		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID,""));		
+		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll(searchWithoutDateLimit));
 		formData = setUnitTypeSpecifics(formData); 	
 		
 		return formData;
