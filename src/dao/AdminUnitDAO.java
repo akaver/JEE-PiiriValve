@@ -456,14 +456,14 @@ public class AdminUnitDAO extends DAO {
 	/*//NB! Only for debugging
 	private void checkUpdatePresent(Integer adminUnitID,
 			Integer adminUnitMasterID) {
-		String sql = "select SubOrdinateAdminUnitID from AdminUnitSubOrdination where AdminUnitID=?";
+		String sql = "select * from AdminUnitSubOrdination";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
-			preparedStatement.setInt(1, adminUnitMasterID);
+			//preparedStatement.setInt(1, adminUnitMasterID);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				System.out.println("Servant: " + resultSet.getInt("SubordinateAdminUnitID"));
+				System.out.println("Servant: " + resultSet.getInt("SubordinateAdminUnitID") + " Master: " + resultSet.getInt("AdminUnitID"));
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);

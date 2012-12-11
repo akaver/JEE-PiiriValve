@@ -315,8 +315,8 @@ public class DAO {
 				"('4', '5', 'KiiliVald->KiiliAlev'," + std + ")," + 
 				"('4', '6', 'KiiliVald->Luige'," + std + ")," + 
 				"('4', '7', 'KiiliVald->Kangru'," + std + ")," + 
-				"('4', '8', 'KiiliVald->Arusta'," + std + ")," + 
-				"('4', '9', 'KiiliVald->Kurevere'," + std + ")" + 
+				"('4', '8', 'KiiliVald->Arusta'," + std + ")" + 
+				//"('4', '9', 'KiiliVald->Kurevere'," + std + ")" + 
 // @formatter:on
 				"");
 	}
