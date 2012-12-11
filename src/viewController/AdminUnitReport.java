@@ -52,16 +52,17 @@ public class AdminUnitReport extends HttpServlet {
 			}
 			formData = populateViewModelWithData(request, response, adminUnitTypeID);			
 		} else {
+			// now we are in post
+			
 			if (BackButtonWasPressed(request, response)) {
 				return;
 			}
 			
 			if (RefreshButtonWasPressed(request)) {
 				Boolean newDataNeeded = false;
-				Integer newAdminUnitTypeID = formData.getAdminUnitType().getAdminUnitTypeID();
 				
 				if (adminUnitTypeHasChanged(formData, request)) {
-					newAdminUnitTypeID = Integer.parseInt(request
+					Integer newAdminUnitTypeID = Integer.parseInt(request
 							.getParameter("AdminUnitType_adminUnitTypeID"));
 					formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(newAdminUnitTypeID));
 					newDataNeeded = true;					
@@ -73,7 +74,7 @@ public class AdminUnitReport extends HttpServlet {
 				}
 				
 				if (newDataNeeded) {
-					formData = setUnitTypeSpecifics(formData, newAdminUnitTypeID);
+					formData = setUnitTypeSpecifics(formData);
 				}
 			}
 		}
@@ -90,7 +91,12 @@ public class AdminUnitReport extends HttpServlet {
 			HttpServletRequest request) {
 		
 		String newDateString = request.getParameter("SearchDate");
-		if(!isValidDateString(newDateString)) {
+		
+		// empty space validates as Today
+		if (newDateString.trim().equals("")) {
+			newDateString = initializeDate();
+		}
+		else if(!isValidDateString(newDateString)) {
 			request.getSession().setAttribute("errors", "Sisesta kuupäev kujul pp.kk.aaaa");
 			return false;
 		}
@@ -127,6 +133,7 @@ public class AdminUnitReport extends HttpServlet {
 		return true;
 	}
 
+	// formats datestring from dd.mm.yyyy -> yyyy-mm-dd 
 	private String reFormat(String dateString) {
 		StringBuilder sb = new StringBuilder(dateString.substring(6));
 		sb.append("-");
@@ -214,37 +221,47 @@ public class AdminUnitReport extends HttpServlet {
 
 	protected AdminUnitReportVM populateViewModelWithData(HttpServletRequest request, HttpServletResponse response,
 			Integer adminUnitTypeID) {
-		AdminUnitReportVM formData = new AdminUnitReportVM();	       
-		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll());	
-		formData = initializeDate(formData);
-		formData = setUnitTypeSpecifics(formData, adminUnitTypeID); 	
+		Boolean searchWithoutDateLimit = true;
+		
+		AdminUnitReportVM formData = new AdminUnitReportVM();
+		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID));		
+		formData.setAdminUnitTypeList(new AdminUnitTypeDAO().getAll(searchWithoutDateLimit));
+		formData.setSearchDate(initializeDate());
+		formData = setUnitTypeSpecifics(formData); 	
 		
 		return formData;
 	}
 
-	private AdminUnitReportVM setUnitTypeSpecifics(AdminUnitReportVM formData, Integer adminUnitTypeID) {
+	
+	// NB! In this method every database method uses date as extra search criteria
+	// - all objects (even names) and subordinations had to be present in this exact moment
+	
+	private AdminUnitReportVM setUnitTypeSpecifics(AdminUnitReportVM formData) {
 		
-		formData.setAdminUnitType(new AdminUnitTypeDAO().getByID(adminUnitTypeID));
-		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(adminUnitTypeID));
+		Integer adminUnitTypeID = formData.getAdminUnitType().getAdminUnitTypeID();
+		String dateString = reFormat(formData.getSearchDate());
+		
+		// get the master units, the ones we have chosen from dropdown
+		formData.setAdminUnitMasterList(new AdminUnitDAO().getByAdminUnitTypeID(adminUnitTypeID, dateString));
+		
+		// get the subordinates to be displayed on page
 		for (dao.AdminUnit au : formData.getAdminUnitMasterList()) {
-			au.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(au.getAdminUnitID()));
+			au.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(au.getAdminUnitID(), dateString));
 			
-			// for extra information to be displayed at Lookbutton click
+			// for extra information to be displayed at Look-button click
 			for (dao.AdminUnit sub : au.getAdminUnitSubordinatesList()) {
-				sub.setAdminUnitTypeString(new AdminUnitTypeDAO().getByID(sub.getAdminUnitTypeID()).getName());
-				sub.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(sub.getAdminUnitID()));
+				sub.setAdminUnitTypeString(new AdminUnitTypeDAO().getByID(sub.getAdminUnitTypeID(), dateString).getName());
+				sub.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(sub.getAdminUnitID(), dateString));
 			}
 		}
 		return formData;
 	}
 
-	private AdminUnitReportVM initializeDate(AdminUnitReportVM formData) {
+	private String initializeDate() {
 
 		Calendar today = Calendar.getInstance();
-		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);		
-        formData.setSearchDate(dateString);
-        
-        return formData;
+		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);
+        return dateString;
 	}
 
 }

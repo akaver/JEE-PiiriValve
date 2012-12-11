@@ -18,7 +18,7 @@ public class AdminUnitDAO extends DAO {
 			Statement statement = super.getConnection().createStatement();
 			ResultSet resultSet = statement
 					.executeQuery("select * from AdminUnit" +
-							"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ");
+							"and OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() ");
 
 			res = new ArrayList<AdminUnit>();
 
@@ -42,7 +42,7 @@ public class AdminUnitDAO extends DAO {
 		System.out.println("adminUnit getByID:" + adminUnitID);
 
 		String sql = "select * from AdminUnit where AdminUnitID=?" +
-				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
+				"and OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() ";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -73,7 +73,7 @@ public class AdminUnitDAO extends DAO {
 
 		// find the subordinate record, which contains its masters id
 		String sql = "select * from AdminUnitSubordination where SubordinateAdminUnitID=?" +
-				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
+				"and OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() ";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -137,7 +137,7 @@ public class AdminUnitDAO extends DAO {
 		String sql = "select * from AdminUnit where AdminUnitTypeID in " +
 				"(select AdminUnitTypeID from AdminUnitTypeSubordination " +
 				"where SubordinateAdminUnitTypeID=? " +
-				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() )";		
+				"and OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() )";		
 
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
@@ -159,6 +159,10 @@ public class AdminUnitDAO extends DAO {
 	}
 	
 	public List<AdminUnit> getSubordinates(Integer adminUnitID) {
+		return getSubordinates(adminUnitID, "NOW()");
+	}
+	
+	public List<AdminUnit> getSubordinates(Integer adminUnitID, String dateString) {
 		System.out.println("Finding subordinates for adminUnit with ID:"
 				+ adminUnitID);
 
@@ -166,10 +170,27 @@ public class AdminUnitDAO extends DAO {
 			return new ArrayList<AdminUnit>();
 		}
 		List<AdminUnit> res = new ArrayList<AdminUnit>();
+		
+		String dateLimits = "";
+		
+		// if we search for NOW, entry must opened and valid
+		if (dateString.equals("NOW()")) {
+			dateLimits = 
+				" and OpenedDate < " + dateString + 
+				" and ClosedDate > " + dateString + 
+				" and FromDate < " + dateString + 
+				" and ToDate > " + dateString;
+		}
+		// if we search for custom date, entry must have been valid THEN
+		else {
+			dateString = "'" + dateString + "'";
+			dateLimits = 
+				" and FromDate < " + dateString + 
+				" and ToDate > " + dateString;
+		}
 
 		// get the list of subordinate ID's
-		String sql = "select * from AdminUnitSubordination where AdminUnitID=? " +
-				"and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
+		String sql = "select * from AdminUnitSubordination where AdminUnitID=? " + dateLimits;
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -210,7 +231,8 @@ public class AdminUnitDAO extends DAO {
 		//find all possible masters
 		String sql = "select * from AdminUnit where AdminUnitTypeID in " +
 				"(select SubordinateAdminUnitTypeID from AdminUnitTypeSubordination " +
-				"where AdminUnitTypeID=? and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() )";
+				"where AdminUnitTypeID=? and " +
+				"OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() )";
 
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
@@ -261,7 +283,7 @@ public class AdminUnitDAO extends DAO {
 		Boolean res = false;
 
 		String sql = "select * from AdminUnit where AdminUnitID=? and " +
-				"ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
+				"OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() ";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -473,9 +495,31 @@ public class AdminUnitDAO extends DAO {
 	}
 
 	public List<AdminUnit> getByAdminUnitTypeID(Integer adminUnitTypeID) {
+		return getByAdminUnitTypeID(adminUnitTypeID, "NOW()");
+	}
+	
+	public List<AdminUnit> getByAdminUnitTypeID(Integer adminUnitTypeID, String dateString) {
 		List<AdminUnit> res = new ArrayList<AdminUnit>();
-		String sql = "select * from AdminUnit where AdminUnitTypeID=?" +
-				" and ClosedDate > NOW() and ToDate > NOW() and FromDate < NOW() ";
+		
+		String dateLimits = "";
+		
+		// if we search for NOW, entry must opened and valid
+		if (dateString.equals("NOW()")) {
+			dateLimits = 
+				" and OpenedDate < " + dateString + 
+				" and ClosedDate > " + dateString + 
+				" and FromDate < " + dateString + 
+				" and ToDate > " + dateString;
+		}
+		// if we search for custom date, entry must have been valid THEN
+		else {
+			dateString = "'" + dateString + "'";
+			dateLimits = 
+				" and FromDate < " + dateString + 
+				" and ToDate > " + dateString;
+		}
+		
+		String sql = "select * from AdminUnit where AdminUnitTypeID=?" + dateLimits;
 		
 		try {
 			PreparedStatement preparedStatement = super.getConnection()

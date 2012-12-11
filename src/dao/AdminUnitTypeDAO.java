@@ -5,13 +5,23 @@ import java.sql.*;
 import org.apache.commons.dbutils.DbUtils;
 
 public class AdminUnitTypeDAO extends DAO {
+	
 	public List<AdminUnitType> getAll() {
+		return getAll(false);
+	}
+	
+	public List<AdminUnitType> getAll(Boolean searchWithoutDateLimit) {
 		List<AdminUnitType> res = null;
+		String dateLimits = " where OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW()";
+		
+		if (searchWithoutDateLimit) {
+			dateLimits = "";
+		}
 
 		try {
 			Statement statement = super.getConnection().createStatement();
 			ResultSet resultSet = statement
-					.executeQuery("select * from AdminUnitType");
+					.executeQuery("select * from AdminUnitType" + dateLimits);
 
 			res = new ArrayList<AdminUnitType>();
 
@@ -28,13 +38,35 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 		return res;
 	}
+	
 
 	public AdminUnitType getByID(Integer adminUnitTypeID) {
+		return getByID(adminUnitTypeID, "NOW()");
+	}
+
+	public AdminUnitType getByID(Integer adminUnitTypeID, String dateString) {
 		AdminUnitType res = null;
+		String dateLimits = "";
+		
+		// if we search for NOW, entry must opened and valid
+		if (dateString.equals("NOW()")) {
+			dateLimits = 
+				" and OpenedDate < " + dateString + 
+				" and ClosedDate > " + dateString + 
+				" and FromDate < " + dateString + 
+				" and ToDate > " + dateString;
+		}
+		// if we search for custom date, entry must have been valid THEN
+		else {
+			dateString = "'" + dateString + "'";
+			dateLimits = 
+				" and FromDate < " + dateString + 
+				" and ToDate > " + dateString;
+		}
 
 		System.out.println("adminUnitType getByID:" + adminUnitTypeID);
 
-		String sql = "select * from AdminUnitType where AdminUnitTypeID=?";
+		String sql = "select * from AdminUnitType where AdminUnitTypeID=?" + dateLimits;
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -51,7 +83,8 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 		return res;
 	}
-
+	
+	
 	// find and return AdminUnitType's master - if any
 	public AdminUnitType getMasterByID(Integer adminUnitTypeID) {
 		System.out.println("Finding master AdminUnitType for: "
