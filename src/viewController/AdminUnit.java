@@ -372,10 +372,10 @@ public class AdminUnit extends HttpServlet {
 
 		// you should also check for unique value
 		if ("".equals(request.getParameter("AdminUnitCode"))) {
-			res.add("Enter code!");
+			res.add("Sisesta kood!");
 		}
 		if ("".equals(request.getParameter("AdminUnitName"))) {
-			res.add("Enter name!");
+			res.add("Sisesta nimi!");
 		}
 
 		return res;

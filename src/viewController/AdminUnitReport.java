@@ -2,6 +2,8 @@ package viewController;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Enumeration;
 
@@ -38,11 +40,12 @@ public class AdminUnitReport extends HttpServlet {
 		HttpSession session = request.getSession();
 		AdminUnitReportVM formData = (AdminUnitReportVM) session
 				.getAttribute("formData");
+		session.removeAttribute("errors");		
 		
 		// if no viewmodel in session, then normally this is first call through
 		// get
 		// so check get parameters and populate viewmodel with data from dao
-		if (formData == null) {
+		if (formData == null) {			
 			Integer adminUnitTypeID = processAndValidateID(request);
 			if (adminUnitTypeID == null) {
 				adminUnitTypeID = 1;
@@ -87,10 +90,50 @@ public class AdminUnitReport extends HttpServlet {
 			HttpServletRequest request) {
 		
 		String newDateString = request.getParameter("SearchDate");
-		if (!newDateString.equals(formData.getAdminUnitType().getAdminUnitTypeID()))
+		if(!isValidDateString(newDateString)) {
+			request.getSession().setAttribute("errors", "Sisesta kuupäev kujul pp.kk.aaaa");
+			return false;
+		}
+		
+		if (!newDateString.equals(formData.getAdminUnitType()
+				.getAdminUnitTypeID())) {
 			return true;
+		}
 		
 		return false;
+	}
+
+	// source: http://www.javadb.com/check-if-a-string-is-a-valid-date
+	private boolean isValidDateString(String dateString) {
+		if (dateString == null)
+		      return false;
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		    
+		if (dateString.trim().length() != dateFormat.toPattern().length())
+		      return false;
+		dateFormat.setLenient(false);
+
+		// need to format the datestring from dd.mm.yyyy -> yyyy-mm-dd 
+		// for dateformat to work correctly
+		String formattedDateString = reFormat(dateString);
+				    
+		try {
+		    //parse the parameter to date
+			dateFormat.parse(formattedDateString.trim());
+		} catch (ParseException pe) {			
+			return false;
+		}
+		return true;
+	}
+
+	private String reFormat(String dateString) {
+		StringBuilder sb = new StringBuilder(dateString.substring(6));
+		sb.append("-");
+		sb.append(dateString.substring(3,5));
+		sb.append("-");
+		sb.append(dateString.substring(0,2));
+		return sb.toString();
 	}
 
 	private Boolean adminUnitTypeHasChanged(AdminUnitReportVM formData, HttpServletRequest request) {
