@@ -88,7 +88,7 @@
 											Alluvad:<br>
 											</c:if>
 											<c:forEach var="subsubordinate" items="${subordinate.adminUnitSubordinatesList}">
-												- ${subsubordinate.name}<br>
+												<span style="padding-left:20px"> - ${subsubordinate.name}</span><br>
 											</c:forEach>
 											<c:if test="${fn:length(subordinate.comment) > 0}">
 												Kommentaar: ${subordinate.comment}												
