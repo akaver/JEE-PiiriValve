@@ -21,8 +21,8 @@
     <servlet-class>viewController.DBInitVC</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>DBInit</servlet-name>
-    <url-pattern>/DBInit</url-pattern>
+    <servlet-name>DBInitVC</servlet-name>
+    <url-pattern>/DBInitVC</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
