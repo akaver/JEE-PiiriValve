@@ -134,11 +134,7 @@
 		<div id="forUnitTypeChoosing" style="display: none; 
 			font-family:'Comic Sans MS', cursive, sans-serif;" title="Vali uus liik">
 			<select id="selectbox" name="AdminUnitType_adminUnitTypeID_orig" onchange="changeDocData(this)">
-				<c:forEach var="entry" items="${formData.adminUnitTypeList}">
-					<c:set var="selected" value="" />
-					<%-- <c:if test="${entry.adminUnitTypeID == formData.adminUnitType.adminUnitTypeID}">
-						<c:set var="selected" value="selected=\"selected\"" />
-					</c:if> --%>
+				<c:forEach var="entry" items="${formData.adminUnitTypeList}">					
 					<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
 				</c:forEach>										
 			</select>
