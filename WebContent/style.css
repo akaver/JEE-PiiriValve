@@ -32,3 +32,22 @@ body {
 body, input, select, textarea, button {
 	font-family: "Comic Sans MS", cursive, sans-serif;
 }
+
+.milContent {
+	background-color: #ADA96E; /*#C9BE62;*/
+	border-radius: 5px;
+	padding: 15px;
+	margin: 15px;
+	width: 500px;
+}
+
+.milHeading, .withMargin {
+	margin-left: 15px;
+}
+
+.milHeading {
+	color: #6F73AD;
+	font-weight: bolder;
+	font-size: 24px;
+	margin-left: 15px;
+}
