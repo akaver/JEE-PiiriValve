@@ -98,7 +98,7 @@ public class AdminUnitVC extends HttpServlet {
 		session.setAttribute("formData", formData);
 		
 		// call the dispatcher
-		request.getRequestDispatcher("AdminUnitMainScreen.jsp").forward(
+		request.getRequestDispatcher("AdminUnitScreen.jsp").forward(
 				request, response);
 	}	
 	
@@ -143,7 +143,7 @@ public class AdminUnitVC extends HttpServlet {
 			String next = paramNames.nextElement();
 			if (next.equals("CancelButton")) {
 				System.out.println("Cancel, nosave and exit");
-				response.sendRedirect("mainScreen.jsp");
+				response.sendRedirect("IndexScreen.jsp");
 				return true;
 			}
 		}	

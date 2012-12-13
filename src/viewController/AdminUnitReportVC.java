@@ -83,7 +83,7 @@ public class AdminUnitReportVC extends HttpServlet {
 		session.setAttribute("formData", formData);
 				
 		// call the dispatcher
-		request.getRequestDispatcher("AdminUnitReportMainScreen.jsp").forward(
+		request.getRequestDispatcher("AdminUnitReportScreen.jsp").forward(
 				request, response);
 	}
 	
@@ -97,7 +97,7 @@ public class AdminUnitReportVC extends HttpServlet {
 			return true;
 		}
 		else if(!isValidDateString(newDateString)) {
-			request.getSession().setAttribute("errors", "Sisesta kuup�ev kujul pp.kk.aaaa");
+			request.getSession().setAttribute("errors", "Sisesta kuupäev kujul pp.kk.aaaa");
 			return false;
 		}
 		
@@ -215,7 +215,7 @@ public class AdminUnitReportVC extends HttpServlet {
 			String next = paramNames.nextElement();
 			if (next.equals("BackButton")) {
 				System.out.println("Going back to main screen");
-				response.sendRedirect("mainScreen.jsp");
+				response.sendRedirect("IndexScreen.jsp");
 				return true;
 			}
 		}	

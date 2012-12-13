@@ -36,6 +36,6 @@ public class IndexVC extends HttpServlet {
 	}
 
 	private void ShowMainScreen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("mainScreen.jsp").forward(request, response);
+		request.getRequestDispatcher("IndexScreen.jsp").forward(request, response);
 	}
 }

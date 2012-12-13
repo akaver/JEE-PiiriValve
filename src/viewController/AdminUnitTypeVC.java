@@ -300,7 +300,7 @@ public class AdminUnitTypeVC extends HttpServlet {
 		session.setAttribute("formData", formData);
 
 		// call the dispatcher
-		request.getRequestDispatcher("AdminUnitTypeMainScreen.jsp").forward(
+		request.getRequestDispatcher("AdminUnitTypeScreen.jsp").forward(
 				request, response);
 	}
 

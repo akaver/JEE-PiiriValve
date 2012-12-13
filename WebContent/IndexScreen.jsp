@@ -13,14 +13,14 @@
 	<p>
 		Choose your action:<br>
 		<br>
-		<a href="DBInit">Recreate database and load initial data</a><br>
-		<a href="DBInit?deletelck=yes">Recreate database and load initial data (kill lock)</a><br>
+		<a href="DBInitVC">Recreate database and load initial data</a><br>
+		<a href="DBInitVC?deletelck=yes">Recreate database and load initial data (kill lock)</a><br>
 		<br>
-		<a href="AdminUnitType?AdminUnitTypeID=4">Administrative unit type redactor</a><br>
-		<a href="AdminUnitTypeReport">Administrative unit type report</a><br>
+		<a href="AdminUnitTypeVC?AdminUnitTypeID=4">Administrative unit type redactor</a><br>
+		<a href="AdminUnitTypeReportVC">Administrative unit type report</a><br>
 		<br>
-		<a href="AdminUnit?AdminUnitID=1">Administrative unit redactor</a><br>
-		<a href="AdminUnitReport?AdminUnitTypeID=1">Administrative unit report</a><br>
+		<a href="AdminUnitVC?AdminUnitID=1">Administrative unit redactor</a><br>
+		<a href="AdminUnitReportVC?AdminUnitTypeID=1">Administrative unit report</a><br>
 	</p>
 </body>
 </html>
