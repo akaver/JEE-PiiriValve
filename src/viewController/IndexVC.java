@@ -61,7 +61,7 @@ public class IndexVC extends HttpServlet {
 		try {
 			if (!request.getParameter("ReportAdminUnit").isEmpty()) {
 				System.out.println("Redirecting AdminUnitReportVC");
-				response.sendRedirect("AdminUnitReportVC?AdminUnitID="
+				response.sendRedirect("AdminUnitReportVC?AdminUnitTypeID="
 						+ request.getParameter("AdminUnitID"));
 			}
 
