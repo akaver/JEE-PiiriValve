@@ -15,19 +15,28 @@
 		document.forms["AdminUnitForm"].submit();
 	}
 	
+	function changeDocData(selectBox) {
+		$('#forSending').attr('value',selectBox.value);
+	}
+	
 	function chooseNewUnitType() {
 		var dialog_buttons = {}; 
 		dialog_buttons['OK'] = function(){
-			$('#forSending').attr('value',this.childNodes[1].selectedOptions[0].value);
 			$(this).dialog('close');
-			makeReload();
-		
+			makeReload();		
 		}; 
 		
 		$('#forUnitTypeChoosing').dialog({ 
 			buttons: dialog_buttons,
-			closeOnEscape: true,
-			modal: true
+			closeOnEscape: false,
+			modal: true,
+			open: function() {
+				$('#selectbox option').each(function() {
+					if($(this).attr('value') == $('#forSending').attr('value')) {
+						$(this).attr('selected','true');
+					}
+				});
+			}
 		});
 	}
 </script>
@@ -153,13 +162,13 @@
 		</table>
 		<div id="forUnitTypeChoosing" style="display: none; 
 			font-family:'Comic Sans MS', cursive, sans-serif;" title="Vali uus liik">
-			<select name="AdminUnitType_adminUnitTypeID_orig">
+			<select id="selectbox" name="AdminUnitType_adminUnitTypeID_orig" onchange="changeDocData(this)">
 				<c:forEach var="entry" items="${formData.adminUnitTypeList}">
 					<c:set var="selected" value="" />
-					<c:if test="${entry.adminUnitTypeID == formData.adminUnitType.adminUnitTypeID}">
+					<%-- <c:if test="${entry.adminUnitTypeID == formData.adminUnitType.adminUnitTypeID}">
 						<c:set var="selected" value="selected=\"selected\"" />
-						</c:if>
-						<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
+					</c:if> --%>
+					<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
 				</c:forEach>										
 			</select>
 		</div>
