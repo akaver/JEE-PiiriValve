@@ -28,13 +28,13 @@ import dao.*;
  * nosession, create it, stuff everything into it and be done? from that point
  * forward, ony deal with session. me gusta.
  */
-public class AdminUnitType extends HttpServlet {
+public class AdminUnitTypeVC extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public AdminUnitType() {
+	public AdminUnitTypeVC() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

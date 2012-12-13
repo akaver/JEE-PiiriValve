@@ -2,23 +2,23 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
   <display-name>JEE-PiiriValve</display-name>
   <welcome-file-list>
-    <welcome-file>BorderGuard</welcome-file>
+    <welcome-file>IndexVC</welcome-file>
   </welcome-file-list>
   <servlet>
     <description></description>
-    <display-name>BorderGuard</display-name>
-    <servlet-name>BorderGuard</servlet-name>
-    <servlet-class>viewController.BorderGuard</servlet-class>
+    <display-name>IndexVC</display-name>
+    <servlet-name>IndexVC</servlet-name>
+    <servlet-class>viewController.IndexVC</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>BorderGuard</servlet-name>
-    <url-pattern>/BorderGuard</url-pattern>
+    <servlet-name>IndexVC</servlet-name>
+    <url-pattern>/IndexVC</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>DBInit</display-name>
-    <servlet-name>DBInit</servlet-name>
-    <servlet-class>viewController.DBInit</servlet-class>
+    <display-name>DBInitVC</display-name>
+    <servlet-name>DBInitVC</servlet-name>
+    <servlet-class>viewController.DBInitVC</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>DBInit</servlet-name>
@@ -26,52 +26,52 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>AdminUnitType</display-name>
-    <servlet-name>AdminUnitType</servlet-name>
-    <servlet-class>viewController.AdminUnitType</servlet-class>
+    <display-name>AdminUnitTypeVC</display-name>
+    <servlet-name>AdminUnitTypeVC</servlet-name>
+    <servlet-class>viewController.AdminUnitTypeVC</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>AdminUnitType</servlet-name>
-    <url-pattern>/AdminUnitType</url-pattern>
+    <servlet-name>AdminUnitTypeVC</servlet-name>
+    <url-pattern>/AdminUnitTypeVC</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>AdminUnit</display-name>
-    <servlet-name>AdminUnit</servlet-name>
-    <servlet-class>viewController.AdminUnit</servlet-class>
+    <display-name>AdminUnitVC</display-name>
+    <servlet-name>AdminUnitVC</servlet-name>
+    <servlet-class>viewController.AdminUnitVC</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>AdminUnit</servlet-name>
-    <url-pattern>/AdminUnit</url-pattern>
+    <servlet-name>AdminUnitVC</servlet-name>
+    <url-pattern>/AdminUnitVC</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>AdminUnitReport</display-name>
-    <servlet-name>AdminUnitReport</servlet-name>
-    <servlet-class>viewController.AdminUnitReport</servlet-class>
+    <display-name>AdminUnitReportVC</display-name>
+    <servlet-name>AdminUnitReportVC</servlet-name>
+    <servlet-class>viewController.AdminUnitReportVC</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>AdminUnitReport</servlet-name>
-    <url-pattern>/AdminUnitReport</url-pattern>
+    <servlet-name>AdminUnitReportVC</servlet-name>
+    <url-pattern>/AdminUnitReportVC</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>ArmyUnit</display-name>
-    <servlet-name>ArmyUnit</servlet-name>
-    <servlet-class>viewController.ArmyUnit</servlet-class>
+    <display-name>ArmyUnitVC</display-name>
+    <servlet-name>ArmyUnitVC</servlet-name>
+    <servlet-class>viewController.ArmyUnitVC</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ArmyUnit</servlet-name>
-    <url-pattern>/ArmyUnit</url-pattern>
+    <servlet-name>ArmyUnitVC</servlet-name>
+    <url-pattern>/ArmyUnitVC</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>AdminUnitTypeReport</display-name>
-    <servlet-name>AdminUnitTypeReport</servlet-name>
-    <servlet-class>viewController.AdminUnitTypeReport</servlet-class>
+    <display-name>AdminUnitTypeReportVC</display-name>
+    <servlet-name>AdminUnitTypeReportVC</servlet-name>
+    <servlet-class>viewController.AdminUnitTypeReportVC</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>AdminUnitTypeReport</servlet-name>
-    <url-pattern>/AdminUnitTypeReport</url-pattern>
+    <servlet-name>AdminUnitTypeReportVC</servlet-name>
+    <url-pattern>/AdminUnitTypeReportVC</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
 <project name="JEE-PiiriValve" default="compile">
 	<property name="team.name" value="Team02d" />
 	<property name="project.name" value="JEE-PiiriValve" />

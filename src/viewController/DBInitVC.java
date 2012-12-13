@@ -11,13 +11,13 @@ import dao.*;
 /**
  * Servlet implementation class DBInit
  */
-public class DBInit extends HttpServlet {
+public class DBInitVC extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public DBInit() {
+	public DBInitVC() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

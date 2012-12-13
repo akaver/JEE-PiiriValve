@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class ArmyUnit
  */
-public class ArmyUnit extends HttpServlet {
+public class ArmyUnitVC extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ArmyUnit() {
+    public ArmyUnitVC() {
         super();
         // TODO Auto-generated constructor stub
     }

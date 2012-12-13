@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import viewModel.*;
 import dao.*;
 
-public class AdminUnit extends HttpServlet {
+public class AdminUnitVC extends HttpServlet {
 	private static final long serialVersionUID = 1L;       
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import viewModel.*;
 import dao.*;
 
-public class AdminUnitReport extends HttpServlet {
+public class AdminUnitReportVC extends HttpServlet {
 	private static final long serialVersionUID = 1L;
    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -97,7 +97,7 @@ public class AdminUnitReport extends HttpServlet {
 			return true;
 		}
 		else if(!isValidDateString(newDateString)) {
-			request.getSession().setAttribute("errors", "Sisesta kuupäev kujul pp.kk.aaaa");
+			request.getSession().setAttribute("errors", "Sisesta kuupï¿½ev kujul pp.kk.aaaa");
 			return false;
 		}
 		
