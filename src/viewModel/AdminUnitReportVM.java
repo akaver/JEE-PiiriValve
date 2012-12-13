@@ -15,6 +15,10 @@ public class AdminUnitReportVM {
 	
 	// list of adminunits that we have chosen
 	private List<AdminUnit> adminUnitMasterList;
+	
+	// the subordinate we need to display info about,
+	// after pressing "Look"/"Vaata"
+	private AdminUnit chosenSubordinate;
 
 	public AdminUnitType getAdminUnitType() {
 		return adminUnitType;
@@ -46,6 +50,14 @@ public class AdminUnitReportVM {
 
 	public void setSearchDate(String searchDate) {
 		this.searchDate = searchDate;
+	}
+
+	public AdminUnit getChosenSubordinate() {
+		return chosenSubordinate;
+	}
+
+	public void setChosenSubordinate(AdminUnit chosenSubOrdinate) {
+		this.chosenSubordinate = chosenSubOrdinate;
 	}
 
 }

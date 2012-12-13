@@ -54,11 +54,17 @@ public class AdminUnitReportVC extends HttpServlet {
 		} else {
 			// now we are in post
 			
-			if (BackButtonWasPressed(request, response)) {
+			if (backButtonWasPressed(request, response)) {
 				return;
 			}
 			
-			if (RefreshButtonWasPressed(request)) {
+			// clear info about last unit "Vaata" was pressed at
+			formData.setChosenSubordinate(null);
+			// see if "Vaata" was pressed again
+			handleLookButtons(formData, request);
+			
+			// if no "Vaata" was pressed see if was refresh button
+			if (formData.getChosenSubordinate() == null && refreshButtonWasPressed(request)) {
 				Boolean newDataNeeded = false;
 				
 				if (adminUnitTypeHasChanged(formData, request)) {
@@ -87,6 +93,32 @@ public class AdminUnitReportVC extends HttpServlet {
 				request, response);
 	}
 	
+	private void handleLookButtons(AdminUnitReportVM formData, HttpServletRequest request) {
+		Enumeration<String> paramNames = request.getParameterNames();		
+		
+		while (paramNames.hasMoreElements()) {
+			String paramName = paramNames.nextElement();			
+			if (paramName.startsWith("LookButton_")) {
+				formData = compileSubordinateInfo(formData, paramName);
+				break;
+			}
+		}
+	}
+
+	private AdminUnitReportVM compileSubordinateInfo(
+			AdminUnitReportVM formData, String paramName) {
+		String adminUnitID = paramName.substring(11);
+		String dateString = reFormat(formData.getSearchDate());
+		
+		AdminUnit au = new AdminUnitDAO().getByID(Integer.parseInt(adminUnitID), dateString);
+		au.setAdminUnitTypeString(new AdminUnitTypeDAO().getByID(au.getAdminUnitTypeID(), dateString).getName());
+		au.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(au.getAdminUnitID(), dateString));
+		au.setMasterName(new AdminUnitDAO().getMasterByID(au.getAdminUnitID(), dateString).getName());
+		
+		formData.setChosenSubordinate(au);
+		return formData;
+	}
+
 	private boolean searchDateHasChanged(AdminUnitReportVM formData,
 			HttpServletRequest request) {
 		
@@ -172,7 +204,7 @@ public class AdminUnitReportVC extends HttpServlet {
 		return formData;
 	}
 
-	private boolean RefreshButtonWasPressed(HttpServletRequest request) {
+	private boolean refreshButtonWasPressed(HttpServletRequest request) {
 		Enumeration<String> paramNames = request.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String next = paramNames.nextElement();
@@ -208,7 +240,7 @@ public class AdminUnitReportVC extends HttpServlet {
 		return adminUnitTypeID;
 	}
 
-	private boolean BackButtonWasPressed(HttpServletRequest request,
+	private boolean backButtonWasPressed(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		Enumeration<String> paramNames = request.getParameterNames();
 		while (paramNames.hasMoreElements()) {
@@ -250,12 +282,6 @@ public class AdminUnitReportVC extends HttpServlet {
 		// get the subordinates to be displayed on page
 		for (dao.AdminUnit au : formData.getAdminUnitMasterList()) {
 			au.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(au.getAdminUnitID(), dateString));
-			
-			// for extra information to be displayed at Look-button click
-			for (dao.AdminUnit sub : au.getAdminUnitSubordinatesList()) {
-				sub.setAdminUnitTypeString(new AdminUnitTypeDAO().getByID(sub.getAdminUnitTypeID(), dateString).getName());
-				sub.setAdminUnitSubordinatesList(new AdminUnitDAO().getSubordinates(sub.getAdminUnitID(), dateString));
-			}
 		}
 		return formData;
 	}

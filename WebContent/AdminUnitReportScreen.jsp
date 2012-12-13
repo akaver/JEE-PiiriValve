@@ -13,6 +13,20 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
+	window.onload = function() {
+		if ($('#forInfoBox').html() != '') {
+			var dialog_buttons = {}; 
+			dialog_buttons['OK'] = function(){
+				$(this).dialog('close'); 
+			}; 
+			
+			$('#infoBoxContent').dialog({ 
+				buttons: dialog_buttons,
+				closeOnEscape: true
+			});			
+		}
+	};
+
 	function openInfo(adminUnitID) {
 		var dialog_buttons = {}; 
 		dialog_buttons['OK'] = function(){ $(this).dialog('close'); }; 
@@ -77,21 +91,8 @@
 								<tr>
 									<td class="allBorders">
 										<div>${subordinate.name}</div>
-										<div><button name="LookButton" type="button" onclick="openInfo(${subordinate.adminUnitID})">Vaata</button></div>
-										<div style="display:none; font-family:'Comic Sans MS', cursive, sans-serif;" id="adminUnitID${subordinate.adminUnitID}" title="${subordinate.name}">
-											Nimi: ${subordinate.name}<br>
-											Kood: ${subordinate.code}<br>
-											Tüüp: ${subordinate.adminUnitTypeString}<br>
-											Kuulub: ${subordinationSet.name}<br>
-											<c:if test="${fn:length(subordinate.adminUnitSubordinatesList) > 0}">
-											Alluvad:<br>
-											</c:if>
-											<c:forEach var="subsubordinate" items="${subordinate.adminUnitSubordinatesList}">
-												<span style="padding-left:20px"> - ${subsubordinate.name}</span><br>
-											</c:forEach>
-											<c:if test="${fn:length(subordinate.comment) > 0}">
-												Kommentaar: ${subordinate.comment}												
-											</c:if>
+										<div>
+											<input name="LookButton_${subordinate.adminUnitID}" type="submit" value="Vaata">
 										</div>
 									</td>
 								</tr>
@@ -115,5 +116,27 @@
 			</tr>
 		</table>
 	</form>
+	<div id="forInfoBox" style="display: none;">
+		<c:if test="${fn:length(formData.chosenSubordinate.name) > 0}">
+			<div style="display: none; font-family:'Comic Sans MS', cursive, sans-serif;" 
+				id="infoBoxContent" title="${formData.chosenSubordinate.name}">
+				Nimi: ${formData.chosenSubordinate.name}<br>
+				Kood: ${formData.chosenSubordinate.code}<br>
+				Tüüp: ${formData.chosenSubordinate.adminUnitTypeString}<br>
+				Kuulub: ${formData.chosenSubordinate.masterName}<br>
+				
+				<c:if test="${fn:length(formData.chosenSubordinate.adminUnitSubordinatesList) > 0}">
+					Alluvad:<br>
+				</c:if>
+				<c:forEach var="subsubordinate" items="${formData.chosenSubordinate.adminUnitSubordinatesList}">
+					<span style="padding-left:20px; "> - ${subsubordinate.name}</span><br>
+				</c:forEach>
+				
+				<c:if test="${fn:length(formData.chosenSubordinate.comment) > 0}">
+					Kommentaar: ${formData.chosenSubordinate.comment}												
+				</c:if>
+			</div>
+		</c:if>
+	</div>
 </body>
 </html>

@@ -76,19 +76,35 @@ public class AdminUnitDAO extends DAO {
 		return res;
 	}
 
-	// find and return AdminUnit's master - if any
 	public AdminUnit getMasterByID(Integer adminUnitID) {
+		return getMasterByID(adminUnitID, "NOW()");
+	}
+	
+	// find and return AdminUnit's master - if any
+	public AdminUnit getMasterByID(Integer adminUnitID, String dateString) {
 		System.out.println("Finding master AdminUnit for: " + adminUnitID);
 
 		if (adminUnitID == null) {
 			return null;
 		}
 
-		Integer masterID = null;
+		Integer masterID = null;		
+		String dateLimits = "";
+
+		// if we search for NOW, entry must opened and valid
+		if (dateString.equals("NOW()")) {
+			dateLimits = " and OpenedDate < " + dateString
+					+ " and ClosedDate > " + dateString + " and FromDate < "
+					+ dateString + " and ToDate > " + dateString;
+		}
+		// if we search for custom date, entry must have been valid THEN
+		else {
+			dateLimits = " and FromDate < DATE '" + dateString
+					+ "' and ToDate > DATE '" + dateString + "'";
+		}
 
 		// find the subordinate record, which contains its masters id
-		String sql = "select * from AdminUnitSubordination where SubordinateAdminUnitID=?"
-				+ "and OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW() ";
+		String sql = "select * from AdminUnitSubordination where SubordinateAdminUnitID=?" + dateLimits;
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -108,7 +124,7 @@ public class AdminUnitDAO extends DAO {
 
 		if (masterID != null) {
 			// get the adminunittype record based on subtybe masters id
-			return getByID(masterID);
+			return getByID(masterID, dateString);
 		}
 
 		return null;

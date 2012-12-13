@@ -21,6 +21,7 @@ public class AdminUnit {
 	//custom properties to be used in view controller -> jsp
 	private List<AdminUnit> adminUnitSubordinatesList;
 	private String adminUnitTypeString;
+	private String masterName;
 	
 	public Integer getAdminUnitID() {
 		return adminUnitID;
@@ -118,5 +119,11 @@ public class AdminUnit {
 	}
 	public void setAdminUnitTypeString(String adminUnitTypeString) {
 		this.adminUnitTypeString = adminUnitTypeString;
+	}
+	public String getMasterName() {
+		return masterName;
+	}
+	public void setMasterName(String masterName) {
+		this.masterName = masterName;
 	}
 }
