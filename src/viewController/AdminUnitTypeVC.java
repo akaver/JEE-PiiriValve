@@ -45,7 +45,7 @@ public class AdminUnitTypeVC extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		System.out.println("Get request");
 		// get the session
 		HttpSession session = request.getSession();
 		// and delete this viewmodel from session, so we can start fresh on each
@@ -63,14 +63,16 @@ public class AdminUnitTypeVC extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		ShowMainScreen(request, response);
+		System.out.println("Post request");
+
 	}
 
 	protected void ShowMainScreen(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		// set the encoding, otherwise database is encoded wrongly 
+		// set the encoding, otherwise database is encoded wrongly
 		request.setCharacterEncoding("UTF-8");
-		
+
 		// so, 2 ways to be here - there is session with our data (then it was
 		// post),
 		// or there isnt - then its get
@@ -79,8 +81,6 @@ public class AdminUnitTypeVC extends HttpServlet {
 		// either with id already set (validate it!) for editing or id=new or
 		// id=0 and
 
-
-		
 		// get the session
 		HttpSession session = request.getSession();
 		// get the viewmodel data from session

@@ -30,7 +30,7 @@
 				</c:forEach>
 			</select> <input type="submit" name="ViewAdminUnit" value="Vaata/Muuda"> <input
 				type="submit" name="AddAdminUnit" value="Lisa uus">
-			<input type="submit" name="ReportAdminUnitType" value="Aruanne">
+			<input type="submit" name="ReportAdminType" value="Aruanne">
 				
 				<br>
 			<br> <br> <a href="AdminUnitTypeVC?AdminUnitTypeID=4">Administrative
