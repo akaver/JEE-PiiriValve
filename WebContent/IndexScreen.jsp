@@ -9,18 +9,37 @@
 <link rel="stylesheet" href="./style.css" type="text/css">
 </head>
 <body>
-	<p>Here we go, main entry point into our borderguard webApp</p>
-	<p>
-		Choose your action:<br>
-		<br>
-		<a href="DBInitVC">Recreate database and load initial data</a><br>
-		<a href="DBInitVC?deletelck=yes">Recreate database and load initial data (kill lock)</a><br>
-		<br>
-		<a href="AdminUnitTypeVC?AdminUnitTypeID=4">Administrative unit type redactor</a><br>
-		<a href="AdminUnitTypeReportVC">Administrative unit type report</a><br>
-		<br>
-		<a href="AdminUnitVC?AdminUnitID=1">Administrative unit redactor</a><br>
-		<a href="AdminUnitReportVC?AdminUnitTypeID=1">Administrative unit report</a><br>
-	</p>
+	<form method="post" action="">
+		<p>Piirivalve - Anu Kuusmaa ja Andres Käver</p>
+		<p>
+			Vali tegevus:<br> <br> <a href="DBInitVC">Loo andmebaas
+				ja lae testandmed</a><br> <a href="DBInitVC?deletelck=yes">Loo
+				andmebaas ja lae testandmed (kill lock)</a><br> <br>
+
+			Administratiivüksuse tüüp:<br> <select name="AdminUnitTypeID">
+				<c:forEach var="entry" items="${formData.adminUnitTypeList}">
+					<option value="${entry.adminUnitTypeID}">${entry.name}</option>
+				</c:forEach>
+			</select> <input type="submit" name="ViewAdminUnitType" value="Vaata/Muuda">
+			<input type="submit" name="AddAdminUnitType" value="Lisa uus">
+			<input type="submit" name="ReportAdminUnitType" value="Aruanne">
+			<br>
+			<br>Administratiivüksus:<br> <select name="AdminUnitID">
+				<c:forEach var="entry" items="${formData.adminUnitList}">
+					<option value="${entry.adminUnitID}">${entry.name}</option>
+				</c:forEach>
+			</select> <input type="submit" name="ViewAdminUnit" value="Vaata/Muuda"> <input
+				type="submit" name="AddAdminUnit" value="Lisa uus">
+			<input type="submit" name="ReportAdminUnitType" value="Aruanne">
+				
+				<br>
+			<br> <br> <a href="AdminUnitTypeVC?AdminUnitTypeID=4">Administrative
+				unit type redactor</a><br> <a href="AdminUnitTypeReportVC">Administrative
+				unit type report</a><br> <br> <a
+				href="AdminUnitVC?AdminUnitID=1">Administrative unit redactor</a><br>
+			<a href="AdminUnitReportVC?AdminUnitTypeID=1">Administrative unit
+				report</a><br>
+		</p>
+	</form>
 </body>
 </html>

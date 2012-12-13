@@ -10,7 +10,7 @@
 </head>
 <body>
 	<form method="post" action="" name="AdminUnitTypeForm">
-		<table width="800" >
+		<table width="800">
 			<tr>
 				<td colspan="2"><h3>Admin Unit Type Editor</h3></td>
 			</tr>

@@ -257,7 +257,6 @@ public class DAO {
 				"('Kurevere', 'Kurevere küla', '', '8'," + std + ")," + 
 				"('Karuvere', 'Karuvere küla', '', '8'," + std + ")," +
 				"('KureVald', 'Kure vald', '', '4'," + std + ")" + 
-				
 // @formatter:on
 				"");
 
@@ -280,7 +279,6 @@ public class DAO {
 				+ "PRIMARY KEY (AdminUnitSubordinationID),"
 				+ "FOREIGN KEY (AdminUnitID) REFERENCES AdminUnit ON DELETE RESTRICT,"
 				+ "FOREIGN KEY (SubordinateAdminUnitID) REFERENCES AdminUnit ON DELETE RESTRICT"
-
 				+ ")");
 	}
 
