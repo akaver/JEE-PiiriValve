@@ -29,7 +29,7 @@
 
 	<target name="war" depends="compile">
 		<mkdir dir="${dist.dir}" />
-		<war destfile="${dist.dir}/${team.name}-${project.name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+		<war destfile="${dist.dir}/${team.name}.war" webxml="${web.dir}/WEB-INF/web.xml">
 			<classes dir="${classes.dir}" />
 			<fileset dir="${web.dir}" excludes="**/servlet-api.jar" />
 		</war>
