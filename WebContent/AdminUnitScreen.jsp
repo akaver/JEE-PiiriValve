@@ -11,20 +11,26 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
+	var newUnitTypeTemp = null;
+	
 	function makeReload() {
 		document.forms["AdminUnitForm"].submit();
 	}
 	
 	function changeDocData(selectBox) {
-		$('#forSending').attr('value',selectBox.value);
+		newUnitTypeTemp = selectBox.value;		
 	}
 	
 	function chooseNewUnitType() {
-		var dialog_buttons = {}; 
-		dialog_buttons['OK'] = function(){
+		var dialog_buttons = {};
+		dialog_buttons['OK'] = function() {
+			$('#forSending').attr('value',newUnitTypeTemp);
 			$(this).dialog('close');
 			makeReload();		
 		}; 
+		dialog_buttons['Loobu'] = function() {
+			$(this).dialog('close');
+		};
 		
 		$('#forUnitTypeChoosing').dialog({ 
 			buttons: dialog_buttons,

@@ -160,8 +160,6 @@ public class AdminUnitVC extends HttpServlet {
 		formData.getAdminUnit().setComment(
 			request.getParameter("AdminUnitComment"));
 		
-		String id = request.getParameter("AdminUnitType_adminUnitTypeID");
-		
 		formData.getAdminUnit().setAdminUnitTypeID(
 			Integer.parseInt(request.getParameter("AdminUnitType_adminUnitTypeID")));
 		
