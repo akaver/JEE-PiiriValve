@@ -23,22 +23,14 @@
 			</select> <input type="submit" name="ViewAdminUnitType" value="Vaata/Muuda">
 			<input type="submit" name="AddAdminUnitType" value="Lisa uus">
 			<input type="submit" name="ReportAdminUnitType" value="Aruanne">
-			<br>
-			<br>Administratiivüksus:<br> <select name="AdminUnitID">
+			<br> <br>Administratiivüksus:<br> <select
+				name="AdminUnitID">
 				<c:forEach var="entry" items="${formData.adminUnitList}">
 					<option value="${entry.adminUnitID}">${entry.name}</option>
 				</c:forEach>
-			</select> <input type="submit" name="ViewAdminUnit" value="Vaata/Muuda"> <input
-				type="submit" name="AddAdminUnit" value="Lisa uus">
-			<input type="submit" name="ReportAdminType" value="Aruanne">
-				
-				<br>
-			<br> <br> <a href="AdminUnitTypeVC?AdminUnitTypeID=4">Administrative
-				unit type redactor</a><br> <a href="AdminUnitTypeReportVC">Administrative
-				unit type report</a><br> <br> <a
-				href="AdminUnitVC?AdminUnitID=1">Administrative unit redactor</a><br>
-			<a href="AdminUnitReportVC?AdminUnitTypeID=1">Administrative unit
-				report</a><br>
+			</select> <input type="submit" name="ViewAdminUnit" value="Vaata/Muuda">
+			<input type="submit" name="AddAdminUnit" value="Lisa uus"> <input
+				type="submit" name="ReportAdminUnit" value="Aruanne">
 		</p>
 	</form>
 </body>
