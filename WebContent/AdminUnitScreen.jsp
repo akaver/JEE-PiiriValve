@@ -10,42 +10,7 @@
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-<script type="text/javascript">
-	var newUnitTypeTemp = null;
-	
-	function makeReload() {
-		document.forms["AdminUnitForm"].submit();
-	}
-	
-	function changeDocData(selectBox) {
-		newUnitTypeTemp = selectBox.value;		
-	}
-	
-	function chooseNewUnitType() {
-		var dialog_buttons = {};
-		dialog_buttons['OK'] = function() {
-			$('#forSending').attr('value',newUnitTypeTemp);
-			$(this).dialog('close');
-			makeReload();		
-		}; 
-		dialog_buttons['Loobu'] = function() {
-			$(this).dialog('close');
-		};
-		
-		$('#forUnitTypeChoosing').dialog({ 
-			buttons: dialog_buttons,
-			closeOnEscape: false,
-			modal: true,
-			open: function() {
-				$('#selectbox option').each(function() {
-					if($(this).attr('value') == $('#forSending').attr('value')) {
-						$(this).attr('selected','true');
-					}
-				});
-			}
-		});
-	}
-</script>
+<script type="text/javascript" src="./changeButtonHelper.js"></script>
 </head>
 <body>
 <form method="post" action="" name="AdminUnitForm" id="AdminUnitForm">
