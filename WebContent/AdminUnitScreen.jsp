@@ -7,9 +7,28 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Haldusüksuse redaktor</title>
 <link rel="stylesheet" href="./style.css" type="text/css">
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
 	function makeReload() {
 		document.forms["AdminUnitForm"].submit();
+	}
+	
+	function chooseNewUnitType() {
+		var dialog_buttons = {}; 
+		dialog_buttons['OK'] = function(){
+			$('#forSending').attr('value',this.childNodes[1].selectedOptions[0].value);
+			$(this).dialog('close');
+			makeReload();
+		
+		}; 
+		
+		$('#forUnitTypeChoosing').dialog({ 
+			buttons: dialog_buttons,
+			closeOnEscape: true,
+			modal: true
+		});
 	}
 </script>
 </head>
@@ -51,20 +70,10 @@
 						<tr>
 							<td valign="top">Liik</td>
 							<td>
-<%-- 								<div id="AdminUnitType">${formData.adminUnitType.name}</div> --%>
+								<div id="AdminUnitType">${formData.adminUnitType.name}</div>
 								<div>
-									<select name="AdminUnitType_adminUnitTypeID" onchange="makeReload()">
-										<c:forEach var="entry" items="${formData.adminUnitTypeList}">
-										<c:set var="selected" value="" />
-										<c:if
-											test="${entry.adminUnitTypeID == formData.adminUnitType.adminUnitTypeID}">
-											<c:set var="selected" value="selected=\"selected\"" />
-										</c:if>
-										<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
-										</c:forEach>										
-									</select>
+									<button type="button" onclick="chooseNewUnitType()">Muuda</button>
 								</div>
-<!-- 								<div><input name="ChangeButton" type="submit" value="Change"></div> -->
 							</td>
 						</tr>
 						<tr>
@@ -128,11 +137,32 @@
 					</table></td>
 			</tr>
 			<tr>
-				<td colspan="2" align="right"><input name="SubmitButton"
-					type="submit" value="Salvesta"> <input name="CancelButton"
-					type="submit" value="Loobu"></td>
+				<td colspan="2" align="right">
+					<input name="SubmitButton" type="submit" value="Salvesta"> 
+					<input name="CancelButton" type="submit" value="Loobu">
+				</td>
 			</tr>
+			<tr>
+				<td>
+					<div style="display: none">
+						<input type="text" id="forSending" name="AdminUnitType_adminUnitTypeID" 
+							value="${formData.adminUnitType.adminUnitTypeID}">
+					</div>
+				</td>
+			</tr>			
 		</table>
-	</form>
+		<div id="forUnitTypeChoosing" style="display: none; 
+			font-family:'Comic Sans MS', cursive, sans-serif;" title="Vali uus liik">
+			<select name="AdminUnitType_adminUnitTypeID_orig">
+				<c:forEach var="entry" items="${formData.adminUnitTypeList}">
+					<c:set var="selected" value="" />
+					<c:if test="${entry.adminUnitTypeID == formData.adminUnitType.adminUnitTypeID}">
+						<c:set var="selected" value="selected=\"selected\"" />
+						</c:if>
+						<option value="${entry.adminUnitTypeID}" ${selected}>${entry.name}</option>
+				</c:forEach>										
+			</select>
+		</div>
+	</form>	
 </body>
 </html>

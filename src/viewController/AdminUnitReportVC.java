@@ -247,7 +247,7 @@ public class AdminUnitReportVC extends HttpServlet {
 			String next = paramNames.nextElement();
 			if (next.equals("BackButton")) {
 				System.out.println("Going back to main screen");
-				response.sendRedirect("IndexScreen.jsp");
+				response.sendRedirect("IndexVC");
 				return true;
 			}
 		}	

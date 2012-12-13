@@ -88,14 +88,27 @@ public class IndexVC extends HttpServlet {
 		}
 		try {
 			if (!request.getParameter("ReportAdminUnitType").isEmpty()) {
+								
+				// find the entry point to report: the unit type of the
+				// unit that is currently selected at the units dropdown
+				Integer adminUnitTypeID = findAdminUnitType(request);						
+				
 				System.out.println("Redirecting AdminUnitTypeReportVC");
 				response.sendRedirect("AdminUnitTypeReportVC?AdminUnitTypeID="
-						+ request.getParameter("AdminUnitID"));
+						+ adminUnitTypeID);
 			}
 
 		} catch (Exception e) {
 		}
+	}
 
+	// when entering units report, find the adminunittype we need to use as entry
+	// point; this the type of the unit currently selected at dropdown
+	private Integer findAdminUnitType(HttpServletRequest request) {
+		String adminUnitIDAsString = request.getParameter("AdminUnitID");
+		Integer adminUnitID = Integer.parseInt(adminUnitIDAsString);
+		AdminUnit au = new AdminUnitDAO().getByID(adminUnitID);
+		return au.getAdminUnitTypeID();
 	}
 
 	private void ShowMainScreen(HttpServletRequest request,

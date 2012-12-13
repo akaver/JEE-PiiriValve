@@ -143,7 +143,7 @@ public class AdminUnitVC extends HttpServlet {
 			String next = paramNames.nextElement();
 			if (next.equals("CancelButton")) {
 				System.out.println("Cancel, nosave and exit");
-				response.sendRedirect("IndexScreen.jsp");
+				response.sendRedirect("IndexVC");
 				return true;
 			}
 		}	
@@ -152,13 +152,16 @@ public class AdminUnitVC extends HttpServlet {
 	
 	private AdminUnitVM updateViewModelFieldsForDB(HttpServletRequest request, AdminUnitVM formData) {
 		// lets update the viewmodel with changes the user wants to make
-		// trivial stuff: name,code,comment
+		// and that need to be saved to DB when changes are submitted
 		formData.getAdminUnit().setCode(
 			request.getParameter("AdminUnitCode"));
 		formData.getAdminUnit().setName(
 			request.getParameter("AdminUnitName"));
 		formData.getAdminUnit().setComment(
 			request.getParameter("AdminUnitComment"));
+		
+		String id = request.getParameter("AdminUnitType_adminUnitTypeID");
+		
 		formData.getAdminUnit().setAdminUnitTypeID(
 			Integer.parseInt(request.getParameter("AdminUnitType_adminUnitTypeID")));
 		
@@ -206,10 +209,9 @@ public class AdminUnitVC extends HttpServlet {
 				+ adminUnitID);
 
 		// update this units master
-		//if (masterChanged) {
-			adminUnitDAO.saveMaster(adminUnitID, formData.getAdminUnitMaster().getAdminUnitID());
-		//}
-		// update the master for all subordinates (missing jQuery right now)
+		adminUnitDAO.saveMaster(adminUnitID, formData.getAdminUnitMaster().getAdminUnitID());
+		
+		// update the master for all subordinates
 		for (dao.AdminUnit sub : formData.getAdminUnitsSubordinateList()) {
 			adminUnitDAO.saveMaster(sub.getAdminUnitID(), adminUnitID);
 		}
@@ -219,7 +221,7 @@ public class AdminUnitVC extends HttpServlet {
 		}
 		
 		// work is done, back to main screen								
-		response.sendRedirect("mainScreen.jsp");
+		response.sendRedirect("IndexVC");
 	}
 
 	private AdminUnitVM addSubordinate(AdminUnitVM formData,
@@ -246,6 +248,7 @@ public class AdminUnitVC extends HttpServlet {
 		formData.setAdminUnitsSubordinateList(adminUnitsSubordinateList);
 
 		// now remove the item from list of possible candidates
+		// because it is no longer a candidate
 
 		List<dao.AdminUnit> adminUnitsSubordinateListPossible = formData
 				.getAdminUnitsSubordinateListPossible();
