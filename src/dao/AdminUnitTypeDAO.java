@@ -351,15 +351,29 @@ public class AdminUnitTypeDAO extends DAO {
 				+ adminUnitTypeID + " Master is:" + adminUnitTypeMaster);
 		// unit can only have one master!!
 		// so either it already has a record of it in db, or we shall insert new
-		// one
-		// try to change the existing record
+
+		// TODO: avoid recursion!!!!
+		// major problem with recursion on subordinate list
+		// it is possible to save new master, which is actually your
+		// child-child-child somewhere
+		// you should traverse a tree down from yourself and see
+		// that new master is not among your sub branch
+		
 		String sql = "";
-		if (adminUnitTypeMaster == null) {
-			// you cannot remove master
+		if (adminUnitTypeID==1){
+			System.out.println("Cannot change master on primary state!");
 			return;
-		} else {
+		}
+		if (adminUnitTypeMaster.getAdminUnitTypeID()==0) {
+			//remove the master
 			sql = "update AdminUnitTypeSubordination set "
-					+ "AdminUnitTypeID=?, SubordinateAdminUnitTypeID=?, ChangedBy='Admin', ChangedDate=NOW() "
+					+ "ChangedBy='Admin', ChangedDate=NOW(), ClosedBy='Admin', ClosedDate=NOW() "
+					+ "where SubordinateAdminUnitTypeID=?";
+			
+		} else {
+			//change the master
+			sql = "update AdminUnitTypeSubordination set "
+					+ "AdminUnitTypeID=?, ChangedBy='Admin', ChangedDate=NOW() "
 					+ "where SubordinateAdminUnitTypeID=?";
 		}
 
@@ -369,11 +383,10 @@ public class AdminUnitTypeDAO extends DAO {
 			preparedStatement.setInt(1,
 					adminUnitTypeMaster.getAdminUnitTypeID());
 			preparedStatement.setInt(2, adminUnitTypeID);
-			preparedStatement.setInt(3, adminUnitTypeID);
 			int rowsChanged = preparedStatement.executeUpdate();
 			System.out.println("Rows changed:" + rowsChanged);
 			if (rowsChanged == 0) {
-				// go for insert then
+				// fuckit, go for insert then
 				sql = "insert into AdminUnitTypeSubordination "
 						+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
 						+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
@@ -390,5 +403,58 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 
 	}
+
+	public void addSubordinate(Integer adminUnitTypeID,
+			AdminUnitType subordinate) {
+		System.out.println("Adding subordinate for adminUnitTypeID:"
+				+ adminUnitTypeID + " Subordinate is:" + subordinate);
+		
+		String sql = "insert into AdminUnitTypeSubordination "
+				+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
+				+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
+		
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1,
+					adminUnitTypeID);
+			preparedStatement.setInt(2, subordinate.getAdminUnitTypeID());
+			System.out.println("SQL:" + preparedStatement);
+			int rowsChanged = preparedStatement.executeUpdate();
+			System.out.println("Rows changed:" + rowsChanged);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}		
+		
+		
+	}
+
+	public void removeSubordinate(Integer adminUnitTypeID,
+			AdminUnitType subordinate) {
+		System.out.println("Removing subordinate for adminUnitTypeID:"
+				+ adminUnitTypeID + " Subordinate is:" + subordinate);
+		
+		String sql = "update AdminUnitTypeSubordination set "
+				+ "ChangedBy='Admin', ChangedDate=NOW(), ClosedBy='Admin', ClosedDate=NOW() "
+				+ "where AdminUnitTypeID=? and SubordinateAdminUnitTypeID=?";
+		
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1,
+					adminUnitTypeID);
+			preparedStatement.setInt(2, subordinate.getAdminUnitTypeID());
+			System.out.println("SQL:" + preparedStatement);
+			int rowsChanged = preparedStatement.executeUpdate();
+			System.out.println("Rows changed:" + rowsChanged);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+		
+	}
+	
+	
 
 }

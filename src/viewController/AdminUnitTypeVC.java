@@ -213,7 +213,47 @@ public class AdminUnitTypeVC extends HttpServlet {
 				formData.getAdminUnitTypeMaster());
 
 		// update this units subordinates
+		// user can remove and add items back and forth
+		// find out, what shall we really do - what is changed compared to original list
 
+		// so, load back orginal list of subordinates
+		List<AdminUnitType> originalSubordinates =	adminUnitTypeDAO.getSubordinates(formData.getAdminUnitType().getAdminUnitTypeID());
+		
+		// go over the formData subordinate list one by one
+		for (AdminUnitType curSubordinate: formData.getAdminUnitTypesSubordinateList()){
+			int status=0;
+			int i=0;
+			// this item is in the original list - do nothing
+			for (i=0; i<originalSubordinates.size(); i++){
+				if (originalSubordinates.get(i).getAdminUnitTypeID().equals(curSubordinate.getAdminUnitTypeID())){
+					//so this item from session was in original list
+					status=1;
+					break;
+				}
+			}
+			
+			//so this item from session was in original list
+			if (status==1){
+				//nothing to save to db
+				//remove it from originals list
+				System.out.println("Nothing to do on subordinate:"+originalSubordinates.get(i));
+				originalSubordinates.remove(i);
+			}
+
+			// so this item wasnt int the originals list, so its new
+			if (status==0){
+				//save it to db, as new subordinate
+				System.out.println("Adding new subordinate:"+curSubordinate);
+				adminUnitTypeDAO.addSubordinate(adminUnitTypeID,curSubordinate);
+			}
+			
+		}
+		
+		for (AdminUnitType removeSubordinate:originalSubordinates){
+			System.out.println("Deleting old subordinate:"+removeSubordinate);
+			adminUnitTypeDAO.removeSubordinate(adminUnitTypeID,removeSubordinate);
+		}
+		
 		// work is done, back to main screen
 		response.sendRedirect("IndexVC");
 	}
@@ -395,7 +435,7 @@ public class AdminUnitTypeVC extends HttpServlet {
 
 		// load the full list of AdminUnitType
 		// TODO - remove all the subordinates of itself, otherwise user can
-		// cause circular reference
+		// cause circular reference!!!!!!
 		formData.setAdminUnitTypeMasterListWithZero(new AdminUnitTypeDAO()
 				.getAll());
 
