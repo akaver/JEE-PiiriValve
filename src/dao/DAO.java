@@ -24,7 +24,7 @@ public class DAO {
 
 		try {
 			String db = "${user.home}/i377/Team02d/db;shutdown=true";
-			connection = DriverManager.getConnection("jdbc:hsqldb:" + db, "sa",
+			connection = DriverManager.getConnection("jdbc:hsqldb:file:" + db, "sa",
 					"");
 		} catch (Exception e) {
 			throw new RuntimeException(e);

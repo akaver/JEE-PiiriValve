@@ -52,7 +52,8 @@ public class AdminUnitVC extends HttpServlet {
 			// formData was there, so this is post!
 			if (cancelWasPressed(request, response)) {
 				return;
-			}			
+			}
+			
 			formData = updateViewModelFieldsForDB(request, formData);
 			
 			// do some simple validation - so at least code and name are set

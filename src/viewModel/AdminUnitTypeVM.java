@@ -1,6 +1,7 @@
 package viewModel;
 
 import java.util.*;
+
 import dao.*;
 
 public class AdminUnitTypeVM {
@@ -65,16 +66,29 @@ public class AdminUnitTypeVM {
 	 */
 	public void setAdminUnitTypeMasterListWithZero(
 			List<AdminUnitType> adminUnitTypeMasterListWithZero) {
+		
+		//resultant list
+		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
+		
+		// if there was no list, create it
+		if (adminUnitTypeMasterListWithZero == null) {
+			adminUnitTypeMasterListWithZero = new ArrayList<AdminUnitType>();
+		}
+		
 		// create new AdminUnitType
 		AdminUnitType withZero = new AdminUnitType();
 		// set id to 0
 		withZero.setAdminUnitTypeID(0);
 		// and name to "---"
 		withZero.setName("---");
-		// append it to list
-		// it goes to last place in list, should go into first!
-		adminUnitTypeMasterListWithZero.add(withZero);
-		this.adminUnitTypeMasterListWithZero = adminUnitTypeMasterListWithZero;
+		// append it to resultant list
+		res.add(withZero);
+		
+		for (AdminUnitType adminUnitTypeFromList : adminUnitTypeMasterListWithZero) {	
+			res.add(adminUnitTypeFromList);
+		}		
+		
+		this.adminUnitTypeMasterListWithZero = res;
 	}
 
 	public List<AdminUnitType> getAdminUnitTypesSubordinateListPossible() {

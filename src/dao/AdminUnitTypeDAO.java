@@ -5,15 +5,15 @@ import java.sql.*;
 import org.apache.commons.dbutils.DbUtils;
 
 public class AdminUnitTypeDAO extends DAO {
-	
+
 	public List<AdminUnitType> getAll() {
 		return getAll(false);
 	}
-	
+
 	public List<AdminUnitType> getAll(Boolean searchWithoutDateLimit) {
 		List<AdminUnitType> res = null;
 		String dateLimits = " where OpenedDate < NOW() and ClosedDate > NOW() and FromDate < NOW() and ToDate > NOW()";
-		
+
 		if (searchWithoutDateLimit) {
 			dateLimits = "";
 		}
@@ -38,45 +38,45 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 		return res;
 	}
-	
 
 	public AdminUnitType getByID(Integer adminUnitTypeID) {
 		return getByID(adminUnitTypeID, "NOW()");
 	}
 
-	// 3 options for dateString - validated date, NOW() or emptyString (no date limits)
+	// 3 options for dateString - validated date, NOW() or emptyString (no date
+	// limits)
 	public AdminUnitType getByID(Integer adminUnitTypeID, String dateString) {
 		AdminUnitType res = null;
 		String dateLimits = "";
-		
+
 		// if we search for NOW, entry must opened and valid
 		if (dateString.equals("NOW()")) {
-			dateLimits = 
-				" and OpenedDate < " + dateString + 
-				" and ClosedDate > " + dateString + 
-				" and FromDate < " + dateString + 
-				" and ToDate > " + dateString;
-		}
-		else if(dateString.equals("")) {
+			dateLimits = " and OpenedDate < " + dateString
+					+ " and ClosedDate > " + dateString + " and FromDate < "
+					+ dateString + " and ToDate > " + dateString;
+		} else if (dateString.equals("")) {
 			dateLimits = "";
 		}
 		// if we search for custom date, entry must have been valid THEN
 		else {
-			dateLimits = 
-				" and FromDate < DATE '" + dateString + 
-				"' and ToDate > DATE '" + dateString + "'";
+			dateLimits = " and FromDate < DATE '" + dateString
+					+ "' and ToDate > DATE '" + dateString + "'";
 		}
 
 		System.out.println("adminUnitType getByID:" + adminUnitTypeID);
 
-		String sql = "select * from AdminUnitType where AdminUnitTypeID=?" + dateLimits;
+		String sql = "select * from AdminUnitType where AdminUnitTypeID=?"
+				+ dateLimits;
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
 			preparedStatement.setInt(1, adminUnitTypeID);
+			System.out.println("SQL:"+preparedStatement);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				res = createAdminUnitTypeFromResultSet(resultSet);
+			} else {
+				System.out.println("SQL: no record found!");
 			}
 			DbUtils.closeQuietly(resultSet);
 			DbUtils.closeQuietly(preparedStatement);
@@ -86,8 +86,7 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 		return res;
 	}
-	
-	
+
 	// find and return AdminUnitType's master - if any
 	public AdminUnitType getMasterByID(Integer adminUnitTypeID) {
 		System.out.println("Finding master AdminUnitType for: "
@@ -166,7 +165,8 @@ public class AdminUnitTypeDAO extends DAO {
 			while (resultSet.next()) {
 				Integer subid = resultSet.getInt("SubordinateAdminUnitTypeID");
 				System.out.println("Fetching subordinate with ID:" + subid);
-				res.add(getByID(subid));
+				AdminUnitType tempAdminUnitType = getByID(subid);
+				res.add(tempAdminUnitType);
 			}
 
 			DbUtils.closeQuietly(resultSet);
@@ -227,7 +227,7 @@ public class AdminUnitTypeDAO extends DAO {
 		return res;
 	}
 
-	public List<AdminUnitType> getPossibleSubordinates(Integer adminUnitTypeID) {
+	public List<AdminUnitType> getPossibleSubordinates(Integer adminUnitTypeID, String dateString) {
 		System.out.println("Possible subordinates for AdminUnitTypeID:"
 				+ adminUnitTypeID);
 
@@ -242,7 +242,22 @@ public class AdminUnitTypeDAO extends DAO {
 		// pluss all the units which where removed from the list on the form
 		// (but not yet saved to db as removed)
 
-		// this is complicated......
+		String dateLimits = "";
+
+		// if we search for NOW, entry must opened and valid
+		if (dateString.equals("NOW()")) {
+			dateLimits = " and AdminUnitType.OpenedDate < " + dateString
+					+ " and AdminUnitType.ClosedDate > " + dateString + " and AdminUnitType.FromDate < "
+					+ dateString + " and AdminUnitType.ToDate > " + dateString;
+		} else if (dateString.equals("")) {
+			dateLimits = "";
+		}
+		// if we search for custom date, entry must have been valid THEN
+		else {
+			dateLimits = " and FromDate < DATE '" + dateString
+					+ "' and ToDate > DATE '" + dateString + "'";
+		}
+
 
 		// list of all AdminUnitTypeID's
 		// without current AdminUnitTypeID
@@ -254,7 +269,8 @@ public class AdminUnitTypeDAO extends DAO {
 				+ "AdminUnitType.AdminUnitTypeID<>1 and "
 				+ // id 1 is state - it cannot be subordinate
 				"AdminUnitType.AdminUnitTypeID<>? " + "and "
-				+ "ISNULL(AdminUnitTypeSubordination.AdminUnitTypeID,0)=0 "
+				+ "ISNULL(AdminUnitTypeSubordination.AdminUnitTypeID,0)=0 "+
+				dateLimits
 				+ "";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
@@ -263,7 +279,10 @@ public class AdminUnitTypeDAO extends DAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				System.out.println("sub: " + resultSet.getInt("ID1"));
-				res.add(getByID(resultSet.getInt("ID1")));
+				
+				AdminUnitType tempAdminUnitType = getByID( resultSet.getInt("ID1"));
+				System.out.println("sub: "+tempAdminUnitType);
+				res.add(tempAdminUnitType);
 			}
 			DbUtils.closeQuietly(resultSet);
 			DbUtils.closeQuietly(preparedStatement);
@@ -335,13 +354,20 @@ public class AdminUnitTypeDAO extends DAO {
 		// one
 		// try to change the existing record
 		String sql = "";
-		sql = "update AdminUnitTypeSubordination set "
-				+ "AdminUnitTypeID=?, SubordinateAdminUnitTypeID=?, ChangedBy='Admin', ChangedDate=NOW() "
-				+ "where SubordinateAdminUnitTypeID=?";
+		if (adminUnitTypeMaster == null) {
+			// you cannot remove master
+			return;
+		} else {
+			sql = "update AdminUnitTypeSubordination set "
+					+ "AdminUnitTypeID=?, SubordinateAdminUnitTypeID=?, ChangedBy='Admin', ChangedDate=NOW() "
+					+ "where SubordinateAdminUnitTypeID=?";
+		}
+
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
-			preparedStatement.setInt(1, adminUnitTypeMaster.getAdminUnitTypeID());
+			preparedStatement.setInt(1,
+					adminUnitTypeMaster.getAdminUnitTypeID());
 			preparedStatement.setInt(2, adminUnitTypeID);
 			preparedStatement.setInt(3, adminUnitTypeID);
 			int rowsChanged = preparedStatement.executeUpdate();
@@ -352,7 +378,8 @@ public class AdminUnitTypeDAO extends DAO {
 						+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
 						+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
 				preparedStatement = super.getConnection().prepareStatement(sql);
-				preparedStatement.setInt(1, adminUnitTypeMaster.getAdminUnitTypeID());
+				preparedStatement.setInt(1,
+						adminUnitTypeMaster.getAdminUnitTypeID());
 				preparedStatement.setInt(2, adminUnitTypeID);
 				rowsChanged = preparedStatement.executeUpdate();
 				System.out.println("Rows inserted:" + rowsChanged);
