@@ -115,13 +115,13 @@ public class DAO {
 		// Kihelkond (id 9) - olemas apr-juuni 2012
 		executeUpdateSQL("insert into AdminUnitType " +
 				"(Code, Name, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
-				"('KH','Kihelkond','väga vana üksus','2012-04-01','2012-07-01'," +
-				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+				"('KH','Kihelkond','väga vana üksus','2012-04-01 00:00:00','2012-07-01 00:00:00'," +
+				"'Admin', '2012-12-01 00:00:00', 'Admin', '2012-12-01 00:00:00', 'Admin', '2999-12-31 00:00:00')");
 		// Talu (id 10) - olemas apr-juuni 2012
 		executeUpdateSQL("insert into AdminUnitType " +
 				"(Code, Name, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES " +
-				"('T','Talu','talu, mis talu','2012-04-01','2012-07-01'," +
-				"'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31')");
+				"('T','Talu','talu, mis talu','2012-04-01 00:00:00','2012-07-01 00:00:00'," +
+				"'Admin', '2012-12-01 00:00:00', 'Admin', '2012-12-01 00:00:00', 'Admin', '2999-12-31 00:00:00')");
 		
 		// Oli olemas kihelkond Alempois (id 12) - olemas apr-juuni 2012
 		executeUpdateSQL("insert into AdminUnit " +
@@ -157,19 +157,19 @@ public class DAO {
 				+ "Code                     VARCHAR(10) NOT NULL,"
 				+ "Name                     VARCHAR(100) NOT NULL,"
 				+ "Comment                  LONGVARCHAR,"
-				+ "FromDate                 DATE NOT NULL,"
-				+ "ToDate                   DATE NOT NULL,"
+				+ "FromDate                 TIMESTAMP NOT NULL,"
+				+ "ToDate                   TIMESTAMP NOT NULL,"
 				+ "OpenedBy                 VARCHAR(32) NOT NULL,"
-				+ "OpenedDate               DATE NOT NULL,"
+				+ "OpenedDate               TIMESTAMP NOT NULL,"
 				+ "ChangedBy                VARCHAR(32) NOT NULL,"
-				+ "ChangedDate              DATE NOT NULL,"
+				+ "ChangedDate              TIMESTAMP NOT NULL,"
 				+ "ClosedBy                 VARCHAR(32),"
-				+ "ClosedDate               DATE NOT NULL,"
+				+ "ClosedDate               TIMESTAMP NOT NULL,"
 				+ "PRIMARY KEY (AdminUnitTypeID)" + ")");
 	}
 
 	private void insertDummyDataToAdminUnitTypeTable() {
-		String std = "'1900-01-01', '2999-12-31', 'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31'";
+		String std = "'1900-01-01 00:00:00', '2999-12-31 00:00:00', 'Admin', '2012-12-01 00:00:00', 'Admin', '2012-12-01 00:00:00', 'Admin', '2999-12-31 00:00:00'";
 		executeUpdateSQL("insert into AdminUnitType "
 				+ "(Code, Name, Comment, FromDate, ToDate, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "
 				+ //
@@ -192,11 +192,11 @@ public class DAO {
 				+ "SubordinateAdminUnitTypeID	INTEGER NOT NULL,"
 				+ "Comment                 	 	LONGVARCHAR,"
 				+ "OpenedBy                 	VARCHAR(32) NOT NULL,"
-				+ "OpenedDate               	DATE NOT NULL,"
+				+ "OpenedDate               	TIMESTAMP NOT NULL,"
 				+ "ChangedBy                	VARCHAR(32) NOT NULL,"
-				+ "ChangedDate              	DATE NOT NULL,"
+				+ "ChangedDate              	TIMESTAMP NOT NULL,"
 				+ "ClosedBy                 	VARCHAR(32),"
-				+ "ClosedDate               	DATE NOT NULL,"
+				+ "ClosedDate               	TIMESTAMP NOT NULL,"
 				+ "PRIMARY KEY (AdminUnitTypeSubordinationID),"
 				+ "FOREIGN KEY (AdminUnitTypeID) REFERENCES AdminUnitType ON DELETE RESTRICT,"
 				+ "FOREIGN KEY (SubordinateAdminUnitTypeID) REFERENCES AdminUnitType ON DELETE RESTRICT"
@@ -204,7 +204,7 @@ public class DAO {
 	}
 
 	private void insertDummyDataToAdminUnitTypeSubordinationTable() {
-		String std = "'Admin', '2012-12-01', 'Admin', '2012-12-01', 'Admin', '2999-12-31'";
+		String std = "'Admin', '2012-12-01 00:00:00', 'Admin', '2012-12-01 00:00:00', 'Admin', '2999-12-31 00:00:00'";
 		executeUpdateSQL("insert into AdminUnitTypeSubordination "
 				+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) VALUES "+
 // @formatter:off
