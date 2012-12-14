@@ -240,9 +240,10 @@ public class AdminUnitVC extends HttpServlet {
 		if (adminUnitsSubordinateList == null) {
 			adminUnitsSubordinateList = new ArrayList<dao.AdminUnit>();
 		}
-		adminUnitsSubordinateList.add(formData
-				.getAdminUnitsSubordinateListPossible().get(
-						listNo));
+		
+		AdminUnit addedUnit = formData.getAdminUnitsSubordinateListPossible()
+				.get(listNo);
+		adminUnitsSubordinateList.add(addedUnit);
 		// put the list back
 		formData.setAdminUnitsSubordinateList(adminUnitsSubordinateList);
 
@@ -255,6 +256,18 @@ public class AdminUnitVC extends HttpServlet {
 				.intValue());
 		formData.setAdminUnitsSubordinateListPossible(adminUnitsSubordinateListPossible);
 				
+		// if this item happened to be in the removed list, 
+		// get it out of there
+		List<dao.AdminUnit> adminUnitsSubordinateListRemoved = formData
+				.getAdminUnitsSubordinateListRemoved();
+		for (AdminUnit au : adminUnitsSubordinateListRemoved) {
+			if (au.getAdminUnitID().equals(addedUnit.getAdminUnitID())) {
+				adminUnitsSubordinateListRemoved.remove(au);
+				formData.setAdminUnitsSubordinateListRemoved(adminUnitsSubordinateListRemoved);
+				break;
+			}
+		}
+		
 		return formData;
 	}
 
