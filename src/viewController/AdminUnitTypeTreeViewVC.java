@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import dao.*;
 
 /**
- * Servlet implementation class AdminUnitTypeTreeViewVC
+ * json output for treeview
  */
 public class AdminUnitTypeTreeViewVC extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -31,7 +31,7 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 		Gson gson = new Gson();
 		AdminUnitTypeDAO adminUnitTypeDAO = new AdminUnitTypeDAO();
 		Collection<AdminUnitTypeJSON> children = new ArrayList<AdminUnitTypeJSON>();
-		
+
 		Enumeration<String> paramNames = request.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();
@@ -40,38 +40,23 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 
 			if (paramName.equals("root")) {
 				if (request.getParameter("root").equals("source")) {
-					/*
-					AdminUnitType adminUnitType = adminUnitTypeDAO.getByID(1);
-					AdminUnitTypeJSON t = new AdminUnitTypeJSON();
-					
-					if (adminUnitType != null) {
-						t.setText(adminUnitType.getName());
-						t.setExpanded(false);
-						t.setId(adminUnitType.getAdminUnitTypeID().toString());
-						t.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType)>=1);
-						t.setHasChildren(true);
+
+					children.add(saveToJSONType(adminUnitTypeDAO.getByID(1),
+							adminUnitTypeDAO
+									.getSubordinateCount(adminUnitTypeDAO
+											.getByID(1)) >= 1));
+				} else {
+					// load the list of childrens
+					for (AdminUnitType adminUnitType : adminUnitTypeDAO
+							.getSubordinates(Integer.parseInt(request
+									.getParameter("root")), "NOW()")) {
+
+						children.add(saveToJSONType(
+								adminUnitType,
+								adminUnitTypeDAO
+										.getSubordinateCount(adminUnitType) >= 1));
 					}
 
-					children.add(t);
-					*/
-					children.add(saveToJSONType(adminUnitTypeDAO.getByID(1),adminUnitTypeDAO.getSubordinateCount(adminUnitTypeDAO.getByID(1))>=1));
-				} else {
-					//load the list of childrens
-					for (AdminUnitType adminUnitType:adminUnitTypeDAO.getSubordinates(Integer.parseInt(request.getParameter("root")), "NOW()")){
-						/*
-						AdminUnitTypeJSON tempUnit = new AdminUnitTypeJSON();
-						tempUnit.setText(adminUnitType.getName());
-						tempUnit.setExpanded(false);
-						tempUnit.setId(adminUnitType.getAdminUnitTypeID().toString());
-						// TODO find out, does this unit has children. dont use fixed value
-						tempUnit.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType)>=1);
-						children.add(tempUnit);
-						*/
-						children.add(saveToJSONType(adminUnitType,adminUnitTypeDAO.getSubordinateCount(adminUnitType)>=1));
-					}
-					
-					
-					
 				}
 			}
 
@@ -88,9 +73,10 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 		System.out.println("AdminUnitTypeTreeViewVC post");
 	}
 
-	private AdminUnitTypeJSON saveToJSONType(AdminUnitType adminUnitType, Boolean hasChildren){
+	private AdminUnitTypeJSON saveToJSONType(AdminUnitType adminUnitType,
+			Boolean hasChildren) {
 		AdminUnitTypeJSON res = new AdminUnitTypeJSON();
-		
+
 		res.setText(adminUnitType.getName());
 		res.setExpanded(false);
 		res.setId(adminUnitType.getAdminUnitTypeID().toString());
