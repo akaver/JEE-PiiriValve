@@ -25,7 +25,11 @@ public class AdminUnitTypeReportVC extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().println("AdminUnitTypeReport");
+		
+		// call the dispatcher
+		request.getRequestDispatcher("AdminUnitTypeReportScreen.jsp").forward(
+				request, response);
+
 
 	}
 

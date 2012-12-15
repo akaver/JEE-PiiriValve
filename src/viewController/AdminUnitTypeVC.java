@@ -77,56 +77,6 @@ public class AdminUnitTypeVC extends HttpServlet {
 			session.removeAttribute("errors");
 			formData = processGET(request, response);
 
-			/*
-			 * 
-			 * 
-			 * 
-			 * // null - hack, 0-add, >=1 - real id Integer adminUnitTypeID =
-			 * null; if (request.getParameter("AdminUnitTypeID").equals("new"))
-			 * { // create new instance of AdminUnitType adminUnitTypeID = 0;
-			 * System.out.println("Creating new entity."); } else { try {
-			 * adminUnitTypeID = Integer.parseInt(request
-			 * .getParameter("AdminUnitTypeID")); } catch (Exception e) {
-			 * System.out.println("Exception in parseInt!"); } }
-			 * 
-			 * // check for valid ID if (adminUnitTypeID == 0 ||
-			 * (adminUnitTypeID >= 0 && new AdminUnitTypeDAO()
-			 * .isIDValid(adminUnitTypeID))) { System.out
-			 * .println("Starting view proccessing for AdminUnitType ID:" +
-			 * adminUnitTypeID); } else { // throw exception, this is hacking
-			 * attempt throw new RuntimeException(
-			 * "Hacking attempt, this is not valid ID for AdminUnitType:" +
-			 * request.getParameter("AdminUnitTypeID")); }
-			 * 
-			 * // create the view model object and populate it with some data,
-			 * get // it through dao formData = new AdminUnitTypeVM();
-			 * 
-			 * if (adminUnitTypeID == 0) { // this is new entity
-			 * formData.setAdminUnitType(new dao.AdminUnitType()); } else { //
-			 * get the entity from dao formData.setAdminUnitType(new
-			 * AdminUnitTypeDAO() .getByID(adminUnitTypeID)); }
-			 * 
-			 * // get the master for this AdminUnitType
-			 * formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO()
-			 * .getMasterByIDWithZero(formData.getAdminUnitType()
-			 * .getAdminUnitTypeID()));
-			 * 
-			 * // load the full list of AdminUnitType // TODO - remove all the
-			 * subordinates of itself, otherwise user can // cause circular
-			 * reference formData.setAdminUnitTypeMasterListWithZero(new
-			 * AdminUnitTypeDAO() .getAll());
-			 * 
-			 * // load the list of subordinates
-			 * formData.setAdminUnitTypesSubordinateList(new AdminUnitTypeDAO()
-			 * .getSubordinates(formData.getAdminUnitType()
-			 * .getAdminUnitTypeID()));
-			 * 
-			 * // load the list of possible new subordinates
-			 * formData.setAdminUnitTypesSubordinateListPossible(new
-			 * AdminUnitTypeDAO()
-			 * .getPossibleSubordinates(formData.getAdminUnitType()
-			 * .getAdminUnitTypeID()));
-			 */
 		} else {
 			// formData was there, so this is post. lets update the viewmodel
 			// with changes the user wants to make

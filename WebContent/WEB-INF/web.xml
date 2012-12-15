@@ -74,4 +74,14 @@
     <servlet-name>AdminUnitTypeReportVC</servlet-name>
     <url-pattern>/AdminUnitTypeReportVC</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AdminUnitTypeTreeViewVC</display-name>
+    <servlet-name>AdminUnitTypeTreeViewVC</servlet-name>
+    <servlet-class>viewController.AdminUnitTypeTreeViewVC</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminUnitTypeTreeViewVC</servlet-name>
+    <url-pattern>/AdminUnitTypeTreeViewVC</url-pattern>
+  </servlet-mapping>
 </web-app>
