@@ -71,7 +71,7 @@ public class AdminUnitTypeDAO extends DAO {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
 			preparedStatement.setInt(1, adminUnitTypeID);
-			System.out.println("SQL:"+preparedStatement);
+			System.out.println("SQL:" + preparedStatement);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				res = createAdminUnitTypeFromResultSet(resultSet);
@@ -99,7 +99,7 @@ public class AdminUnitTypeDAO extends DAO {
 		Integer masterID = null;
 
 		// find the subordinate record, which contains its masters id
-		String sql = "select * from AdminUnitTypeSubordination where SubordinateAdminUnitTypeID=?";
+		String sql = "select * from AdminUnitTypeSubordination where SubordinateAdminUnitTypeID=? and ClosedDate>NOW()";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -145,7 +145,8 @@ public class AdminUnitTypeDAO extends DAO {
 
 	}
 
-	public List<AdminUnitType> getSubordinates(Integer adminUnitTypeID) {
+	public List<AdminUnitType> getSubordinates(Integer adminUnitTypeID,
+			String dateTimeString) {
 		System.out.println("Finding subordinates for adminUnitType with ID:"
 				+ adminUnitTypeID);
 
@@ -154,8 +155,21 @@ public class AdminUnitTypeDAO extends DAO {
 		}
 		List<AdminUnitType> res = new ArrayList<AdminUnitType>();
 
+		String dateLimits = "";
+
+		// if we search for NOW, entry must opened and valid
+		if (dateTimeString.equals("NOW()")) {
+			dateLimits = " and AdminUnitTypeSubordination.OpenedDate < "
+					+ dateTimeString
+					+ " and AdminUnitTypeSubordination.ClosedDate > "
+					+ dateTimeString;
+		} else if (dateTimeString.equals("")) {
+			dateLimits = "";
+		}
+
 		// get the list of subordinate ID's
-		String sql = "select * from AdminUnitTypeSubordination where AdminUnitTypeID=?";
+		String sql = "select * from AdminUnitTypeSubordination where AdminUnitTypeID=?"
+				+ dateLimits;
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
@@ -227,7 +241,8 @@ public class AdminUnitTypeDAO extends DAO {
 		return res;
 	}
 
-	public List<AdminUnitType> getPossibleSubordinates(Integer adminUnitTypeID, String dateString) {
+	public List<AdminUnitType> getPossibleSubordinates(Integer adminUnitTypeID,
+			String dateTimeString) {
 		System.out.println("Possible subordinates for AdminUnitTypeID:"
 				+ adminUnitTypeID);
 
@@ -241,48 +256,61 @@ public class AdminUnitTypeDAO extends DAO {
 		// master
 		// pluss all the units which where removed from the list on the form
 		// (but not yet saved to db as removed)
-
+		// TODO fix datetime
+/*
 		String dateLimits = "";
 
 		// if we search for NOW, entry must opened and valid
-		if (dateString.equals("NOW()")) {
-			dateLimits = " and AdminUnitType.OpenedDate < " + dateString
-					+ " and AdminUnitType.ClosedDate > " + dateString + " and AdminUnitType.FromDate < "
-					+ dateString + " and AdminUnitType.ToDate > " + dateString;
-		} else if (dateString.equals("")) {
+		if (dateTimeString.equals("NOW()")) {
+			dateLimits = " and AdminUnitType.OpenedDate < " + dateTimeString
+					+ " and AdminUnitType.ClosedDate > " + dateTimeString
+					+ " and AdminUnitTypeSubordination.OpenedDate < "
+					+ dateTimeString
+					+ " and AdminUnitTypeSubordination.ClosedDate > "
+					+ dateTimeString + "";
+		} else if (dateTimeString.equals("")) {
 			dateLimits = "";
 		}
-		// if we search for custom date, entry must have been valid THEN
-		else {
-			dateLimits = " and FromDate < DATE '" + dateString
-					+ "' and ToDate > DATE '" + dateString + "'";
-		}
-
-
+*/
 		// list of all AdminUnitTypeID's
 		// without current AdminUnitTypeID
 		// without master currently set
 		// and without record no 1 - the first semifixed unit - the state
-		String sql = "select AdminUnitType.AdminUnitTypeID as ID1 "
-				+ "from AdminUnitType LEFT JOIN AdminUnitTypeSubordination ON AdminUnitType.AdminUnitTypeID=AdminUnitTypeSubordination.SubordinateAdminUnitTypeID "
+		/*
+		 * String sql = "select AdminUnitType.AdminUnitTypeID as ID1 " +
+		 * "from  AdminUnitType LEFT OUTER JOIN AdminUnitTypeSubordination ON AdminUnitType.AdminUnitTypeID=AdminUnitTypeSubordination.SubordinateAdminUnitTypeID "
+		 * + "where " + "AdminUnitType.AdminUnitTypeID<>1 and " + // id 1 is
+		 * state - it cannot be subordinate "AdminUnitType.AdminUnitTypeID<>? "
+		 * + "and " + "ISNULL(AdminUnitTypeSubordination.AdminUnitTypeID,0)=0 "+
+		 * dateLimits+ "";
+		 */
+		// fuck the hsqldb, this isnt normal
+		String sql = "select * from (select  AdminUnitTypeID, ISNULL(AdminUnitTypeSubordinationID,0) as IdNull "
+				+ "from AdminUnitType LEFT JOIN "
+				+ "(select * from AdminUnitTypeSubordination where ClosedDate>NOW()) AS  AdminUnitTypeSubordinationTemp "
+				+ "ON AdminUnitType.AdminUnitTypeID=AdminUnitTypeSubordinationTemp.SubordinateAdminUnitTypeID "
 				+ "where "
 				+ "AdminUnitType.AdminUnitTypeID<>1 and "
-				+ // id 1 is state - it cannot be subordinate
-				"AdminUnitType.AdminUnitTypeID<>? " + "and "
-				+ "ISNULL(AdminUnitTypeSubordination.AdminUnitTypeID,0)=0 "+
-				dateLimits
-				+ "";
+				+ "AdminUnitType.AdminUnitTypeID<>? and "
+				+ "AdminUnitType.ClosedDate>NOW() and "
+				+ "AdminUnitType.ToDate>NOW() )";
+
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
 			preparedStatement.setInt(1, adminUnitTypeID);
+			System.out.println("SQL: " + preparedStatement);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				System.out.println("sub: " + resultSet.getInt("ID1"));
-				
-				AdminUnitType tempAdminUnitType = getByID( resultSet.getInt("ID1"));
-				System.out.println("sub: "+tempAdminUnitType);
-				res.add(tempAdminUnitType);
+				// lets skip over some records
+				if (resultSet.getInt("IdNull") == 0) {
+					System.out.println("sub: "
+							+ resultSet.getInt("AdminUnitTypeID"));
+					AdminUnitType tempAdminUnitType = getByID(resultSet
+							.getInt("AdminUnitTypeID"));
+					System.out.println("sub: " + tempAdminUnitType);
+					res.add(tempAdminUnitType);
+				}
 			}
 			DbUtils.closeQuietly(resultSet);
 			DbUtils.closeQuietly(preparedStatement);
@@ -358,38 +386,42 @@ public class AdminUnitTypeDAO extends DAO {
 		// child-child-child somewhere
 		// you should traverse a tree down from yourself and see
 		// that new master is not among your sub branch
-		
+
 		String sql = "";
-		if (adminUnitTypeID==1){
+		if (adminUnitTypeID == 1) {
 			System.out.println("Cannot change master on primary state!");
 			return;
 		}
-		if (adminUnitTypeMaster.getAdminUnitTypeID()==0) {
-			//remove the master
+		if (adminUnitTypeMaster.getAdminUnitTypeID() == 0) {
+			// remove the master
 			sql = "update AdminUnitTypeSubordination set "
 					+ "ChangedBy='Admin', ChangedDate=NOW(), ClosedBy='Admin', ClosedDate=NOW() "
 					+ "where SubordinateAdminUnitTypeID=?";
-			
+
 		} else {
-			//change the master
+			// change the master
 			sql = "update AdminUnitTypeSubordination set "
 					+ "AdminUnitTypeID=?, ChangedBy='Admin', ChangedDate=NOW() "
-					+ "where SubordinateAdminUnitTypeID=?";
+					+ "where SubordinateAdminUnitTypeID=? and ClosedDate>NOW()";
 		}
 
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
-			preparedStatement.setInt(1,
-					adminUnitTypeMaster.getAdminUnitTypeID());
-			preparedStatement.setInt(2, adminUnitTypeID);
+			if (adminUnitTypeMaster.getAdminUnitTypeID() == 0) {
+				preparedStatement.setInt(1, adminUnitTypeID);
+			} else {
+				preparedStatement.setInt(1,
+						adminUnitTypeMaster.getAdminUnitTypeID());
+				preparedStatement.setInt(2, adminUnitTypeID);
+			}
 			int rowsChanged = preparedStatement.executeUpdate();
 			System.out.println("Rows changed:" + rowsChanged);
 			if (rowsChanged == 0) {
 				// fuckit, go for insert then
 				sql = "insert into AdminUnitTypeSubordination "
 						+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
-						+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
+						+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31 00:00:00')";
 				preparedStatement = super.getConnection().prepareStatement(sql);
 				preparedStatement.setInt(1,
 						adminUnitTypeMaster.getAdminUnitTypeID());
@@ -408,42 +440,15 @@ public class AdminUnitTypeDAO extends DAO {
 			AdminUnitType subordinate) {
 		System.out.println("Adding subordinate for adminUnitTypeID:"
 				+ adminUnitTypeID + " Subordinate is:" + subordinate);
-		
+
 		String sql = "insert into AdminUnitTypeSubordination "
 				+ "(AdminUnitTypeID, SubordinateAdminUnitTypeID, Comment, OpenedBy, OpenedDate, ChangedBy, ChangedDate, ClosedBy, ClosedDate) values "
-				+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31')";
-		
-		try {
-			PreparedStatement preparedStatement = super.getConnection()
-					.prepareStatement(sql);
-			preparedStatement.setInt(1,
-					adminUnitTypeID);
-			preparedStatement.setInt(2, subordinate.getAdminUnitTypeID());
-			System.out.println("SQL:" + preparedStatement);
-			int rowsChanged = preparedStatement.executeUpdate();
-			System.out.println("Rows changed:" + rowsChanged);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-		}		
-		
-		
-	}
+				+ "(?,?,'', 'Admin', NOW(), 'Admin', NOW(), 'Admin', '2999-12-31 00:00:00')";
 
-	public void removeSubordinate(Integer adminUnitTypeID,
-			AdminUnitType subordinate) {
-		System.out.println("Removing subordinate for adminUnitTypeID:"
-				+ adminUnitTypeID + " Subordinate is:" + subordinate);
-		
-		String sql = "update AdminUnitTypeSubordination set "
-				+ "ChangedBy='Admin', ChangedDate=NOW(), ClosedBy='Admin', ClosedDate=NOW() "
-				+ "where AdminUnitTypeID=? and SubordinateAdminUnitTypeID=?";
-		
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
-			preparedStatement.setInt(1,
-					adminUnitTypeID);
+			preparedStatement.setInt(1, adminUnitTypeID);
 			preparedStatement.setInt(2, subordinate.getAdminUnitTypeID());
 			System.out.println("SQL:" + preparedStatement);
 			int rowsChanged = preparedStatement.executeUpdate();
@@ -452,9 +457,31 @@ public class AdminUnitTypeDAO extends DAO {
 			throw new RuntimeException(e);
 		} finally {
 		}
-		
+
 	}
-	
-	
+
+	public void removeSubordinate(Integer adminUnitTypeID,
+			AdminUnitType subordinate) {
+		System.out.println("Removing subordinate for adminUnitTypeID:"
+				+ adminUnitTypeID + " Subordinate is:" + subordinate);
+
+		String sql = "update AdminUnitTypeSubordination set "
+				+ "ChangedBy='Admin', ChangedDate=NOW(), ClosedBy='Admin', ClosedDate=NOW() "
+				+ "where AdminUnitTypeID=? and SubordinateAdminUnitTypeID=?";
+
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitTypeID);
+			preparedStatement.setInt(2, subordinate.getAdminUnitTypeID());
+			System.out.println("SQL:" + preparedStatement);
+			int rowsChanged = preparedStatement.executeUpdate();
+			System.out.println("Rows changed:" + rowsChanged);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+
+	}
 
 }
