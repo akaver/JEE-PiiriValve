@@ -257,21 +257,17 @@ public class AdminUnitTypeDAO extends DAO {
 		// pluss all the units which where removed from the list on the form
 		// (but not yet saved to db as removed)
 		// TODO fix datetime
-/*
-		String dateLimits = "";
-
-		// if we search for NOW, entry must opened and valid
-		if (dateTimeString.equals("NOW()")) {
-			dateLimits = " and AdminUnitType.OpenedDate < " + dateTimeString
-					+ " and AdminUnitType.ClosedDate > " + dateTimeString
-					+ " and AdminUnitTypeSubordination.OpenedDate < "
-					+ dateTimeString
-					+ " and AdminUnitTypeSubordination.ClosedDate > "
-					+ dateTimeString + "";
-		} else if (dateTimeString.equals("")) {
-			dateLimits = "";
-		}
-*/
+		/*
+		 * String dateLimits = "";
+		 * 
+		 * // if we search for NOW, entry must opened and valid if
+		 * (dateTimeString.equals("NOW()")) { dateLimits =
+		 * " and AdminUnitType.OpenedDate < " + dateTimeString +
+		 * " and AdminUnitType.ClosedDate > " + dateTimeString +
+		 * " and AdminUnitTypeSubordination.OpenedDate < " + dateTimeString +
+		 * " and AdminUnitTypeSubordination.ClosedDate > " + dateTimeString +
+		 * ""; } else if (dateTimeString.equals("")) { dateLimits = ""; }
+		 */
 		// list of all AdminUnitTypeID's
 		// without current AdminUnitTypeID
 		// without master currently set
@@ -484,9 +480,28 @@ public class AdminUnitTypeDAO extends DAO {
 
 	}
 
-	public Boolean getSubordinateCount(AdminUnitType adminUnitType) {
-		// TODO Auto-generated method stub
-		return true;
+	public Integer getSubordinateCount(AdminUnitType adminUnitType) {
+		Integer res = 0;
+
+		String sql = "select count(*) as Total  from AdminUnitTypeSubordination where "
+				+ "AdminUnitTypeID=?";
+		try {
+			PreparedStatement preparedStatement = super.getConnection()
+					.prepareStatement(sql);
+			preparedStatement.setInt(1, adminUnitType.getAdminUnitTypeID());
+			System.out.println("SQL: " + preparedStatement);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				res=resultSet.getInt("Total");
+			}
+			DbUtils.closeQuietly(resultSet);
+			DbUtils.closeQuietly(preparedStatement);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+		}
+
+		return res;
 	}
 
 }

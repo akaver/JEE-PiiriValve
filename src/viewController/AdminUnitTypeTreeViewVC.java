@@ -47,7 +47,7 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 						t.setText(adminUnitType.getName());
 						t.setExpanded(false);
 						t.setId(adminUnitType.getAdminUnitTypeID().toString());
-						t.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType));
+						t.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType)>=1);
 						t.setHasChildren(true);
 					}
 
@@ -61,7 +61,7 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 						tempUnit.setExpanded(false);
 						tempUnit.setId(adminUnitType.getAdminUnitTypeID().toString());
 						// TODO find out, does this unit has children. dont use fixed value
-						tempUnit.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType));
+						tempUnit.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType)>=1);
 						children.add(tempUnit);
 					}
 					
