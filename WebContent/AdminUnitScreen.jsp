@@ -124,10 +124,8 @@
 			</tr>
 			<tr>
 				<td>
-					<div style="display: none">
-						<input type="text" id="forSending" name="AdminUnitType_adminUnitTypeID" 
+					<input type="text" id="forSending" name="AdminUnitType_adminUnitTypeID" 
 							value="${formData.adminUnitType.adminUnitTypeID}">
-					</div>
 				</td>
 			</tr>			
 		</table>
