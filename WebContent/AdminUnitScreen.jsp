@@ -124,7 +124,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="text" id="forSending" name="AdminUnitType_adminUnitTypeID" 
+					<input type="hidden" id="forSending" name="AdminUnitType_adminUnitTypeID" 
 							value="${formData.adminUnitType.adminUnitTypeID}">
 				</td>
 			</tr>			
