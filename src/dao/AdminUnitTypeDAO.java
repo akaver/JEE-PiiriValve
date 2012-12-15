@@ -484,7 +484,7 @@ public class AdminUnitTypeDAO extends DAO {
 		Integer res = 0;
 
 		String sql = "select count(*) as Total  from AdminUnitTypeSubordination where "
-				+ "AdminUnitTypeID=?";
+				+ "AdminUnitTypeID=? and ClosedDate>NOW()";
 		try {
 			PreparedStatement preparedStatement = super.getConnection()
 					.prepareStatement(sql);
