@@ -30,10 +30,8 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		Gson gson = new Gson();
 		AdminUnitTypeDAO adminUnitTypeDAO = new AdminUnitTypeDAO();
-
-		AdminUnitTypeJSON t = new AdminUnitTypeJSON();
-		AdminUnitType adminUnitType = null;
-
+		Collection<AdminUnitTypeJSON> children = new ArrayList<AdminUnitTypeJSON>();
+		
 		Enumeration<String> paramNames = request.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();
@@ -42,39 +40,39 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 
 			if (paramName.equals("root")) {
 				if (request.getParameter("root").equals("source")) {
-					adminUnitType = adminUnitTypeDAO.getByID(1);
+					AdminUnitType adminUnitType = adminUnitTypeDAO.getByID(1);
+					AdminUnitTypeJSON t = new AdminUnitTypeJSON();
 					
 					if (adminUnitType != null) {
 						t.setText(adminUnitType.getName());
 						t.setExpanded(false);
 						t.setId(adminUnitType.getAdminUnitTypeID().toString());
+						t.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType));
 						t.setHasChildren(true);
 					}
 
-					out.println("[");
-					out.println(gson.toJson(t));
-					out.println("]");
+					children.add(t);
 					
 				} else {
 					//load the list of childrens
-					Collection<AdminUnitTypeJSON> children = new ArrayList<AdminUnitTypeJSON>();
-					
-					for (AdminUnitType au:adminUnitTypeDAO.getSubordinates(Integer.parseInt(request.getParameter("root")), "NOW()")){
+					for (AdminUnitType adminUnitType:adminUnitTypeDAO.getSubordinates(Integer.parseInt(request.getParameter("root")), "NOW()")){
 						AdminUnitTypeJSON tempUnit = new AdminUnitTypeJSON();
-						tempUnit.setText(au.getName());
+						tempUnit.setText(adminUnitType.getName());
 						tempUnit.setExpanded(false);
-						tempUnit.setId(au.getAdminUnitTypeID().toString());
-						tempUnit.setHasChildren(true);
+						tempUnit.setId(adminUnitType.getAdminUnitTypeID().toString());
+						// TODO find out, does this unit has children. dont use fixed value
+						tempUnit.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType));
 						children.add(tempUnit);
 					}
 					
-					out.println(gson.toJson(children));
+					
 					
 				}
 			}
 
 		}
 
+		out.println(gson.toJson(children));
 
 		out.flush();
 

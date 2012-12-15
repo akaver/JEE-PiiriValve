@@ -484,4 +484,9 @@ public class AdminUnitTypeDAO extends DAO {
 
 	}
 
+	public Boolean getSubordinateCount(AdminUnitType adminUnitType) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

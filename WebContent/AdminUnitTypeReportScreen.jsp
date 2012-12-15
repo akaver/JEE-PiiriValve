@@ -28,7 +28,7 @@
 </head>
 <body>
 	<div id="main">
-
+		<p>Haldusüksuste tüüpide aruanne</p>
 		<p>
 			<a href="IndexVC">Tagasi</a>
 		</p>
