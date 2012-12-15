@@ -40,6 +40,7 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 
 			if (paramName.equals("root")) {
 				if (request.getParameter("root").equals("source")) {
+					/*
 					AdminUnitType adminUnitType = adminUnitTypeDAO.getByID(1);
 					AdminUnitTypeJSON t = new AdminUnitTypeJSON();
 					
@@ -52,10 +53,12 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 					}
 
 					children.add(t);
-					
+					*/
+					children.add(saveToJSONType(adminUnitTypeDAO.getByID(1),adminUnitTypeDAO.getSubordinateCount(adminUnitTypeDAO.getByID(1))>=1));
 				} else {
 					//load the list of childrens
 					for (AdminUnitType adminUnitType:adminUnitTypeDAO.getSubordinates(Integer.parseInt(request.getParameter("root")), "NOW()")){
+						/*
 						AdminUnitTypeJSON tempUnit = new AdminUnitTypeJSON();
 						tempUnit.setText(adminUnitType.getName());
 						tempUnit.setExpanded(false);
@@ -63,6 +66,8 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 						// TODO find out, does this unit has children. dont use fixed value
 						tempUnit.setHasChildren(adminUnitTypeDAO.getSubordinateCount(adminUnitType)>=1);
 						children.add(tempUnit);
+						*/
+						children.add(saveToJSONType(adminUnitType,adminUnitTypeDAO.getSubordinateCount(adminUnitType)>=1));
 					}
 					
 					
@@ -83,4 +88,14 @@ public class AdminUnitTypeTreeViewVC extends HttpServlet {
 		System.out.println("AdminUnitTypeTreeViewVC post");
 	}
 
+	private AdminUnitTypeJSON saveToJSONType(AdminUnitType adminUnitType, Boolean hasChildren){
+		AdminUnitTypeJSON res = new AdminUnitTypeJSON();
+		
+		res.setText(adminUnitType.getName());
+		res.setExpanded(false);
+		res.setId(adminUnitType.getAdminUnitTypeID().toString());
+		res.setHasChildren(hasChildren);
+
+		return res;
+	}
 }
