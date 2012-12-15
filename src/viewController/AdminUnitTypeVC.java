@@ -214,46 +214,54 @@ public class AdminUnitTypeVC extends HttpServlet {
 
 		// update this units subordinates
 		// user can remove and add items back and forth
-		// find out, what shall we really do - what is changed compared to original list
+		// find out, what shall we really do - what is changed compared to
+		// original list
 
 		// so, load back orginal list of subordinates
-		List<AdminUnitType> originalSubordinates =	adminUnitTypeDAO.getSubordinates(formData.getAdminUnitType().getAdminUnitTypeID());
-		
+		List<AdminUnitType> originalSubordinates = adminUnitTypeDAO
+				.getSubordinates(formData.getAdminUnitType()
+						.getAdminUnitTypeID(), "NOW()");
+
 		// go over the formData subordinate list one by one
-		for (AdminUnitType curSubordinate: formData.getAdminUnitTypesSubordinateList()){
-			int status=0;
-			int i=0;
+		for (AdminUnitType curSubordinate : formData
+				.getAdminUnitTypesSubordinateList()) {
+			int status = 0;
+			int i = 0;
 			// this item is in the original list - do nothing
-			for (i=0; i<originalSubordinates.size(); i++){
-				if (originalSubordinates.get(i).getAdminUnitTypeID().equals(curSubordinate.getAdminUnitTypeID())){
-					//so this item from session was in original list
-					status=1;
+			for (i = 0; i < originalSubordinates.size(); i++) {
+				if (originalSubordinates.get(i).getAdminUnitTypeID()
+						.equals(curSubordinate.getAdminUnitTypeID())) {
+					// so this item from session was in original list
+					status = 1;
 					break;
 				}
 			}
-			
-			//so this item from session was in original list
-			if (status==1){
-				//nothing to save to db
-				//remove it from originals list
-				System.out.println("Nothing to do on subordinate:"+originalSubordinates.get(i));
+
+			// so this item from session was in original list
+			if (status == 1) {
+				// nothing to save to db
+				// remove it from originals list
+				System.out.println("Nothing to do on subordinate:"
+						+ originalSubordinates.get(i));
 				originalSubordinates.remove(i);
 			}
 
 			// so this item wasnt int the originals list, so its new
-			if (status==0){
-				//save it to db, as new subordinate
-				System.out.println("Adding new subordinate:"+curSubordinate);
-				adminUnitTypeDAO.addSubordinate(adminUnitTypeID,curSubordinate);
+			if (status == 0) {
+				// save it to db, as new subordinate
+				System.out.println("Adding new subordinate:" + curSubordinate);
+				adminUnitTypeDAO
+						.addSubordinate(adminUnitTypeID, curSubordinate);
 			}
-			
+
 		}
-		
-		for (AdminUnitType removeSubordinate:originalSubordinates){
-			System.out.println("Deleting old subordinate:"+removeSubordinate);
-			adminUnitTypeDAO.removeSubordinate(adminUnitTypeID,removeSubordinate);
+
+		for (AdminUnitType removeSubordinate : originalSubordinates) {
+			System.out.println("Deleting old subordinate:" + removeSubordinate);
+			adminUnitTypeDAO.removeSubordinate(adminUnitTypeID,
+					removeSubordinate);
 		}
-		
+
 		// work is done, back to main screen
 		response.sendRedirect("IndexVC");
 	}
@@ -327,8 +335,16 @@ public class AdminUnitTypeVC extends HttpServlet {
 				// change viewmodels AdminUnitTypeMaster, find new one from
 				// dao
 				// based on new id
-				formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
-						.getParameter("AdminUnitTypeMaster_adminUnitTypeID"))));
+				if (request.getParameter("AdminUnitTypeMaster_adminUnitTypeID")
+						.equals("0")) {
+					AdminUnitType res = new AdminUnitType();
+					res.setAdminUnitTypeID(0);
+					res.setName("---");					
+					formData.setAdminUnitTypeMaster(res);
+				} else {
+					formData.setAdminUnitTypeMaster(new AdminUnitTypeDAO().getByID(Integer.parseInt(request
+							.getParameter("AdminUnitTypeMaster_adminUnitTypeID"))));
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Exceptoin:" + e);
@@ -442,12 +458,12 @@ public class AdminUnitTypeVC extends HttpServlet {
 		// load the list of subordinates
 		formData.setAdminUnitTypesSubordinateList(new AdminUnitTypeDAO()
 				.getSubordinates(formData.getAdminUnitType()
-						.getAdminUnitTypeID()));
+						.getAdminUnitTypeID(), "NOW()"));
 
 		// load the list of possible new subordinates
 		formData.setAdminUnitTypesSubordinateListPossible(new AdminUnitTypeDAO()
 				.getPossibleSubordinates(formData.getAdminUnitType()
-						.getAdminUnitTypeID(),"NOW()"));
+						.getAdminUnitTypeID(), "NOW()"));
 
 		return formData;
 	}
