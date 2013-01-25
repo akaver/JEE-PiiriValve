@@ -289,8 +289,21 @@ public class AdminUnitReportVC extends HttpServlet {
 	private String initializeDate() {
 
 		Calendar today = Calendar.getInstance();
-		String dateString = today.get(Calendar.DATE) + "." + (today.get(Calendar.MONTH) + 1) + "." + today.get(Calendar.YEAR);
+		String dayPart = String.valueOf(today.get(Calendar.DATE));
+		dayPart = guaranteeTwoNumbers(dayPart);		
+		String monthPart = String.valueOf(today.get(Calendar.MONTH) + 1);
+		monthPart = guaranteeTwoNumbers(monthPart);
+		
+		String dateString = dayPart + "." + monthPart + "." + today.get(Calendar.YEAR);
         return dateString;
+	}
+
+	//make sure date is two digits long
+	private String guaranteeTwoNumbers(String datePart) {
+		if (datePart.length() == 1) {
+			datePart = "0" + datePart;
+		}
+		return datePart;
 	}
 
 }
